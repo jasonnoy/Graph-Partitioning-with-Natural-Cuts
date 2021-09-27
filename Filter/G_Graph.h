@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "../share/Utility.h"
+#include "../share/sw_basetypes.h"
 #include "../Assemble/A_Graph.h"
 
 #include "G_Node.h"
