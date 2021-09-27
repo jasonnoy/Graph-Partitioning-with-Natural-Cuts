@@ -6,6 +6,7 @@
 #include <list>
 #include <map>
 #include <set>
+#include <string>
 //#include <algorithm>
 #include <deque>
 #include <fstream>
