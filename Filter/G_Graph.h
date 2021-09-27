@@ -8,6 +8,7 @@
 #include <set>
 //#include <algorithm>
 #include <deque>
+#include <fstream>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ using namespace std;
 #include "G_Node.h"
 #include "Edge_sort.h"
 #include "PushRelabel.h"
+#include "adapter.h"
 
 struct edge_cncted_comp{
 

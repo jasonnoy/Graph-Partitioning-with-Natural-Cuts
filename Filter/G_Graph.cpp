@@ -4,88 +4,103 @@
 
 void G_Graph::read_graph(string co_path, string gr_path){
 
-		FILE *co_f, *gr_f;
-		fopen_s( &co_f, co_path.c_str(), "r");
-		check_file( co_f, co_path.c_str() );
-		fopen_s( &gr_f, gr_path.c_str(), "r");
-		check_file( gr_f, gr_path.c_str() );
+    // read in node
+    cout<<"read in nodes.../n";
+    std::vector<node_info_t> nodes;
+    std::ifstream fs(co_path, std::ios::binary);
+    if (!fs) {
+        return -1;
+    }
 
-		//read in node
-		NodeID node_count = 0;
-		if( !feof( co_f ) ){
-			fscanf_s( co_f, "%u\n", &node_count );
-		}
-		this->node_list.reserve( node_count );
+    uint32_t count;
+    fs.read((char *)&count, sizeof(uint32_t));
+    nodes.resize(count);
+    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
+    while (!nodes.empty()) {
+        this->node_list.push_back(sw_node_adapter(nodes.back()));
+        nodes.pop_back();
+    }
 
-		char tc = 0;
-		char skip[200];
-		NodeID tid = 0;
-		int tlt = 0, tlg = 0;
-		while( !feof(co_f) ){
+    delete nodes;
+    cout<<"read nodes done\n"
 
-			//fscanf_s( co_f, "%c", &tc );
-			tc = fgetc( co_f );
-			if( tc != 'v' ){
-				fgets( skip, 200, co_f );
-				continue;
-			}
-			fscanf_s( co_f, "%u %d %d\n", &tid, &tlg, &tlt );
-			//G_Node tnode(tid-1, tlt, tlg);
-			G_Node tnode(tid-1);
-			this->node_list.push_back( tnode );
-		}
-		fclose( co_f );
+    // read in edges
+    cout<<"read edges...\n";
+    std::vector<link_info_t> links;
+    fs.clear();
+    fs(gr_path, std::ios::binary);
+    if (!fs) {
+        return -1;
+    }
 
-		//read in edge
-		NodeID edge_count = 0;
-		if( !feof(gr_f) ){
-			fscanf_s( gr_f, "%u\n", &edge_count );
-		}
-		this->edge_list.reserve( edge_count );
+    fs.read((char *)&count, sizeof(uint32_t));
+    links.resize(count);
+    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+    while (!links.empty()) {
+        this->edge_list.push_back(sw_edge_adapter(links.back()));
+        nodes.pop_back();
+    }
 
-		NodeID ts = 0, tt = 0, tw = 0;
-		tid = 0;
-		while( !feof(gr_f) ){
+    delete links;
+    cout<<"read edges done\n";
+//		FILE *co_f, *gr_f;
+//		fopen_s( &co_f, co_path.c_str(), "r");
+//		check_file( co_f, co_path.c_str() );
+//		fopen_s( &gr_f, gr_path.c_str(), "r");
+//		check_file( gr_f, gr_path.c_str() );
+//
+//		//read in node
+//		NodeID node_count = 0;
+//		if( !feof( co_f ) ){
+//			fscanf_s( co_f, "%u\n", &node_count );
+//		}
+//		this->node_list.reserve( node_count );
+//
+//		char tc = 0;
+//		char skip[200];
+//		NodeID tid = 0;
+//		int tlt = 0, tlg = 0;
+//		while( !feof(co_f) ){
+//
+//			//fscanf_s( co_f, "%c", &tc );
+//			tc = fgetc( co_f );
+//			if( tc != 'v' ){
+//				fgets( skip, 200, co_f );
+//				continue;
+//			}
+//			fscanf_s( co_f, "%u %d %d\n", &tid, &tlg, &tlt );
+//			//G_Node tnode(tid-1, tlt, tlg);
+//			G_Node tnode(tid-1);
+//			this->node_list.push_back( tnode );
+//		}
+//		fclose( co_f );
 
-			//fscanf_s( gr_f, "%c", &tc );
-			tc = fgetc( gr_f );
-			if( tc != 'a' ){
-				fgets( skip, 200, gr_f );
-				continue;
-			}
-			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
-			G_Edge e(ts-1, tt-1, tid++);
-			this->edge_list.push_back(e);
-			//this->node_list[ts-1].get_adj_list()[tt-1] = (G_Edge*)&(this->edge_list.back());
-			this->node_list[ts-1].get_adj_list().push_back((G_Edge*)&(this->edge_list.back()));
-		}
-		fclose( co_f );
+    //fill symmetric edge id
+    this->sym_id.resize( this->edge_list.size(), 0);
+    size_t eid = 0;
+    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
+    for(; eit != this->edge_list.end(); eit++, eid++ ){
 
-		//fill symmetric edge id
-		this->sym_id.resize( this->edge_list.size(), 0);
-		size_t eid = 0;
-		vector<G_Edge>::const_iterator eit = this->edge_list.begin();
-		for(; eit != this->edge_list.end(); eit++, eid++ ){
+        vector<G_Edge*>::const_iterator syeit =
+            this->node_list[eit->get_target()].get_adj_list().begin();
+        for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
 
-			vector<G_Edge*>::const_iterator syeit = 
-				this->node_list[eit->get_target()].get_adj_list().begin();
-			for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
+            if( (*syeit)->get_target() == eit->get_source() ){
+                this->sym_id[eid] = (*syeit)->get_id();
+                break;
+            }
+        }
+    }
+    cout<<"fill symmetric edge done\n";
 
-				if( (*syeit)->get_target() == eit->get_source() ){
-					this->sym_id[eid] = (*syeit)->get_id();
-					break;
-				}
-			}
-		}
-
-		//intial contraction
-		this->contract_to.resize( this->node_list.size() );
-		for( size_t i = 0; i < this->node_list.size(); i++ )
-			contract_to[i] = i;
-		this->contract_node_list.resize( this->node_list.size() );
-		for( size_t i = 0; i < this->node_list.size(); i++ )
-			this->contract_node_list[i].push_back( i );
-
+    //initial contraction
+    this->contract_to.resize( this->node_list.size() );
+    for( size_t i = 0; i < this->node_list.size(); i++ )
+        contract_to[i] = i;
+    this->contract_node_list.resize( this->node_list.size() );
+    for( size_t i = 0; i < this->node_list.size(); i++ )
+        this->contract_node_list[i].push_back( i );
+    cout<<"initial contraction done\n";
 }
 
 void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0 ){
@@ -161,10 +176,10 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 		
 		for(; ecit != edge_classes.end(); ecit++){ //deal with one edge class
 
-			if( ecit->size() < 4 )
+			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
 				continue;
 
-			size_t comp_lim = ecit->size()/2 - 1; // k
+			size_t comp_lim = ecit->size()/2 - 1; // k - number of connected components
 
 			//close edges in this class
 			//and initially mark class edges unvisited
@@ -242,31 +257,6 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 						stacks[di].push_back( (*trit)->get_target() );
 					}
 				}
-
-				//}
-				//else{ //node is not contracted
-				//	
-				//	vector<G_Edge*>::const_iterator trit = //all target nodes
-				//		this->node_list[n].get_adj_list().begin();
-				//	for(; trit != this->node_list[n].get_adj_list().end(); trit++){
-
-				//		//whether this edge is closed
-				//		if( class_edge_visited.count((*trit)->get_id()) ){
-				//			//mark next traverse edge
-				//			if( !class_edge_visited[(*trit)->get_id()] ){
-				//				//the edge has not been visited
-				//				neid[di] = (*trit)->get_id();
-				//				class_edge_visited[ neid[di] ] = true;
-				//				class_edge_visited[this->sym_edge_id(neid[di])] = true;
-				//			}
-				//			continue;
-				//		}
-				//		if( node_visited[(*trit)->get_target()] )
-				//			continue;
-				//		stacks[di].push_back( (*trit)->get_target() );
-				//	}
-
-				//}//end else
 
 				// if an stack is empty, one component has been found
 				// contract it. If k-1 components have been contracted,
@@ -482,7 +472,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 			if( *eit && !edge_prsd[b_id] ){
 
 				random = (unsigned int)rand(); //rand (0, 2^15)
-				random &= 0x0000000f;
+				random &= 0x0000000f;          // 只保留后四位
 				b_bits[b_id] |= random;
 				for( size_t i = 0; i < 4 ; i++ ){
 
@@ -529,7 +519,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 			if( degree_node[1].empty() )
 				break;
 			//find a leaf node
-			nit = this->node_list.begin() + (*degree_node[1].begin());
+			nit = this->node_list.begin() + (*degree_node[1].begin()); // degree_node[1].begin()在下面被erase
 			degree_node[1].erase( degree_node[1].begin() );
 
 			//fill the leaf edge -- I

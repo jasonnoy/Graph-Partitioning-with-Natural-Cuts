@@ -114,7 +114,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		}
 		
 		//initial heap
-		std::make_heap( logic_edges.begin(), logic_edges.end() );
+		std::make_heap( logic_edges.begin(), logic_edges.end() ); // !!默认是最大堆!!这里貌似有问题
 		//end initial
 
 		NodeID new_id = 0;
@@ -161,7 +161,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					node_deleted.insert( min_e.target ); //no longer valid, but this doesn't
 														 //mean they can be new node id.
 								//recycle resources
-					if( !logic_edge_counter.count( min_e.source ) ){
+					if( !logic_edge_counter.count( min_e.source ) ){    // redundant with line 135 block?
 							available_new_id.push_back( min_e.source );
 					}
 					if( !logic_edge_counter.count( min_e.target ) ){
@@ -332,7 +332,7 @@ double A_Graph::cal_edge_score( Logic_Edge& le ){
 		double r = 0.0;
 		unsigned int random_a = (unsigned int)( rand() % 100 ); //rand [0,100)
 		unsigned int random_b = 0;
-		if( random_a < 3 ){
+		if( random_a < 3 ){     // !!应该是>2!!
 
 			random_b = 60 + (unsigned int)( rand() % 41 ); //rand [60,100]
 		}
