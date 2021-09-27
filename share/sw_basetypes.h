@@ -1,5 +1,6 @@
-#ifndef  __SW_BASETYPES_H_
-#define  __SW_BASETYPES_H_
+#ifndef  SW_BASETYPES_H
+#define  SW_BASETYPES_H
+#include "stdlib.h"
 
 /** 路线规划等级 */
 enum class road_function_class_t : uint8_t
