@@ -1,5 +1,6 @@
 #ifndef  SW_BASETYPES_H
 #define  SW_BASETYPES_H
+#include "string.h"
 #include "string"
 
 /** 路线规划等级 */
