@@ -46,9 +46,14 @@ void G_Graph::read_graph(string co_path, string gr_path){
     links.resize(count);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
+    NodeID nullCounter = 0;
     while (!links.empty()) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
+        }
+        if (!id_to_index.count(links.back().sw_link_id)) {
+            nullCounter++;
+            continue;
         }
         G_Edge edge = sw_edge_adapter(links.back(), counter, id_to_index);
 //        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
@@ -58,6 +63,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         counter++;
         links.pop_back();
     }
+    cout<<nullCounter*100/count<<"% links are outlinks\n";
     cout<<"edge 100: oid: "<<edge_list[100].get_origin_id()<<" source: "<<node_list[edge_list[100].get_source()].get_origin_id()<<" target: "<<node_list[edge_list[100].get_target()].get_origin_id()<<endl;
     cout<<"idmap[0.oid]: "<<id_to_index[edge_list[100].get_origin_id()]<<endl;
     cout<<"365356: "<<id_to_index[365356]<<" 269778:"<<id_to_index[269778]<<endl;
