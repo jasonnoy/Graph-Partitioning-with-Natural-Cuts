@@ -19,14 +19,14 @@ void G_Graph::read_graph(string co_path, string gr_path){
     unsigned int counter = 0;
     while (!nodes.empty()) {
         if (counter++ % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\n";
+            cout<<counter * 100 / count<<"%\r";
         }
         this->node_list.push_back(sw_node_adapter(nodes.back()));
         nodes.pop_back();
     }
 
     nodes.clear();
-    cout<<"read nodes done\n";
+    cout<<"\nread nodes done\n";
 
     // read in edges
     cout<<"read edges...\n";
@@ -42,14 +42,14 @@ void G_Graph::read_graph(string co_path, string gr_path){
     counter = 0;
     while (!links.empty()) {
         if (counter++ % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\n";
+            cout<<counter * 100 / count<<"%\r";
         }
         this->edge_list.push_back(sw_edge_adapter(links.back()));
         links.pop_back();
     }
 
     links.clear();
-    cout<<"read edges done\n";
+    cout<<"\nread edges done\n";
 //		FILE *co_f, *gr_f;
 //		fopen_s( &co_f, co_path.c_str(), "r");
 //		check_file( co_f, co_path.c_str() );
