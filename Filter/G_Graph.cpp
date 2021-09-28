@@ -44,11 +44,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter++ % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge = sw_edge_adapter(links.back());
-        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
-        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
-        this->edge_list.push_back(edge);
-        this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+//        G_Edge edge = sw_edge_adapter(links.back());
+//        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
+//        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
+        this->edge_list.push_back(sw_edge_adapter(links.back()));
+        this->node_list[sw_edge_adapter(links.back()).get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         links.pop_back();
     }
 
