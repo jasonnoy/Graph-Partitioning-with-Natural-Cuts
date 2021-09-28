@@ -49,7 +49,8 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
         this->edge_list.push_back(edge);
         auto iter = std::find(node_list.begin(), node_list.end(), edge.get_source());
-        this->node_list[std::distance(std::begin(node_list), iter)].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+        unsigned int index = std::begin(node_list) - iter;
+        this->node_list[index].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         links.pop_back();
     }
 
