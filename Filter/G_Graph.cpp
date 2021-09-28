@@ -19,7 +19,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     unsigned int counter = 0;
     while (!nodes.empty()) {
         if (counter++ % (count / 10) == 0) {
-            printf(".0%f \n", (double)counter / count);
+            printf("%.0f", (double)counter / count);
             cout<<"%\n";
         }
         this->node_list.push_back(sw_node_adapter(nodes.back()));
@@ -43,7 +43,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     counter = 0;
     while (!links.empty()) {
         if (counter++ % (count / 10) == 0) {
-            printf(".0%f \n", (double)counter / count);
+            printf("%.0f \n", (double)counter / count);
             cout<<"%\n";
         }
         this->edge_list.push_back(sw_edge_adapter(links.back()));
