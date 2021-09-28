@@ -62,9 +62,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
     cout<<"idmap[0.oid]: "<<id_to_index[edge_list[100].get_origin_id()]<<endl;
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
-    for (int i = 0; i < 100; i++) {
-        cout<<id_to_index[node_list[i].get_origin_id()]<<endl;
-    }
+//    for (int i = 0; i < 100; i++) {
+//        cout<<id_to_index[node_list[i].get_origin_id()]<<endl;
+//    }
 //		FILE *co_f, *gr_f;
 //		fopen_s( &co_f, co_path.c_str(), "r");
 //		check_file( co_f, co_path.c_str() );
