@@ -22,6 +22,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
+        if (counter<1000){
+            cout<<"oid: "<<nodes.back().sw_node_id<<endl;
+        }
         this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
         nodes.pop_back();
         if (counter == 100) {
