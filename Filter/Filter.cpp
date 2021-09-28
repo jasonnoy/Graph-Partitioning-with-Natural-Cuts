@@ -24,7 +24,7 @@ void contract_tiny_cuts( G_Graph &graph, NodeSize sz_lim ){
 
 	VERBOSE(printf("get DFS tree...");)
 	vector<bool> edge_in_fi( graph.get_edge_list().size(), true );
-	graph.dfs_tree( 0, edge_in_fi, 0);
+	graph.dfs_tree( graph.get_node_list().front(), edge_in_fi, 0);
 	VERBOSE(
 		size_t ten = 0;
 		for( int i = 0; i < edge_in_fi.size(); i++ ){
