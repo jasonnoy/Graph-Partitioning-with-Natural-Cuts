@@ -24,7 +24,10 @@ void G_Graph::read_graph(string co_path, string gr_path){
         }
         this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
         nodes.pop_back();
-        cout<<"counter:"<<counter<<"  \r";
+        cout<<"key: "<<this->node_list.back().get_origin_id()<<" counter:"<<counter<<"  \r";
+        if (counter == 100) {
+            cout<<"\n100key: "<< this->node_list.back().get_origin_id()<<endl;
+        }
         id_to_index[this->node_list.back().get_origin_id()] = counter;
         counter++;
     }
