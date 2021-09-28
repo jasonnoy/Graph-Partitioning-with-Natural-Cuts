@@ -48,11 +48,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     counter = 0;
     NodeID nullCounter = 0;
     while (!links.empty()) {
-        if (counter % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\r";
+        if ((counter + nullCounter) % (count / 10) == 0) {
+            cout<<(counter + nullCounter) * 100 / count<<"%\r";
         }
         if (!id_to_index.count(links.back().sw_link_id)) {
             nullCounter++;
+            links.pop_back();
             continue;
         }
         G_Edge edge = sw_edge_adapter(links.back(), counter, id_to_index);
