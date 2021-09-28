@@ -47,10 +47,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
         G_Edge edge = sw_edge_adapter(links.back());
 //        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
 //        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
-        this->edge_list.push_back(sw_edge_adapter(links.back()));
-        auto iter = std::find(node_list.begin(), node_list.end(), sw_edge_adapter(links.back()).get_source());
-        unsigned int index = std::begin(node_list) - iter;
-        this->node_list[index].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+        this->edge_list.push_back(edge);
+        unsigned int source = edge.get_source();
+        auto iter = std::find(node_list.begin(), node_list.end(), edge.get_source());
+//        unsigned int index = std::begin(node_list) - iter;
+//        this->node_list[index].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         links.pop_back();
     }
 
