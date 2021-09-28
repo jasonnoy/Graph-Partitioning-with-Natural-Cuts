@@ -22,6 +22,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
+        if (!counter) {
+            cout<<"nodelist is empty: "<<node_list.empty()<<endl;
+        }
         this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
         nodes.pop_back();
         if (id_to_index.count(this->node_list.back().get_origin_id())) {
