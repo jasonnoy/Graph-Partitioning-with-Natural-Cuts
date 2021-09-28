@@ -54,6 +54,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         counter++;
         links.pop_back();
     }
+    cout<<"node 3 has "<<node_list[2].get_adj_list().size()<<" adj edges\n";
 
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
@@ -94,7 +95,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     size_t eid = 0;
     vector<G_Edge>::const_iterator eit = this->edge_list.begin();
     for(; eit != this->edge_list.end(); eit++, eid++ ){
-        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size();
+//        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
         vector<G_Edge*>::const_iterator syeit =
             this->node_list[eit->get_target()].get_adj_list().begin();
         for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
