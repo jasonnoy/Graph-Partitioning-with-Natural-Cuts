@@ -45,7 +45,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
             cout<<counter * 100 / count<<"%\n";
         }
         this->edge_list.push_back(sw_edge_adapter(links.back()));
-        nodes.pop_back();
+        links.pop_back();
     }
 
     links.clear();
