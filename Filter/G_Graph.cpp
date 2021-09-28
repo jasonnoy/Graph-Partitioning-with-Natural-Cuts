@@ -94,7 +94,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     size_t eid = 0;
     vector<G_Edge>::const_iterator eit = this->edge_list.begin();
     for(; eit != this->edge_list.end(); eit++, eid++ ){
-
+        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size();
         vector<G_Edge*>::const_iterator syeit =
             this->node_list[eit->get_target()].get_adj_list().begin();
         for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
