@@ -17,12 +17,14 @@ void G_Graph::read_graph(string co_path, string gr_path){
     nodes.resize(count);
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
     unsigned int counter = 0;
+    map<unsigned int, unsigned int> id_to_index;
     while (!nodes.empty()) {
-        if (counter++ % (count / 10) == 0) {
+        if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
         this->node_list.push_back(sw_node_adapter(nodes.back()));
         nodes.pop_back();
+        id_to_index[this->node_list.back().get_id()] = counter++;
     }
 
     cout<<"\nread nodes done\n";
@@ -48,10 +50,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
 //        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
         this->edge_list.push_back(edge);
-//        unsigned int source = edge.get_source();
-//        auto iter = std::find(node_list.begin(), node_list.end(), edge.get_source());
-//        unsigned int index = std::begin(node_list) - iter;
-//        this->node_list[index].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+        this->node_list[id_to_index[edge.get_source()]].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         links.pop_back();
     }
 
