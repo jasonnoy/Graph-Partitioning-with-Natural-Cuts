@@ -8,9 +8,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
     cout<<"read in nodes.../n";
     std::vector<node_info_t> nodes;
     std::ifstream fs(co_path, std::ios::binary);
-    if (!fs) {
-        return -1;
-    }
+//    if (!fs) {
+//        return -1;
+//    }
 
     uint32_t count;
     fs.read((char *)&count, sizeof(uint32_t));
@@ -21,27 +21,26 @@ void G_Graph::read_graph(string co_path, string gr_path){
         nodes.pop_back();
     }
 
-    delete nodes;
-    cout<<"read nodes done\n"
+    delete nodes.clear();
+    cout<<"read nodes done\n";
 
     // read in edges
     cout<<"read edges...\n";
     std::vector<link_info_t> links;
-    fs.clear();
-    fs(gr_path, std::ios::binary);
-    if (!fs) {
-        return -1;
-    }
+    std::ifstream fs2(gr_path, std::ios::binary);
+//    if (!fs) {
+//        return -1;
+//    }
 
-    fs.read((char *)&count, sizeof(uint32_t));
+    fs2.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
-    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+    fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     while (!links.empty()) {
         this->edge_list.push_back(sw_edge_adapter(links.back()));
         nodes.pop_back();
     }
 
-    delete links;
+    links.clear();
     cout<<"read edges done\n";
 //		FILE *co_f, *gr_f;
 //		fopen_s( &co_f, co_path.c_str(), "r");
@@ -293,7 +292,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 //		//Release
 //		//srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'
 //		//Debug
-//		srand(40); //!!!!!!!!!Remmber to change when release!!!!!!!!!!!!!!!
+//		srand(40); //!!!!!!!Remmber to change when release!!!!!!!!!!!!!!!
 //		int random = 0;
 //		int middle = RANDOM_LEN/2;
 //
@@ -1731,7 +1730,7 @@ void G_Graph::convert_n_output( string r_path ){
 			ag->contract_node_list[i].push_back( i );
 
 		//convert done, start writing
-		FILE *node_f, *edge_f;
+//		FILE *node_f, *edge_f;
 		string node_n = "anode.txt";
 		string edge_n = "aedge.txt";
 
@@ -1739,41 +1738,50 @@ void G_Graph::convert_n_output( string r_path ){
 		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
 
 		//write node and id map
-		fopen_s( &node_f, node_n.c_str(), "w" );
-		check_file( node_f, node_n.c_str() );
+        ofstream outfile;
+		outfile.open(node_n);
 
-		fprintf_s( node_f, "%u\n", ag->node_list.size() );
+//		fprintf_s( node_f, "%u\n", ag->node_list.size() );
+        outfile<<ag->node_list.size()<<endl;
 
 		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
+            outfile<<anit->get_id()<<" "<<anit->get_size()<<": ";
 
-			fprintf_s( node_f, "%u %u: ", anit->get_id(), anit->get_size() );
+//			fprintf_s( node_f, "%u %u: ", anit->get_id(), anit->get_size() );
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
-
-				fprintf_s( node_f, "%u ", *idmnit );
+                outfile<<*idmit<<" ";
+//				fprintf_s( node_f, "%u ", *idmnit );
 			}
-			fprintf_s( node_f, "\n" );
+            outfile<<endl;
+//			fprintf_s( node_f, "\n" );
 		}
+        outfile.close();
+        outfile.clear(ios::goodbit);
 
-		fflush( node_f );
-		fclose( node_f );
+//		fflush( node_f );
+//		fclose( node_f );
 
 		//write edge
-		fopen_s( &edge_f, edge_n.c_str(), "w" );
-		check_file( edge_f, edge_n.c_str() );
+        outfile.open(edge_n);
+//		fopen_s( &edge_f, edge_n.c_str(), "w" );
+//		check_file( edge_f, edge_n.c_str() );
 
-		fprintf_s( edge_f, "%u\n", ag->edge_list.size() );
+        outfile<<ag->edge_list.size()<<endl;
+//		fprintf_s( edge_f, "%u\n", ag->edge_list.size() );
 
 		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
 		for(; aeit != ag->edge_list.end(); aeit++){
 
-			fprintf_s( edge_f, "%u %u %u\n", aeit->get_source(),
-				aeit->get_target(), aeit->get_weight() );
+//			fprintf_s( edge_f, "%u %u %u\n", aeit->get_source(),
+//				aeit->get_target(), aeit->get_weight() );
+            outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
 		}
-		fflush( edge_f );
-		fclose( edge_f );
+//		fflush( edge_f );
+//		fclose( edge_f );
+        outfile.close();
 
 		delete ag;
 		return;

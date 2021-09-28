@@ -10,6 +10,7 @@
 //#include <algorithm>
 #include <deque>
 #include <fstream>
+#include <iostream>
 
 using namespace std;
 
