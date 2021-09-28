@@ -57,7 +57,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         counter++;
         links.pop_back();
     }
-    cout<<"node 0: oid: "<<edge_list[0].get_origin_id()<<" source: "<<node_list[edge_list[0].get_source()].get_origin_id()<<" target: "<<node_list[edge_list[0].get_target()].get_origin_id()<<endl;
+    cout<<"edge 0: oid: "<<edge_list[0].get_origin_id()<<" source: "<<node_list[edge_list[0].get_source()].get_origin_id()<<" target: "<<node_list[edge_list[0].get_target()].get_origin_id()<<endl;
     cout<<"idmap[0.oid]: "<<id_to_index[edge_list[0].get_origin_id()]<<endl;
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
