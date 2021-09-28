@@ -25,7 +25,6 @@ void G_Graph::read_graph(string co_path, string gr_path){
         nodes.pop_back();
     }
 
-    nodes.clear();
     cout<<"\nread nodes done\n";
     cout<<"there are "<<node_list.size()<<" nodes\n";
 
@@ -45,11 +44,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter++ % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        this->edge_list.push_back(sw_edge_adapter(links.back()));
+        G_Edge edge = sw_edge_adapter(links.back());
+        this->edge_list.push_back(edge);
+        this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         links.pop_back();
     }
 
-    links.clear();
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 //		FILE *co_f, *gr_f;
