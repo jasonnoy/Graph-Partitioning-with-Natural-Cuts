@@ -27,6 +27,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 
     nodes.clear();
     cout<<"\nread nodes done\n";
+    cout<<"there are "<<node_list.size()<<" nodes\n";
 
     // read in edges
     cout<<"read edges...\n";
@@ -50,6 +51,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 
     links.clear();
     cout<<"\nread edges done\n";
+    cout<<"there are "<<edge_list.size()<<" edges\n";
 //		FILE *co_f, *gr_f;
 //		fopen_s( &co_f, co_path.c_str(), "r");
 //		check_file( co_f, co_path.c_str() );
