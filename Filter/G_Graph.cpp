@@ -5,7 +5,7 @@
 void G_Graph::read_graph(string co_path, string gr_path){
 
     // read in node
-    cout<<"read in nodes.../n";
+    cout<<"read in nodes...\n";
     std::vector<node_info_t> nodes;
     std::ifstream fs(co_path, std::ios::binary);
 //    if (!fs) {
@@ -16,7 +16,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     fs.read((char *)&count, sizeof(uint32_t));
     nodes.resize(count);
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
+    unsigned int counter = 0;
     while (!nodes.empty()) {
+        double percent = ((double)counter++ / count) * 100;
+        if (percent % 10.0 == 0) {
+            cout<<percent<<"%\n";
+        }
         this->node_list.push_back(sw_node_adapter(nodes.back()));
         nodes.pop_back();
     }
@@ -35,7 +40,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     fs2.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
+    counter = 0;
     while (!links.empty()) {
+        percent = ((double)counter++ / count) * 100;
+        if (percent % 10.0 == 0) {
+            cout<<percent<<"%\n";
+        }
         this->edge_list.push_back(sw_edge_adapter(links.back()));
         nodes.pop_back();
     }
