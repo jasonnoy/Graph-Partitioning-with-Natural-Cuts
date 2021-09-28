@@ -21,7 +21,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         nodes.pop_back();
     }
 
-    delete nodes.clear();
+    nodes.clear();
     cout<<"read nodes done\n";
 
     // read in edges
@@ -1752,7 +1752,7 @@ void G_Graph::convert_n_output( string r_path ){
 //			fprintf_s( node_f, "%u %u: ", anit->get_id(), anit->get_size() );
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<*idmit<<" ";
+                outfile<<(unsigned int)(*idmnit)<<" ";
 //				fprintf_s( node_f, "%u ", *idmnit );
 			}
             outfile<<endl;
