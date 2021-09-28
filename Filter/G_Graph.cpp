@@ -60,6 +60,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     }
     cout<<"edge 100: oid: "<<edge_list[100].get_origin_id()<<" source: "<<node_list[edge_list[100].get_source()].get_origin_id()<<" target: "<<node_list[edge_list[100].get_target()].get_origin_id()<<endl;
     cout<<"idmap[0.oid]: "<<id_to_index[edge_list[100].get_origin_id()]<<endl;
+    cout<<"365356: "<<id_to_index[365356]<<" 269778:"<<id_to_index[269778]<<endl;
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 //    for (int i = 0; i < 100; i++) {
