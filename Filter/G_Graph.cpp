@@ -17,12 +17,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     nodes.resize(count);
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
     unsigned int counter = 0;
-    map<unsigned int, unsigned int> id_to_index;
+    map<NodeID, NodeID> id_to_index;
     while (!nodes.empty()) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        this->node_list.push_back(sw_node_adapter(nodes.back()));
+        this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
         nodes.pop_back();
         id_to_index[this->node_list.back().get_id()] = counter++;
     }
@@ -43,14 +43,15 @@ void G_Graph::read_graph(string co_path, string gr_path){
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
     while (!links.empty()) {
-        if (counter++ % (count / 10) == 0) {
+        if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge = sw_edge_adapter(links.back());
+        G_Edge edge = sw_edge_adapter(links.back(), counter, id_to_index);
 //        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
 //        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
         this->edge_list.push_back(edge);
-        this->node_list[id_to_index[edge.get_source()]].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+        this->node_list[counter].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+        counter++;
         links.pop_back();
     }
 
@@ -133,7 +134,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 			NodeID n = node_stack.back();
 			node_stack.pop_back();
 
-            cout<<"cur node id: "<<this->node_list[n].get_id()<<"adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
+            cout<<"cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
 
 			//map<NodeID, G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
 			vector<G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();

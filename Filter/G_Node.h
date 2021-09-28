@@ -15,7 +15,7 @@ public:
 	~G_Node(){
 	}
 
-	G_Node(NodeID id): nid(id){
+	G_Node(NodeID id, NodeID oid): nid(id), origin_id(oid){
 	}
 
 	//G_Node(NodeID id): nid(id), sz(1){
@@ -31,6 +31,10 @@ public:
 	const NodeID get_id() const{
 		return this->nid;
 	}
+
+    const NodeID get_origin_id() const{
+        return this->origin_id;
+    }
 
 	//Coordinate get_lat(){
 	//	return this->lat;
@@ -63,6 +67,7 @@ public:
 private:
 
 	const NodeID nid;
+    const NodeID origin_id;
 	//map< NodeID, G_Edge* > adj_list;
 	vector<G_Edge*> adj_list;
 	//Coordinate lat;
