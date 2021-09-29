@@ -18,11 +18,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
     unsigned int counter = 0;
     auto node_iter = nodes.begin();
-    for (; node_iter != nodes.end(); iter++) {
+    for (; node_iter != nodes.end(); node_iter++) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        this->node_list.push_back(sw_node_adapter(node_iter, counter));
+        this->node_list.push_back(sw_node_adapter(*node_iter, counter));
         counter++;
     }
 //    while (!nodes.empty()) {
@@ -50,11 +50,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
     auto edge_iter = links.begin();
-    for (; edge_iter != links.end(); iter++) {
+    for (; edge_iter != links.end(); edge_iter++) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge = sw_edge_adapter(edge_iter, counter);
+        G_Edge edge = sw_edge_adapter(*edge_iter, counter);
         this->edge_list.push_back(edge);
         if (edge.get_source() == 0) {
             cout<<"source 0, id: "<<count<<endl;
