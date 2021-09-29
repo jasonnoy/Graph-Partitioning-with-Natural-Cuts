@@ -130,7 +130,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //		fclose( co_f );
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size(), 0);
+    this->sym_id.resize( this->edge_list.size() * 2, 0);
     size_t eid = counter;
     cout<<"counter: "<<counter<<endl;
     for (int i = 0; i < counter; i++) {
