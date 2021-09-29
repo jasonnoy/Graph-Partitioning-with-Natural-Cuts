@@ -69,7 +69,8 @@ void G_Graph::read_graph(string co_path, string gr_path){
         }
         counter++;
     }
-//    links.clear();
+    links.clear();
+    fs2.close();
     cout<<"73: adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 //    while (!links.empty()) {
 //        if (counter % (count / 10) == 0) {
