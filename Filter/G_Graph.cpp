@@ -138,7 +138,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
             cout<<"i: "<<i<<endl;
         }
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
-        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++, eid++) {
+        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
                 continue;
@@ -149,6 +149,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
             if (i>741400){
                 cout<<"size: "<<this->node_list[edge_list[i].get_target()].get_adj_list().size()<<" eid: "<<eid<<endl;
             }
+            eid++;
         }
     }
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
