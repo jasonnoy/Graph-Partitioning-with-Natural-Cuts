@@ -141,16 +141,20 @@ void G_Graph::read_graph(string co_path, string gr_path){
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
-                continue;
+                break;
             }
-            G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
-            this->edge_list.push_back(newEdge);
-            this->sym_id[i] = eid;
-            if (i>741400){
-                cout<<"size: "<<this->node_list[edge_list[i].get_target()].get_adj_list().size()<<" eid: "<<eid<<endl;
-            }
-            eid++;
+//            G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
+//            this->edge_list.push_back(newEdge);
+//            this->sym_id[i] = eid;
+//            if (i>741400){
+//                cout<<"size: "<<this->node_list[edge_list[i].get_target()].get_adj_list().size()<<" eid: "<<eid<<endl;
+//            }
+//            eid++;
         }
+        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid, 0);
+        edge_list.push_back(newEdge);
+        sym_id[i] = eid;
+        eid++;
     }
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
 //    for(; eit != this->edge_list.end(); eit++, eid++ ){
