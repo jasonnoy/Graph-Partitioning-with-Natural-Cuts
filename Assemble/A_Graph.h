@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <list>
 #include <map>
@@ -10,6 +11,7 @@
 #include <deque>
 #include <cmath>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
