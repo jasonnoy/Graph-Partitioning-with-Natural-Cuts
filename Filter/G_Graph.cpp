@@ -152,6 +152,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         edge_list.push_back(newEdge);
         node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
         sym_id[i] = eid;
+        sym_id[eid] = i;
         eid++;
     }
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
@@ -216,9 +217,9 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
                     cout<<"215 ";
 					edge_removed[e2t] = false;
                     cout<<"217 ";
-//					EdgeID e2s = this->sym_edge_id(e2t);
+					EdgeID e2s = this->sym_edge_id(e2t);
                     cout<<"219 ";
-//					edge_removed[e2s] = false;
+					edge_removed[e2s] = false;
                     cout<<"221 ";
 
 					node_stack.push_back( t );
