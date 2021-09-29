@@ -10,6 +10,9 @@ G_Edge sw_edge_adapter( link_info_t linkInfo, EdgeID nid) {
     if (nid == 317855) {
         cout<<"id: "<<nid<<" source: "<<source<<" target: "<<target<<endl;
     }
+    if (target == 0) {
+        cout<<"target0, source id: "<<source<<endl;
+    }
     return edge;
 }
 
