@@ -17,20 +17,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     nodes.resize(count);
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
     unsigned int counter = 0;
-    map<NodeID, NodeID> id_to_index;
     while (!nodes.empty()) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        if (counter<1000){
-            cout<<"oid: "<<nodes.back().sw_node_id<<endl;
-        }
         this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
         nodes.pop_back();
-        if (counter == 100) {
-            cout<<"\n100key: "<< this->node_list.back().get_origin_id()<<endl;
-        }
-        id_to_index[this->node_list.back().get_origin_id()] = counter;
         counter++;
     }
 
@@ -49,17 +41,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
     links.resize(count);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
-    NodeID nullCounter = 0;
     while (!links.empty()) {
-        if ((counter + nullCounter) % (count / 10) == 0) {
-            cout<<(counter + nullCounter) * 100 / count<<"%\r";
+        if (counter % (count / 10) == 0) {
+            cout<<counter * 100 / count<<"%\r";
         }
-        if (!id_to_index.count(links.back().sw_link_id)) {
-            nullCounter++;
-            links.pop_back();
-            continue;
-        }
-        G_Edge edge = sw_edge_adapter(links.back(), counter, id_to_index);
+        G_Edge edge = sw_edge_adapter(links.back(), counter);
 //        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
 //        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
         this->edge_list.push_back(edge);
@@ -67,10 +53,6 @@ void G_Graph::read_graph(string co_path, string gr_path){
         counter++;
         links.pop_back();
     }
-    cout<<nullCounter*100/count<<"% links are outlinks\n";
-    cout<<"edge 100: oid: "<<edge_list[100].get_origin_id()<<" source: "<<node_list[edge_list[100].get_source()].get_origin_id()<<" target: "<<node_list[edge_list[100].get_target()].get_origin_id()<<endl;
-    cout<<"idmap[0.oid]: "<<id_to_index[edge_list[100].get_origin_id()]<<endl;
-    cout<<"365356: "<<id_to_index[365356]<<" 269778:"<<id_to_index[269778]<<endl;
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 //    for (int i = 0; i < 100; i++) {
