@@ -61,6 +61,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
             cout<<"source 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
             cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
             cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
+            cout<<"node 0: id: "<<node_list[0].get_id()<<endl;
         }
         if (edge.get_target()==0) {
             cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
