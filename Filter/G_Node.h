@@ -60,7 +60,7 @@ public:
 	//	return this->adj_list;
 	//}
 
-	vector<G_Edge*> get_adj_list(){
+	vector<G_Edge*> &get_adj_list(){
 		return this->adj_list;
 	}
 
