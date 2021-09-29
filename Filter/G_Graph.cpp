@@ -161,7 +161,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 			node_stack.pop_back();
 
             cout<<"cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
-            cout<<"source: "<<this->node_list[n].get_adj_list()[0]->get_source()<<"target: "<<this->node_list[n].get_adj_list()[0]->get_target();
+            cout<<"edge id: "<<this->node_list[n].get_adj_list()[0]->get_id()<<" source: "<<this->node_list[n].get_adj_list()[0]->get_source()<<"target: "<<this->node_list[n].get_adj_list()[0]->get_target();
 
 			//map<NodeID, G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
 			vector<G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
