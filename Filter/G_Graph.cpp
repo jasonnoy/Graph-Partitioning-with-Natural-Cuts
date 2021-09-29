@@ -143,6 +143,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     for( size_t i = 0; i < this->node_list.size(); i++ )
         this->contract_node_list[i].push_back( i );
     cout<<"initial contraction done\n";
+    cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 }
 
 void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0 ){
