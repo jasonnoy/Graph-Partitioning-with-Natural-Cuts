@@ -134,9 +134,6 @@ void G_Graph::read_graph(string co_path, string gr_path){
     size_t eid = counter;
     cout<<"counter: "<<counter<<endl;
     for (int i = 0; i < counter; i++) {
-        if (i>741400){
-            cout<<"i: "<<i<<endl;
-        }
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
@@ -156,6 +153,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         sym_id[i] = eid;
         eid++;
     }
+    cout<<"eid: "<<eid<<endl;
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
 //    for(; eit != this->edge_list.end(); eit++, eid++ ){
 ////        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
