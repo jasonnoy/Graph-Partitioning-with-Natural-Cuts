@@ -47,7 +47,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 
     fs2.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
-    this->edge_list.reserve(2 * count);
+    this->edge_list.reserve(2 * count + 1);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
     auto edge_iter = links.begin();
