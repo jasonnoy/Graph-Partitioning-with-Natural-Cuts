@@ -150,10 +150,10 @@ void G_Graph::read_graph(string co_path, string gr_path){
         }
         G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid, 0);
         edge_list.push_back(newEdge);
+        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
         sym_id[i] = eid;
         eid++;
     }
-    cout<<"eid: "<<eid<<endl;
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
 //    for(; eit != this->edge_list.end(); eit++, eid++ ){
 ////        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
