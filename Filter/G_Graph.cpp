@@ -60,7 +60,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (edge.get_source()==0) {
             cout<<"source 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
             cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
-            cout<<"adj list[0] id: "<<node_list[0].get_adj_list()[0]->get_id()<<endl;
+            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
         }
         counter++;
     }
@@ -146,6 +146,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 }
 
 void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0 ){
+        cout<<"node[0] adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 
 		vector<bool> node_visited( this->node_list.size(), false );
 		vector<NodeID> node_stack;
@@ -162,7 +163,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 			NodeID n = node_stack.back();
 			node_stack.pop_back();
 
-            cout<<"cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
+            cout<<"n: "<<n<<" cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
             cout<<"edge id: "<<this->node_list[n].get_adj_list()[0]->get_id()<<" source: "<<this->node_list[n].get_adj_list()[0]->get_source()<<"target: "<<this->node_list[n].get_adj_list()[0]->get_target();
 
 			//map<NodeID, G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
