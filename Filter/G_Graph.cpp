@@ -134,11 +134,15 @@ void G_Graph::read_graph(string co_path, string gr_path){
     size_t eid = counter;
     cout<<"counter: "<<counter<<endl;
     for (int i = 0; i < counter; i++) {
-        if (i>741000){
+        if (i>741400){
             cout<<"i: "<<i<<endl;
         }
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++, eid++) {
+            if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
+                this->sym_id[i] = (*sym_edge_iter)->get_id();
+                continue;
+            }
             G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
             this->edge_list.push_back(newEdge);
             this->sym_id[i] = eid;
