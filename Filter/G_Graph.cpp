@@ -133,11 +133,13 @@ void G_Graph::read_graph(string co_path, string gr_path){
     this->sym_id.resize( this->edge_list.size(), 0);
     size_t eid = counter;
     for (int i = 0; i < counter; i++) {
+        cout<<"i: "<<i<<endl;
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++, eid++) {
             G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
             this->edge_list.push_back(newEdge);
             this->sym_id[i] = eid;
+            cout<<"eid: "<<eid<<endl;
         }
     }
 //    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
