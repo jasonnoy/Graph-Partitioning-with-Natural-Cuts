@@ -216,9 +216,9 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
                     cout<<"215 ";
 					edge_removed[e2t] = false;
                     cout<<"217 ";
-					EdgeID e2s = this->sym_edge_id(e2t);
+//					EdgeID e2s = this->sym_edge_id(e2t);
                     cout<<"219 ";
-					edge_removed[e2s] = false;
+//					edge_removed[e2s] = false;
                     cout<<"221 ";
 
 					node_stack.push_back( t );
