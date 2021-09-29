@@ -24,7 +24,6 @@ void contract_tiny_cuts( G_Graph &graph, NodeSize sz_lim ){
 
 	VERBOSE(printf("get DFS tree...");)
 	vector<bool> edge_in_fi( graph.get_edge_list().size(), true );
-    cout<<"the last node id: "<<graph.get_node_list().back().get_id()<<endl;
 	graph.dfs_tree( 0, edge_in_fi, 0);
 	VERBOSE(
 		size_t ten = 0;
