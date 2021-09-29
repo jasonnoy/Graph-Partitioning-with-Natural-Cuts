@@ -206,6 +206,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
                 cout<<i<<endl;
 				//NodeID t = it->second->get_target();
 				NodeID t = (*it)->get_target();
+                cout<<"target: "<<t<<endl;
 				if( !node_visited[t] ){
 
 					//every two related edges should be updated at the same time
