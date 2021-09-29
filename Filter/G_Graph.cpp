@@ -47,7 +47,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 
     fs2.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
-    this->edge_list.reserve(count);
+    this->edge_list.reserve(2 * count);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
     auto edge_iter = links.begin();
@@ -131,20 +131,28 @@ void G_Graph::read_graph(string co_path, string gr_path){
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size(), 0);
-    size_t eid = 0;
-    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
-    for(; eit != this->edge_list.end(); eit++, eid++ ){
-//        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
-        vector<G_Edge*>::const_iterator syeit =
-            this->node_list[eit->get_target()].get_adj_list().begin();
-        for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
-
-            if( (*syeit)->get_target() == eit->get_source() ){
-                this->sym_id[eid] = (*syeit)->get_id();
-                break;
-            }
+    size_t eid = counter;
+    for (int i = 0; i < counter; i++) {
+        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
+        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++, eid++) {
+            G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
+            this->edge_list.push_back(newEdge);
+            this->sym_id[i] = eid;
         }
     }
+//    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
+//    for(; eit != this->edge_list.end(); eit++, eid++ ){
+////        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
+//        vector<G_Edge*>::const_iterator syeit =
+//            this->node_list[eit->get_target()].get_adj_list().begin();
+//        for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
+//
+//            if( (*syeit)->get_target() == eit->get_source() ){
+//                this->sym_id[eid] = (*syeit)->get_id();
+//                break;
+//            }
+//        }
+//    }
     cout<<"fill symmetric edge done\n";
 
     //initial contraction
