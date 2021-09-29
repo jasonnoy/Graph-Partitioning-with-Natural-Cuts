@@ -212,11 +212,16 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 					//every two related edges should be updated at the same time
 					//EdgeID e2t = it->second->get_id();
 					EdgeID e2t = (*it)->get_id();
+                    cout<<"215 ";
 					edge_removed[e2t] = false;
+                    cout<<"217 ";
 					EdgeID e2s = this->sym_edge_id(e2t);
+                    cout<<"219 ";
 					edge_removed[e2s] = false;
+                    cout<<"221 ";
 
 					node_stack.push_back( t );
+                    cout<<"224\n";
 					node_visited[t] = true;
 				}
 			}//end for
