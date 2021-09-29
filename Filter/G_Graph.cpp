@@ -65,11 +65,11 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (edge.get_target()==0) {
             cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
             cout<<"edge list back id: "<<edge_list.back().get_id()<<" source: "<<edge_list.back().get_source()<<endl;
-            cout<<"adj list[0] source id: "<<node_list[edge.get_id()].get_adj_list()[0]->get_source()<<endl;
+            cout<<"adj list[0] target id: "<<node_list[edge_list.back().get_source()].get_adj_list()[0]->get_target()<<endl;
         }
         counter++;
     }
-    links.clear();
+//    links.clear();
     cout<<"73: adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 //    while (!links.empty()) {
 //        if (counter % (count / 10) == 0) {
