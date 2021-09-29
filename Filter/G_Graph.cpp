@@ -69,7 +69,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //        }
         if (counter == 930000) {
             cout<<"node 0: id: "<<node_list[0].get_id()<<"oid: "<<node_list[0].get_origin_id()<<endl;
-            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
+            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()<<endl;
         }
         counter++;
     }
