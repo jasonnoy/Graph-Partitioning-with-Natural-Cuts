@@ -65,6 +65,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         counter++;
     }
     links.clear();
+    cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 //    while (!links.empty()) {
 //        if (counter % (count / 10) == 0) {
 //            cout<<counter * 100 / count<<"%\r";
@@ -117,7 +118,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //		}
 //		fclose( co_f );
 
-    //fill symmetric edge id
+    // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size(), 0);
     size_t eid = 0;
     vector<G_Edge>::const_iterator eit = this->edge_list.begin();
@@ -143,7 +144,6 @@ void G_Graph::read_graph(string co_path, string gr_path){
     for( size_t i = 0; i < this->node_list.size(); i++ )
         this->contract_node_list[i].push_back( i );
     cout<<"initial contraction done\n";
-    cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
 }
 
 void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0 ){
