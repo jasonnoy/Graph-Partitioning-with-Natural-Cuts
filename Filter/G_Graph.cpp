@@ -197,7 +197,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 			NodeID n = node_stack.back();
 			node_stack.pop_back();
 
-            cout<<" cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
+//            cout<<" cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
 //            cout<<"edge id: "<<this->node_list[n].get_adj_list()[0]->get_id()<<" source: "<<this->node_list[n].get_adj_list()[0]->get_source()<<"target: "<<this->node_list[n].get_adj_list()[0]->get_target();
 
 			//map<NodeID, G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
@@ -207,23 +207,16 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
                 cout<<i<<endl;
 				//NodeID t = it->second->get_target();
 				NodeID t = (*it)->get_target();
-                cout<<"target: "<<t<<"visited: "<<node_visited[t]<<endl;
 				if( !node_visited[t] ){
 
 					//every two related edges should be updated at the same time
 					//EdgeID e2t = it->second->get_id();
-                    cout<<"214 ";
 					EdgeID e2t = (*it)->get_id();
-                    cout<<"215 ";
 					edge_removed[e2t] = false;
-                    cout<<"217 ";
 					EdgeID e2s = this->sym_edge_id(e2t);
-                    cout<<"219 ";
 					edge_removed[e2s] = false;
-                    cout<<"221 ";
 
 					node_stack.push_back( t );
-                    cout<<"224\n";
 					node_visited[t] = true;
 				}
 			}//end for
