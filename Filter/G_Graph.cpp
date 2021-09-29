@@ -132,6 +132,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size(), 0);
     size_t eid = counter;
+    cout<<"counter: "<<counter<<endl;
     for (int i = 0; i < counter; i++) {
         if (i>741000){
             cout<<"i: "<<i<<endl;
@@ -141,7 +142,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
             G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
             this->edge_list.push_back(newEdge);
             this->sym_id[i] = eid;
-            if (i>741000){
+            if (i>741400){
                 cout<<"size: "<<this->node_list[edge_list[i].get_target()].get_adj_list().size()<<" eid: "<<eid<<endl;
             }
         }
