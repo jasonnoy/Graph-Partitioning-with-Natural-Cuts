@@ -56,8 +56,8 @@ void G_Graph::read_graph(string co_path, string gr_path){
         }
         G_Edge edge = sw_edge_adapter(*edge_iter, counter);
         this->edge_list.push_back(edge);
-        if (edge.get_source() == 0) {
-            cout<<"source 0, id: "<<count<<endl;
+        if (edge.get_source()==0) {
+            cout<<"source 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
         }
         this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         counter++;
