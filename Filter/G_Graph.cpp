@@ -60,7 +60,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (edge.get_source()==0) {
             cout<<"source 0, id: "<<edge.get_id()<<" source oid: "<<node_list[0].get_origin_id()<<endl;
             cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
-            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()<<endl;
+            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
         }
 //        if (edge.get_target()==0) {
 //            cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
@@ -69,7 +69,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
 //        }
         if (counter == 930000) {
             cout<<"node 0: id: "<<node_list[0].get_id()<<"oid: "<<node_list[0].get_origin_id()<<endl;
-            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()<<endl;
+            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
         }
         counter++;
     }
