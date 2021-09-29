@@ -54,7 +54,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge(*edge_iter.start_node_id, *edge_iter.end_node_id, counter, counter, *edge_iter.sw_link_id);
+        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter, counter, edge_iter->sw_link_id);
         this->edge_list.push_back(edge);
         this->node_list[edge.get_source()].get_adj_list().push_back(&(this->edge_list.back()));
         if (edge.get_source()==0) {
