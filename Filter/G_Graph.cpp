@@ -17,15 +17,23 @@ void G_Graph::read_graph(string co_path, string gr_path){
     nodes.resize(count);
     fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
     unsigned int counter = 0;
-    while (!nodes.empty()) {
+    auto node_iter = nodes.begin();
+    for (; node_iter != nodes.end(); iter++) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
-        nodes.pop_back();
+        this->node_list.push_back(sw_node_adapter(node_iter, counter));
         counter++;
     }
-
+//    while (!nodes.empty()) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
+//        nodes.pop_back();
+//        counter++;
+//    }
+    nodes.clear();
     cout<<"\nread nodes done\n";
     cout<<"there are "<<node_list.size()<<" nodes\n";
 
@@ -41,21 +49,35 @@ void G_Graph::read_graph(string co_path, string gr_path){
     links.resize(count);
     fs2.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
-    while (!links.empty()) {
+    auto edge_iter = links.begin();
+    for (; edge_iter != links.end(); iter++) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge = sw_edge_adapter(links.back(), counter);
-//        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
-//        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
+        G_Edge edge = sw_edge_adapter(edge_iter, counter);
         this->edge_list.push_back(edge);
         if (edge.get_source() == 0) {
             cout<<"source 0, id: "<<count<<endl;
         }
         this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
         counter++;
-        links.pop_back();
     }
+    links.clear();
+//    while (!links.empty()) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        G_Edge edge = sw_edge_adapter(links.back(), counter);
+////        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
+////        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
+//        this->edge_list.push_back(edge);
+//        if (edge.get_source() == 0) {
+//            cout<<"source 0, id: "<<count<<endl;
+//        }
+//        this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
+//        counter++;
+//        links.pop_back();
+//    }
     cout<<"\nread edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 //    for (int i = 0; i < 100; i++) {
