@@ -58,16 +58,16 @@ void G_Graph::read_graph(string co_path, string gr_path){
         G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter, edge_iter->sw_link_id);
         this->edge_list.push_back(edge);
         this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
-        if (edge.get_source()==10000) {
-            cout<<"source 0, id: "<<edge.get_id()<<" source oid: "<<node_list[0].get_origin_id()<<endl;
-            cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
-            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
-        }
-        if (edge.get_target()==10000) {
-            cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
-            cout<<"edge list back id: "<<edge_list.back().get_id()<<" source: "<<edge_list.back().get_source()<<endl;
-            cout<<"adj list[target] target id: "<<node_list[edge_list.back().get_source()].get_adj_list()[0]->get_target()<<endl;
-        }
+//        if (edge.get_source()==10000) {
+//            cout<<"source 0, id: "<<edge.get_id()<<" source oid: "<<node_list[0].get_origin_id()<<endl;
+//            cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
+//            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
+//        }
+//        if (edge.get_target()==10000) {
+//            cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
+//            cout<<"edge list back id: "<<edge_list.back().get_id()<<" source: "<<edge_list.back().get_source()<<endl;
+//            cout<<"adj list[target] target id: "<<node_list[edge_list.back().get_source()].get_adj_list()[0]->get_target()<<endl;
+//        }
 //        if (counter == 930000) {
 //            cout<<"node 0: id: "<<node_list[0].get_id()<<"oid: "<<node_list[0].get_origin_id()<<endl;
 //            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
