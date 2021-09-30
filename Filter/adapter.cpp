@@ -18,8 +18,8 @@ G_Edge sw_edge_adapter( link_info_t linkInfo, EdgeID nid) {
 }
 
 G_Node sw_node_adapter( node_info_t nodeInfo, unsigned int nid) {
-    NodeID oid = nodeInfo.sw_node_id;
-    G_Node node(nid, oid);
+    geo_point_t geo_info = nodeInfo.geo_point;
+    G_Node node(nid, geo_info);
     return node;
 }
 

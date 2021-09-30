@@ -1828,15 +1828,17 @@ void G_Graph::convert_n_output( string r_path ){
 		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
-            outfile<<anit->get_id()<<" "<<anit->get_size()<<": ";
+            outfile<<anit->get_id()<<" "<<anit->get_size()<<":{";
 
 //			fprintf_s( node_f, "%u %u: ", anit->get_id(), anit->get_size() );
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<(unsigned int)(*idmnit)<<" ";
+//                outfile<<(unsigned int)(*idmnit)<<" ";
+                NodeID id = (NodeID)(*idmit);
+                outfile<<"["<<this->node_list[id].get_geo_info().latitude<<","<<this->node_list[id].get_geo_info().longitude<<"],";
 //				fprintf_s( node_f, "%u ", *idmnit );
 			}
-            outfile<<endl;
+            outfile<<"}\n";
 //			fprintf_s( node_f, "\n" );
 		}
         outfile.close();
