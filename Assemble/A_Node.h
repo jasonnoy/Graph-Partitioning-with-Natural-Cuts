@@ -16,12 +16,19 @@ public:
 	~A_Node(){
 	}
 
-	A_Node( NodeID id, NodeSize sz ): nid(id), sz(sz){
+    A_Node( NodeID id, NodeSize sz ): nid(id), sz(sz) {
+    }
+
+	A_Node( NodeID id, NodeSize sz, NodeID oid ): nid(id), sz(sz), sw_id(oid) {
 	}
 
 	const NodeID get_id() const{
 		return this->nid;
 	}
+
+    const NodeID get_oid() const{
+        return this->sw_id;
+    }
 
 	const NodeSize get_size() const{
 		return this->sz;
@@ -36,6 +43,7 @@ private:
 	const NodeID nid;
 	vector<A_Edge*> adj_list;
 	const NodeSize sz;
+    const NodeID sw_id;
 };
 
 

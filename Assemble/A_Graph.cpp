@@ -2,16 +2,21 @@
 
 void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_path, string gr_path){
 
-		FILE *co_f, *gr_f;
-		fopen_s( &co_f, co_path.c_str(), "r");
-		check_file( co_f, co_path.c_str() );
-		fopen_s( &gr_f, gr_path.c_str(), "r");
-		check_file( gr_f, gr_path.c_str() );
+//		FILE *co_f, *gr_f;
+//		fopen_s( &co_f, co_path.c_str(), "r");
+//		check_file( co_f, co_path.c_str() );
+//		fopen_s( &gr_f, gr_path.c_str(), "r");
+//		check_file( gr_f, gr_path.c_str() );
+
+        ifstream infile(co_path);
+        if (!infile.is_open()) {
+            cout<<"Error! Read file failed.\n";
+        }
 
 		//read in node
 		NodeID node_count = 0;
-		if( !feof( co_f ) ){
-			fscanf_s( co_f, "%u\n", &node_count );
+		if( !infile>>node_count ){
+			cout<<"Node file format error.\n";
 		}
 		this->node_list.reserve( node_count );
 		id_map.resize( node_count );
@@ -19,9 +24,10 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		NodeID tid = 0;
 		NodeSize sz = 0;
 		int i = 0;
-		while( !feof(co_f) ){
+		while( !infile.eof() ){
 
-			fscanf_s( co_f, "%u %u:", &tid, &sz );
+            infile>>tid>>sz;
+//			fscanf_s( co_f, "%u %u:", &tid, &sz );
 			//G_Node tnode(tid-1, tlt, tlg);
 			A_Node tnode( tid, sz );
 			this->node_list.push_back( tnode );
@@ -29,31 +35,40 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 			vector<NodeID> contain_id;
 			for( i = 0; i < sz; i++ ){
 				NodeID map_id = 0;
-				fscanf_s( co_f, "%u ", &map_id );
+                infile>>map_id;
+//				fscanf_s( co_f, "%u ", &map_id );
 				contain_id.push_back( map_id );
 			}
 			id_map[tid] = contain_id;
 			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
 		}
-		fclose( co_f );
+        infile.close();
+        infile.clear(ios::goodbit);
+//		fclose( co_f );
 
 		//read in edge
+        infile.open(gr_path);
+        if (!infile.is_open()) {
+            cout<<"gr_path open file error.\n";
+        }
 		NodeID edge_count = 0;
-		if( !feof(gr_f) ){
-			fscanf_s( gr_f, "%u\n", &edge_count );
+		if( !infile.eof() ){
+			infile>>edge_count;
 		}
 		this->edge_list.reserve( edge_count );
 
 		NodeID ts = 0, tt = 0, tw = 0;
 		tid = 0;
-		while( !feof(gr_f) ){
+		while( !infile.eof() ){
 
-			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
+//			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
+            infile>>ts>>tt>>tw;
 			A_Edge e(ts, tt, tw, tid++);
 			this->edge_list.push_back(e);
 			this->node_list[ts].get_adj_list().push_back((A_Edge*)&(this->edge_list.back()));
 		}
-		fclose( co_f );
+        infile.close();
+//		fclose( co_f );
 
 		//fill symmetric edge id
 		this->sym_id.resize( this->edge_list.size(), 0);
