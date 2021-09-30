@@ -1834,8 +1834,7 @@ void G_Graph::convert_n_output( string r_path ){
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
 //                outfile<<(unsigned int)(*idmnit)<<" ";
-                NodeID id = (NodeID)(*idmit);
-                outfile<<"["<<this->node_list[id].get_geo_info().latitude<<","<<this->node_list[id].get_geo_info().longitude<<"],";
+                outfile<<"["<<this->node_list[*idmnit].get_geo_info().latitude<<","<<this->node_list[*idmnit].get_geo_info().longitude<<"],";
 //				fprintf_s( node_f, "%u ", *idmnit );
 			}
             outfile<<"}\n";
