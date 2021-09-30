@@ -1825,6 +1825,7 @@ void G_Graph::convert_n_output( string r_path ){
 //		fprintf_s( node_f, "%u\n", ag->node_list.size() );
         outfile<<ag->node_list.size()<<endl;
 
+
 		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
