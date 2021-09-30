@@ -2,16 +2,21 @@
 
 void R_Graph::read_graph(string co_path, string gr_path){
 
-		FILE *co_f, *gr_f;
-		fopen_s( &co_f, co_path.c_str(), "r");
-		check_file( co_f, co_path.c_str() );
-		fopen_s( &gr_f, gr_path.c_str(), "r");
-		check_file( gr_f, gr_path.c_str() );
+//		FILE *co_f, *gr_f;
+//		fopen_s( &co_f, co_path.c_str(), "r");
+//		check_file( co_f, co_path.c_str() );
+//		fopen_s( &gr_f, gr_path.c_str(), "r");
+//		check_file( gr_f, gr_path.c_str() );
+        ifstream infile;
 
 		//read in node
+        infile.open(co_path);
+        if (!infile.is_open()) {
+            cout<<"open file error!\n";
+        }
 		NodeID node_count = 0;
-		if( !feof( co_f ) ){
-			fscanf_s( co_f, "%u\n", &node_count );
+		if( !infile>>node_count ){
+			cout<<"co file format error.\n";
 		}
 		this->node_list.reserve( node_count );
 
@@ -19,7 +24,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
 		char skip[200];
 		NodeID tid = 0;
 		int tlt = 0, tlg = 0;
-		while( !feof(co_f) ){
+		while( !infile.eof() ){
 
 			//fscanf_s( co_f, "%c", &tc );
 			tc = fgetc( co_f );

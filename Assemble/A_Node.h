@@ -16,7 +16,7 @@ public:
 	~A_Node(){
 	}
 
-    A_Node( NodeID id, NodeSize sz ): nid(id), sz(sz) {
+    A_Node( NodeID id, NodeSize sz ): nid(id), sz(sz), sw_id(0){
     }
 
 	A_Node( NodeID id, NodeSize sz, NodeID oid ): nid(id), sz(sz), sw_id(oid) {
