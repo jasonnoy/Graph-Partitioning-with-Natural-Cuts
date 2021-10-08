@@ -3,7 +3,7 @@
 #include <ctime>
 
 using namespace std;
-clock_t start, end;
+clock_t start;
 
 #include "G_Graph.h"
 
@@ -150,7 +150,7 @@ int main( int argc, char** argv){
 	contract_tiny_cuts( g, sz_lim );
 	contract_natural_cuts( g, sz_lim );
 	convert_and_output( g, result_path );
-    end = clock();
+    clock_t end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;
     cout<<"Filter run time: "<<time<<"s.\n";
 	return 0;
