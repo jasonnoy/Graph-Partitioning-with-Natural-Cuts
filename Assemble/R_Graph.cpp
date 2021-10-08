@@ -74,7 +74,8 @@ void R_Graph::read_graph(string co_path, string gr_path){
 			R_Edge e(ts, tt, tw);
 			this->edge_list.push_back(e);
 		}
-		fclose( gr_f );
+        infile.close();
+//		fclose( gr_f );
 }
 
 void R_Graph::fill_contract_to( vector< vector<NodeID> >& final_result ){
@@ -164,7 +165,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //					this->node_list[s].get_lng(),
 //					this->node_list[t].get_lat(),
 //					this->node_list[t].get_lng() );
-                outfile<<"{"this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<"},{"<<this->node_list[t].get_lat()<<","<<this->node_list[t].get_lng()<<"}\n";
+                outfile<<"{"<<this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<"},{"<<this->node_list[t].get_lat()<<","<<this->node_list[t].get_lng()<<"}\n";
 			}
 		}
         outfile.close();

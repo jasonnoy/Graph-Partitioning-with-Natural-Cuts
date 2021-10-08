@@ -1,7 +1,7 @@
 #include <iostream>
-#include <math.h>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
+#include <string.h>
 using namespace std;
 
 #include "A_Graph.h"
