@@ -13,15 +13,15 @@ public:
 	G_Edge(NodeID s, NodeID t, EdgeID id): source(s), target(t), eid(id) {
 	}
 
-	inline const NodeID get_source() const{
+	const NodeID get_source() const{
 		return this->source;
 	}
 
-	inline const NodeID get_target() const{
+	const NodeID get_target() const{
 		return this->target;
 	}
 
-	inline const EdgeID get_id() const{
+	const EdgeID get_id() const{
 		return this->eid;
 	}
 
