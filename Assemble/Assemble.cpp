@@ -27,6 +27,7 @@ void read_a_graph( A_Graph& a_graph, vector< vector<NodeID> >& id_map, string co
     cout<<"check verbose\n";
 
 	VERBOSE(printf("read in assemble graph...");)
+    cout<<"check verbose2\n";
 	a_graph.read_graph_n_idmap( id_map, co_path, gr_path );
 	VERBOSE(printf("done!\n");)
 	VERBOSE( printf("Asssemble graph has:\n%u nodes and %u edges\n", a_graph.get_node_list().size(), a_graph.get_edge_list().size()); )
