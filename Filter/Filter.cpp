@@ -1,7 +1,9 @@
 #include <iostream>
 #include <math.h>
+#include <ctime>
 
 using namespace std;
+clock_t start, end;
 
 #include "G_Graph.h"
 
@@ -113,6 +115,7 @@ void convert_and_output( G_Graph &graph, string r_path ){
 }
 
 int main( int argc, char** argv){
+    start = clock();
 
 	//srand(40);
 	srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'
@@ -132,30 +135,6 @@ int main( int argc, char** argv){
 	string gr_path( argv[3] );
 	string result_path = ( argv[4] );
 
-	//NodeSize sz_lim = 4;
-	//string co_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/sample.cnode";
-	//string gr_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/sample.cedge";
-	//string result_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/result/sample/";
-	//VERBOSE( printf("Sample: \n"); )
-
-	//NodeSize sz_lim = 4096;
-	//string co_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.NY.cnode";
-	//string gr_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.NY.cedge";
-	//string result_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/result/NY/";
-	//VERBOSE( printf("NY: \n"); )
-
-	//NodeSize sz_lim = 16384;
-	//string co_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.FLA.cnode";
-	//string gr_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.FLA.cedge";
-	//string result_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/result/FLA/";
-	//VERBOSE( printf("FLA: \n"); )
-
-	//NodeSize sz_lim = 1048576;
-	//string co_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.USA.cnode";
-	//string gr_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/data/USA-road-d.USA.cedge";
-	//string result_path = "Y:/paper/NTUADSC/SPV/experiment/Exp/GraphPatition/result/USA/";
-	//VERBOSE( printf("USA: \n"); )
-
 	VERBOSE( printf("Node size limit: %d\n", sz_lim); )
 	
 	G_Graph g;
@@ -171,6 +150,8 @@ int main( int argc, char** argv){
 	contract_tiny_cuts( g, sz_lim );
 	contract_natural_cuts( g, sz_lim );
 	convert_and_output( g, result_path );
-
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Filter run time: "<<time<<"s.\n";
 	return 0;
 }
