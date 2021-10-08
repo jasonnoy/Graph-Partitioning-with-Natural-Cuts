@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <string.h>
+#include <time>
 using namespace std;
 
 #include "A_Graph.h"
@@ -48,6 +49,8 @@ void write_result( R_Graph& g, vector< vector<NodeID> >& result, vector< vector<
 }
 
 int main( int argc, char** argv){
+    clock_t start, end;
+    start = clock();
 
 	srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'
 
@@ -118,5 +121,8 @@ int main( int argc, char** argv){
 	}
 	write_result( r_g, result, id_map, co_path, gr_path, result_path );
 
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Assemble spent time: "<<time<<"s\n";
 	return 0;
 }
