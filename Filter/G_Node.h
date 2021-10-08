@@ -15,9 +15,10 @@ public:
 
 	~G_Node(){
 	}
-
-	G_Node(NodeID id, geo_point_t geo): nid(id), geo_info(geo){
-	}
+    G_Node(NodeID id): nid(id){
+    }
+//	G_Node(NodeID id, geo_point_t geo): nid(id), geo_info(geo){
+//	}
 
 	//G_Node(NodeID id): nid(id), sz(1){
 	//}
@@ -33,9 +34,9 @@ public:
 		return this->nid;
 	}
 
-    const geo_point_t get_geo_info() const{
-        return this->geo_info;
-    }
+//    const geo_point_t get_geo_info() const{
+//        return this->geo_info;
+//    }
 
 	//Coordinate get_lat(){
 	//	return this->lat;
@@ -70,7 +71,7 @@ private:
 	const NodeID nid;
 	//map< NodeID, G_Edge* > adj_list;
 	vector<G_Edge*> adj_list;
-    geo_point_t geo_info;
+//    geo_point_t geo_info;
 	//Coordinate lat;
 	//Coordinate lng;
 	//NodeSize sz;

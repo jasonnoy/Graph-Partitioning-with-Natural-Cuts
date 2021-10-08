@@ -24,7 +24,8 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Node node(counter, node_iter->geo_point);
+        G_Node node(counter);
+//        G_Node node(counter, node_iter->geo_point); // for filter show
         this->node_list.push_back(node);
         counter++;
     }
