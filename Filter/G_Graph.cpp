@@ -21,9 +21,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
     unsigned int counter = 0;
     auto node_iter = nodes.begin();
     for (; node_iter != nodes.end(); node_iter++) {
-//        if (counter % (count / 10) == 0) {
-//            cout<<counter * 100 / count<<"%\r";
-//        }
+        if (counter % (count / 10) == 0) {
+            cout<<counter * 100 / count<<"%\r";
+        }
         G_Node node(counter, node_iter->geo_point);
         this->node_list.push_back(node);
         counter++;
@@ -49,9 +49,9 @@ void G_Graph::read_graph(string co_path, string gr_path){
     counter = 0;
     auto edge_iter = links.begin();
     for (; edge_iter != links.end(); edge_iter++) {
-//        if (counter % (count / 10) == 0) {
-//            cout<<counter * 100 / count<<"%\r";
-//        }
+        if (counter % (count / 10) == 0) {
+            cout<<counter * 100 / count<<"%\r";
+        }
         G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
         this->edge_list.push_back(edge);
         this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
