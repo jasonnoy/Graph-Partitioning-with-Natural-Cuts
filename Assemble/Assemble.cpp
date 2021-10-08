@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <string.h>
-#include <time>
+#include <ctime>
 using namespace std;
 
 #include "A_Graph.h"
