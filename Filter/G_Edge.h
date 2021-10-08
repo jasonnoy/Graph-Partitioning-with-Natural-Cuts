@@ -10,7 +10,7 @@ public:
 	~G_Edge(){
 	}
 
-	G_Edge(NodeID s, NodeID t, EdgeID id, uint64_t oid): source(s), target(t), eid(id), origin_eid(oid){
+	G_Edge(NodeID s, NodeID t, EdgeID id): source(s), target(t), eid(id) {
 	}
 
 	const NodeID get_source() const{
@@ -25,15 +25,11 @@ public:
 		return this->eid;
 	}
 
-    const uint64_t get_origin_id() const{
-        return this->origin_eid;
-    }
 private:
 
 	const NodeID source;
 	const NodeID target;
 	const EdgeID eid;
-    const uint64_t origin_eid;
 };
 
 
