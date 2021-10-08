@@ -39,6 +39,8 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     }
     fs.close();
     fs.clear(ios::goodbit);
+    os.close();
+    os.clear(ios::goodbit);
     nodes.clear();
 
     // preprocess edges
@@ -68,6 +70,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     }
     links.clear();
     fs.close();
+    os.close();
     cout<<"preprocess edges done\n";
 }
 int main(int argc, char** argv){
