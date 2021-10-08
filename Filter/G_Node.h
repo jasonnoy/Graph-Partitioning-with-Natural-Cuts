@@ -7,6 +7,7 @@
 using namespace std;
 
 #include "G_Edge.h"
+#include "../share/sw_basetypes.h"
 
 class G_Node{
 
@@ -15,7 +16,7 @@ public:
 	~G_Node(){
 	}
 
-	G_Node(NodeID id, NodeID oid): nid(id), origin_id(oid){
+	G_Node(NodeID id, geo_point_t geo): nid(id), geo_info(geo){
 	}
 
 	//G_Node(NodeID id): nid(id), sz(1){
@@ -32,8 +33,8 @@ public:
 		return this->nid;
 	}
 
-    const NodeID get_origin_id() const{
-        return this->origin_id;
+    const geo_point_t get_geo_info() const{
+        return this->geo_info;
     }
 
 	//Coordinate get_lat(){
@@ -67,9 +68,9 @@ public:
 private:
 
 	const NodeID nid;
-    const NodeID origin_id;
 	//map< NodeID, G_Edge* > adj_list;
 	vector<G_Edge*> adj_list;
+    geo_point_t geo_info;
 	//Coordinate lat;
 	//Coordinate lng;
 	//NodeSize sz;

@@ -7,10 +7,12 @@ void G_Graph::read_graph(string co_path, string gr_path){
     // read in node
     cout<<"read in nodes...\n";
     std::vector<node_info_t> nodes;
-    std::ifstream fs(co_path, std::ios::binary);
-//    if (!fs) {
-//        return -1;
-//    }
+    std::ifstream fs;
+    fs.open(co_path, std::ios::binary);
+    if (!fs.is_open()) {
+        cout<<"co_file open failed!\n";
+        exit(1);
+    }
 
     uint32_t count;
     fs.read((char *)&count, sizeof(uint32_t));
@@ -22,112 +24,43 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        this->node_list.push_back(sw_node_adapter(*node_iter, counter));
+        G_Node node(counter, node_iter->geo_point);
+        this->node_list.push_back(node);
         counter++;
     }
-//    while (!nodes.empty()) {
-//        if (counter % (count / 10) == 0) {
-//            cout<<counter * 100 / count<<"%\r";
-//        }
-//        this->node_list.push_back(sw_node_adapter(nodes.back(), counter));
-//        nodes.pop_back();
-//        counter++;
-//    }
+    fs.close();
+    fs.clear(ios::goodbit);
     nodes.clear();
-    cout<<"\nread nodes done\n";
+    cout<<"read nodes done\n";
     cout<<"there are "<<node_list.size()<<" nodes\n";
 
     // read in edges
     cout<<"read edges...\n";
     std::vector<link_info_t> links;
-    std::ifstream fs2(gr_path, std::ios::binary);
-//    if (!fs) {
-//        return -1;
-//    }
-
-    fs2.read((char *)&count, sizeof(uint32_t));
+    fs.open(gr_path, std::ios::binary);
+    if (!fs.is_open()) {
+        cout<<"gr_file open failed!\n";
+        exit(1);
+    }
+    fs.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
     this->edge_list.reserve(2 * count + 1);
-    fs2.read((char *)&links[0], sizeof(link_info_t) * count);
+    fs.read((char *)&links[0], sizeof(link_info_t) * count);
     counter = 0;
     auto edge_iter = links.begin();
     for (; edge_iter != links.end(); edge_iter++) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter, edge_iter->sw_link_id);
+        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
         this->edge_list.push_back(edge);
         this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
-        if (edge.get_source()==10000) {
-            cout<<"source 0, id: "<<edge.get_id()<<" source oid: "<<node_list[0].get_origin_id()<<endl;
-            cout<<"edge list back id: "<<edge_list.back().get_id()<<endl;
-            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
-        }
-        if (edge.get_target()==10000) {
-            cout<<"target 0, counter: "<<counter<<" id: "<<edge.get_id()<<endl;
-            cout<<"edge list back id: "<<edge_list.back().get_id()<<" source: "<<edge_list.back().get_source()<<endl;
-            cout<<"adj list[target] target id: "<<node_list[edge_list.back().get_source()].get_adj_list()[0]->get_target()<<endl;
-        }
-//        if (counter == 930000) {
-//            cout<<"node 0: id: "<<node_list[0].get_id()<<"oid: "<<node_list[0].get_origin_id()<<endl;
-//            cout<<"adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<" address: "<<&node_list[0].get_adj_list()[0]<<endl;
-//        }
         counter++;
     }
     links.clear();
-    fs2.close();
-//    cout<<"73: adj list[0] target id: "<<node_list[0].get_adj_list()[0]->get_target()<<endl;
-//    while (!links.empty()) {
-//        if (counter % (count / 10) == 0) {
-//            cout<<counter * 100 / count<<"%\r";
-//        }
-//        G_Edge edge = sw_edge_adapter(links.back(), counter);
-////        cout<<"edge:"<<edge.get_id()<<" source: "<<edge.get_source()<<endl;
-////        cout<<"adj size of node: "<<node_list[edge.get_source()].get_adj_list().size()<<endl;
-//        this->edge_list.push_back(edge);
-//        if (edge.get_source() == 0) {
-//            cout<<"source 0, id: "<<count<<endl;
-//        }
-//        this->node_list[edge.get_source()].get_adj_list().push_back((G_Edge*) &(this->edge_list.back()));
-//        counter++;
-//        links.pop_back();
-//    }
-    cout<<"\nread edges done\n";
+    fs.close();
+    cout<<"read edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
-//    for (int i = 0; i < 100; i++) {
-//        cout<<id_to_index[node_list[i].get_origin_id()]<<endl;
-//    }
-//		FILE *co_f, *gr_f;
-//		fopen_s( &co_f, co_path.c_str(), "r");
-//		check_file( co_f, co_path.c_str() );
-//		fopen_s( &gr_f, gr_path.c_str(), "r");
-//		check_file( gr_f, gr_path.c_str() );
-//
-//		//read in node
-//		NodeID node_count = 0;
-//		if( !feof( co_f ) ){
-//			fscanf_s( co_f, "%u\n", &node_count );
-//		}
-//		this->node_list.reserve( node_count );
-//
-//		char tc = 0;
-//		char skip[200];
-//		NodeID tid = 0;
-//		int tlt = 0, tlg = 0;
-//		while( !feof(co_f) ){
-//
-//			//fscanf_s( co_f, "%c", &tc );
-//			tc = fgetc( co_f );
-//			if( tc != 'v' ){
-//				fgets( skip, 200, co_f );
-//				continue;
-//			}
-//			fscanf_s( co_f, "%u %d %d\n", &tid, &tlg, &tlt );
-//			//G_Node tnode(tid-1, tlt, tlg);
-//			G_Node tnode(tid-1);
-//			this->node_list.push_back( tnode );
-//		}
-//		fclose( co_f );
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size() * 2, 0);
@@ -140,34 +73,14 @@ void G_Graph::read_graph(string co_path, string gr_path){
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
                 break;
             }
-//            G_Edge newEdge((*sym_edge_iter)->get_target(), (*sym_edge_iter)->get_source(), eid, 0);
-//            this->edge_list.push_back(newEdge);
-//            this->sym_id[i] = eid;
-//            if (i>741400){
-//                cout<<"size: "<<this->node_list[edge_list[i].get_target()].get_adj_list().size()<<" eid: "<<eid<<endl;
-//            }
-//            eid++;
         }
-        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid, 0);
+        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
         edge_list.push_back(newEdge);
         node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
         sym_id[i] = eid;
         sym_id[eid] = i;
         eid++;
     }
-//    vector<G_Edge>::const_iterator eit = this->edge_list.begin();
-//    for(; eit != this->edge_list.end(); eit++, eid++ ){
-////        cout<<"cur adj size: "<<node_list[eit->get_target()].get_adj_list().size()<<endl;
-//        vector<G_Edge*>::const_iterator syeit =
-//            this->node_list[eit->get_target()].get_adj_list().begin();
-//        for(; syeit != this->node_list[eit->get_target()].get_adj_list().end(); syeit++ ){
-//
-//            if( (*syeit)->get_target() == eit->get_source() ){
-//                this->sym_id[eid] = (*syeit)->get_id();
-//                break;
-//            }
-//        }
-//    }
     cout<<"fill symmetric edge done\n";
 
     //initial contraction
@@ -197,11 +110,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 			NodeID n = node_stack.back();
 			node_stack.pop_back();
 
-//            cout<<" cur node id: "<<this->node_list[n].get_id()<<" adj size:"<<this->node_list[n].get_adj_list().size()<<endl;
-//            cout<<"edge id: "<<this->node_list[n].get_adj_list()[0]->get_id()<<" source: "<<this->node_list[n].get_adj_list()[0]->get_source()<<"target: "<<this->node_list[n].get_adj_list()[0]->get_target();
-
-			//map<NodeID, G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
-			vector<G_Edge*>::const_iterator it = this->node_list[n].get_adj_list().begin();
+			auto it = this->node_list[n].get_adj_list().begin();
             int i = 0;
 			for(; it != this->node_list[n].get_adj_list().end(); it++){
 				//NodeID t = it->second->get_target();
@@ -362,181 +271,6 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 		}//end for all edge classes
 		return;
 }
-
-//void G_Graph::fill_b_bits( vector<bool>& edge_removed, 
-//	vector< vector<bool> >& b_bit_list, unsigned int b ){
-//
-//		/*fill initial edges not in tree*/
-//
-//		////mt19937 eng;
-//		////uniform_int<int> unif(0,RANDOM_LEN);
-//		//Release
-//		//srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'
-//		//Debug
-//		srand(40); //!!!!!!!Remmber to change when release!!!!!!!!!!!!!!!
-//		int random = 0;
-//		int middle = RANDOM_LEN/2;
-//
-//		vector<bool> edge_prsd( this->get_edge_list().size(), false );
-//		vector<bool>::const_iterator eit = edge_removed.begin();
-//		vector<bool>::iterator b_it, syb_it;
-//		EdgeID b_id = 0;
-//		for(; eit != edge_removed.end(); eit++, b_id++ ){
-//
-//			if( *eit && !edge_prsd[b_id] ){
-//
-//				b_it = b_bit_list[b_id].begin();
-//				syb_it = b_bit_list[this->sym_edge_id(b_id)].begin();
-//				for(; b_it - b_bit_list[b_id].begin() < b; b_it++, syb_it++ ){
-//
-//					random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1)); //rand [0,1000)
-//					if( random <= middle ){
-//						*b_it = true;
-//						*syb_it = true;
-//					}
-//				}
-//				edge_prsd[b_id] = true;
-//				edge_prsd[this->sym_edge_id(b_id)] = true;
-//			}
-//		}
-//		//for( size_t i = 0 ; i < b; i++ ){
-//
-//		//	size_t ep = 0;
-//		//	vector<bool>::const_iterator eit = edge_removed.begin();
-//		//	////mt19937 eng;
-//		//	////uniform_int<int> unif(0,RANDOM_LEN);
-//		//	//srand((unsigned int)time(NULL));
-//		//	for(; eit != edge_removed.end(); eit++ ){
-//		//		
-//		//		if( *eit ){ //if edge removed (in fi)
-//		//			//random = unif(eng);
-//		//			random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1)); //rand [0,1000)
-//		//			if( random <= middle )
-//		//				b_bit_list[ep][i] = true;
-//		//		}
-//		//		ep++;
-//		//	}
-//		//}
-//		////randomly make symetric edges contains same bits
-//		//for(size_t ep = 0; ep < this->get_edge_list().size(); ep++){
-//
-//		//	if( edge_removed[ep] && !edge_prsd[ep] ){
-//		//		random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1)); //rand [0,1000)
-//		//		if( random <= middle ){
-//		//			b_bit_list[this->sym_edge_id(ep)].assign(
-//		//				b_bit_list[ep].begin()
-//		//				,b_bit_list[ep].end());
-//		//		}
-//		//		else{
-//		//			b_bit_list[ep].assign(
-//		//				b_bit_list[this->sym_edge_id(ep)].begin()
-//		//				,b_bit_list[this->sym_edge_id(ep)].end());
-//		//		}
-//		//		edge_prsd[ep] = true;
-//		//		edge_prsd[this->sym_edge_id(ep)] = true;
-//		//	}
-//		//}
-//
-//		/*fill all edges in tree*/
-//
-//		//count every node remain edges
-//		vector<size_t> node_rem_edge( this->get_node_list().size() );
-//		vector< set<NodeID> > degree_node;
-//		vector<G_Node>::iterator nit = this->get_node_list().begin();
-//		vector<size_t>::iterator cn_it = node_rem_edge.begin();
-//		for(; nit != this->get_node_list().end(); nit++, cn_it++ ){
-//
-//			size_t remain_edge_count = nit->get_adj_list().size();
-//			//map<NodeID, G_Edge*>::iterator eit = nit->get_adj_list().begin();
-//			vector<G_Edge*>::iterator eit = nit->get_adj_list().begin();
-//			for(; eit != nit->get_adj_list().end(); eit++){
-//
-//				//if( edge_removed[eit->second->get_id()] )
-//				if( edge_removed[(*eit)->get_id()] )
-//					remain_edge_count--;
-//			}
-//			*cn_it = remain_edge_count;
-//			if( remain_edge_count + 1 > degree_node.size() )
-//				degree_node.resize( remain_edge_count + 1 );
-//			if( remain_edge_count )
-//				degree_node[remain_edge_count].insert( nit->get_id() );
-//		}
-//
-//		while( true ){
-//
-//			//no leaf edge, stop
-//			if( degree_node[1].empty() )
-//				break;
-//			//find a leaf node
-//			nit = this->node_list.begin() + (*degree_node[1].begin());
-//			degree_node[1].erase( degree_node[1].begin() );
-//
-//			//find a leaf node
-//			//nit = this->get_node_list().begin();
-//			//cn_it = node_rem_edge.begin();
-//			//for(; cn_it != node_rem_edge.end(); cn_it++, nit++){
-//
-//			//	if( 1 ==  *cn_it )//1 == remain_edge_count
-//			//		break; //nit points to a leaf node
-//			//}
-//			//no leaf edge, stop
-//			//if( nit == this->get_node_list().end() )
-//			//	break;
-//
-//			//fill the leaf edge -- I
-//			EdgeID eid = 0;
-//			//map<NodeID, G_Edge*>::iterator eit = nit->get_adj_list().begin();
-//			vector<G_Edge*>::iterator eit = nit->get_adj_list().begin();
-//			while( eit != nit->get_adj_list().end() ){
-//				//if( !edge_removed[eit->second->get_id()] ){
-//				//	eid = eit->second->get_id(); //get the leaf edge id
-//				//	break;
-//				//}
-//				if( !edge_removed[(*eit)->get_id()] ){
-//					eid = (*eit)->get_id(); //get the leaf edge id
-//					break;
-//				}
-//				++eit;
-//			}
-//
-//			//remove the leaf node
-//			edge_removed[eid] = true;
-//			edge_removed[this->sym_edge_id(eid)] = true;
-//			//node_rem_edge[eit->second->get_source()]--;
-//			//node_rem_edge[eit->second->get_target()]--;
-//			/*size_t sd = 0;
-//			sd = node_rem_edge[(*eit)->get_source()];
-//			degree_node[sd].erase( degree_node[sd].find((*eit)->get_source()) );
-//			node_rem_edge[(*eit)->get_source()]--;
-//			if( node_rem_edge[(*eit)->get_source()] )
-//				degree_node[node_rem_edge[(*eit)->get_source()]].insert((*eit)->get_source());*/
-//			size_t td = 0;
-//			td = node_rem_edge[(*eit)->get_target()];
-//			degree_node[td].erase( degree_node[td].find((*eit)->get_target()) );
-//			node_rem_edge[(*eit)->get_target()]--;
-//			if( node_rem_edge[(*eit)->get_target()] )
-//				degree_node[node_rem_edge[(*eit)->get_target()]].insert((*eit)->get_target());
-//
-//			//fill the leaf edge -- II
-//			eit = nit->get_adj_list().begin();
-//			for(; eit != nit->get_adj_list().end(); eit++){
-//
-//				//if( eit->second->get_id() == eid )
-//				if( (*eit)->get_id() == eid )
-//					continue;
-//				for(size_t i = 0; i < b; i++){
-//					b_bit_list[eid][i] = b_bit_list[eid][i] ^ b_bit_list[(*eit)->get_id()][i];
-//						//^ b_bit_list[eit->second->get_id()][i]);
-//				}
-//
-//				b_bit_list[this->sym_edge_id(eid)].assign( b_bit_list[eid].begin(),
-//					b_bit_list[eid].end() );
-//			}
-//		}//end while
-//
-//		//all edges have b-bit
-//		return;
-//}
 
 void G_Graph::fill_b_bits( vector<bool>& edge_removed, 
 	vector< Bits >& b_bits, unsigned int b ){
@@ -1606,107 +1340,6 @@ void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 		return;
 }
 
-/*void G_Graph::convert( A_Graph* ag, vector< vector<NodeID> >& id_map ){
-		
-		//map: old id (contracted node id) to new id
-		map<NodeID, NodeID> old_to_new;
-		NodeID new_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
-
-			if( this->contract_node_list[i].empty() )
-				continue;
-			old_to_new[i] = new_id++;
-		}
-
-		//node
-		ag->node_list.reserve( new_id );
-		id_map.resize( new_id );
-		NodeID s_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
-
-			if( this->contract_node_list[i].empty() )
-				continue;
-			//all internal node size is 1
-			A_Node n( s_id, this->contract_node_list[i].size() );
-			ag->node_list.push_back( n );
-			id_map[s_id].assign( 
-				this->contract_node_list[i].begin(),
-				this->contract_node_list[i].end() );
-			s_id++;
-		}
-
-		//edge
-		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
-		ag->sym_id.resize( this->edge_list.size(), 0 );
-
-		map<NodeID, EdgeWeight> accumulate_wet;
-		s_id = 0;
-		NodeID t_id = 0;
-		EdgeID e_id = 0;
-		NodeID nt_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
-
-			if( this->contract_node_list[i].empty() )
-				continue;
-			accumulate_wet.clear();
-
-			vector<NodeID>::const_iterator cnit = this->contract_node_list[i].begin();
-			for(; cnit != this->contract_node_list[i].end(); cnit++){
-
-				vector<G_Edge*>::const_iterator eit =
-					this->node_list[ *cnit ].get_adj_list().begin();
-				for(; eit != this->node_list[ *cnit ].get_adj_list().end(); eit++){
-
-					t_id = this->contract_to[ (*eit)->get_target() ];
-					if( t_id == i )
-						continue;
-
-					nt_id = old_to_new[t_id];
-					if( nt_id < s_id )
-						continue;
-
-					if( accumulate_wet.count( nt_id ) )
-						accumulate_wet[nt_id]++;
-					else
-						accumulate_wet[nt_id] = 1;
-				}//for all edges
-			}//for all contained nodes
-
-			//make new nodes and incident edges
-			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
-			for(; neit != accumulate_wet.end(); neit++){
-
-				A_Edge e( s_id, neit->first, neit->second, e_id );
-				ag->sym_id[e_id] = e_id + 1;
-				e_id++;
-
-				A_Edge sym_e( neit->first,s_id, neit->second, e_id );
-				ag->sym_id[e_id] = e_id - 1;
-				e_id++;
-
-				ag->edge_list.push_back(e);
-				ag->node_list[s_id].get_adj_list().push_back((A_Edge*)&(ag->edge_list.back()));
-				ag->edge_list.push_back(sym_e);
-				ag->node_list[neit->first].get_adj_list().push_back((A_Edge*)&(ag->edge_list.back()));
-			}
-			//next node
-			s_id++;
-		}
-
-		ag->sym_id.resize( e_id );
-		//ag->edge_list.resize( e_id );
-
-		//intial contraction
-		ag->contract_to.resize( new_id );
-		for( size_t i = 0; i < new_id; i++ )
-			ag->contract_to[i] = i;
-		ag->contract_node_list.resize( new_id );
-		for( size_t i = 0; i < new_id; i++ )
-			ag->contract_node_list[i].push_back( i );
-
-		return;
-}*/
-
 void G_Graph::convert_n_output( string r_path ){
 		
 		A_Graph * ag;
@@ -1811,7 +1444,6 @@ void G_Graph::convert_n_output( string r_path ){
 			ag->contract_node_list[i].push_back( i );
 
 		//convert done, start writing
-//		FILE *node_f, *edge_f;
 		string node_n = "anode.txt";
 		string edge_n = "aedge.txt";
 
@@ -1821,47 +1453,40 @@ void G_Graph::convert_n_output( string r_path ){
 		//write node and id map
         ofstream outfile;
 		outfile.open(node_n);
+        if (!outfile.is_open()) {
+            cout<<"open node outfile failed!\n";
+            exit(1);
+        }
 
-//		fprintf_s( node_f, "%u\n", ag->node_list.size() );
         outfile<<ag->node_list.size()<<endl;
 
 		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
-            outfile<<anit->get_id()<<" "<<anit->get_size()<<": ";
+            outfile<<anit->get_id()<<" "<<anit->get_size()<<":{";
 
-//			fprintf_s( node_f, "%u %u: ", anit->get_id(), anit->get_size() );
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<(unsigned int)(*idmnit)<<" ";
-//				fprintf_s( node_f, "%u ", *idmnit );
+                outfile<<"["<<this->node_list[*idmnit].get_geo_info().latitude<<","<<this->node_list[*idmnit].get_geo_info().longitude<<"],";
 			}
-            outfile<<endl;
-//			fprintf_s( node_f, "\n" );
+            outfile<<"}\n";
 		}
         outfile.close();
         outfile.clear(ios::goodbit);
 
-//		fflush( node_f );
-//		fclose( node_f );
-
 		//write edge
         outfile.open(edge_n);
-//		fopen_s( &edge_f, edge_n.c_str(), "w" );
-//		check_file( edge_f, edge_n.c_str() );
+        if (!outfile.is_open()) {
+            cout<<"open edge outfile failed!\n";
+            exit(1);
+        }
 
         outfile<<ag->edge_list.size()<<endl;
-//		fprintf_s( edge_f, "%u\n", ag->edge_list.size() );
 
 		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
 		for(; aeit != ag->edge_list.end(); aeit++){
-
-//			fprintf_s( edge_f, "%u %u %u\n", aeit->get_source(),
-//				aeit->get_target(), aeit->get_weight() );
             outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
 		}
-//		fflush( edge_f );
-//		fclose( edge_f );
         outfile.close();
 
 		delete ag;
