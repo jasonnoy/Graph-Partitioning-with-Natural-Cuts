@@ -116,6 +116,7 @@ int main( int argc, char** argv){
 				a_g.use_combine = true;
 		}
 
+        cout<<"Before read\n";
 		read_a_graph( a_g, id_map, a_co_path, a_gr_path );
 		multistart_and_combination( a_g, result, sz_lim );
 	}
