@@ -24,6 +24,7 @@ void local_search( A_Graph& a_graph ,vector< vector<NodeID> >& result, NodeSize 
 }
 
 void read_a_graph( A_Graph& a_graph, vector< vector<NodeID> >& id_map, string co_path, string gr_path ){
+    cout<<"check verbose\n";
 
 	VERBOSE(printf("read in assemble graph...");)
 	a_graph.read_graph_n_idmap( id_map, co_path, gr_path );
