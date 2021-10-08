@@ -57,7 +57,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
 //		}
 		this->edge_list.reserve( edge_count );
 
-		NodeID ts = 0, tt = 0, tw = 1; // All edges weight = 1 by default
+		NodeID ts = 0, tt = 0;
 		tid = 0;
 		while( !infile.eof() ){
 
@@ -71,7 +71,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
             infile>>ts>>tt;
             // use predefined weight
 //			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
-			R_Edge e(ts, tt, tw);
+			R_Edge e(ts, tt);
 			this->edge_list.push_back(e);
 		}
         infile.close();
