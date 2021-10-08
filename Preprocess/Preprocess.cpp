@@ -12,7 +12,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     gr_out_path.insert( gr_out_path.begin(), out_path.begin(), out_path.end() );
     vector<node_info_t> nodes;
     ifstream fs;
-    fs.open(co_out_path, ios::binary);
+    fs.open(co_path, ios::binary);
     if (!fs.is_open()) {
         cout<<"co_file open failed!\n";
         exit(1);
@@ -44,7 +44,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     // preprocess edges
     cout<<"preprocess edges...\n";
     std::vector<link_info_t> links;
-    fs.open(gr_path, ios::binary);
+    fs.open(gr_graph, ios::binary);
     if (!fs.is_open()) {
         cout<<"gr_file open failed!\n";
         exit(1);
