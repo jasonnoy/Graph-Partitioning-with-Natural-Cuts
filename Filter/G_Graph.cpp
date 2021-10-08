@@ -24,7 +24,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
-        G_Node node(counter, *node_iter->geo_point);
+        G_Node node(counter, node_iter->geo_point);
         this->node_list.push_back(node);
         counter++;
     }
@@ -74,7 +74,7 @@ void G_Graph::read_graph(string co_path, string gr_path){
                 break;
             }
         }
-        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid, 0);
+        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
         edge_list.push_back(newEdge);
         node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
         sym_id[i] = eid;
