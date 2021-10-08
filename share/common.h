@@ -17,7 +17,7 @@ typedef unsigned int NodeID ;
 typedef double Coordinate;
 typedef unsigned int NodeSize;
 //typedef size_t NodeSize;
-#define REALLATLNG 1000000.0
+#define REALLATLNG 100000.0
 
 //edge
 typedef unsigned int EdgeID;

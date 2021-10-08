@@ -65,7 +65,13 @@ void preprocess(string co_path, string gr_graph, string out_path) {
         if (counter % (count / 10) == 0) {
             cout<<counter * 100 / count<<"%\r";
         }
+        // using default weight=1;
         os<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<endl;
+        os<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<endl;
+
+        // use predefined weight
+//        os<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<endl;
+//        os<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<endl; // use predefined weight
         counter++;
     }
     links.clear();
