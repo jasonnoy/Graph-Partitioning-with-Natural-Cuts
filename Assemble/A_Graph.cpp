@@ -112,14 +112,10 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		vector<Logic_Edge>::iterator leit;
 		//size_t min_pos = 0;
 		//min_e.score = numeric_limits<double>::max();
-        int i = 0;
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
 		logic_edges.reserve( 10 * this->edge_list.size() );
         cout<<"logic size: "<<(10 * this->edge_list.size())<<endl;
-		for(; eit != this->edge_list.end(); eit++, i++){
-            if (i>70000) {
-                cout<<i<<"\n";
-            }
+		for(; eit != this->edge_list.end(); eit++){
 			s = this->contract_to[eit->get_source()];
 			t = this->contract_to[eit->get_target()];
 			Logic_Edge le(s, t, eit->get_weight());
@@ -145,10 +141,12 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		//end initial
 
 		NodeID new_id = 0;
+        int i = 0;
 		map<NodeID, EdgeWeight> accumulate_wet;
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( !logic_edges.empty() ){
+            cout<<"i: "<<i<<endl;
 
 			min_e = logic_edges.front();
 
@@ -237,7 +235,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					}
 
 			}//end if contract
-
+            i++;
 		}//end while
         cout<<"Initialize heap done.\n";
 		this->del_cnt_node.assign( available_new_id.begin(), available_new_id.end() );
