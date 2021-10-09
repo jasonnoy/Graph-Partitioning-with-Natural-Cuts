@@ -66,15 +66,15 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
             infile>>ts>>tt>>tw;
             cout<<tid*100/edge_count<<"%\r";
-			A_Edge e(ts, tt, tw, tid++);
+			A_Edge e(ts, tt, tw, tid);
 			this->edge_list.push_back(e);
 			this->node_list[ts].get_adj_list().push_back(&edge_list.back());
+            tid++;
 		}
         infile.close();
 //		fclose( co_f );
         cout<<tid<<" edges\n";
         cout<<"Read in edge success!\n";
-
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
@@ -141,24 +141,20 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		//end initial
 
 		NodeID new_id = 0;
-        int i = 0;
 		map<NodeID, EdgeWeight> accumulate_wet;
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( !logic_edges.empty() ){
-            cout<<"i: "<<i<<endl;
-
+            cout<<".";
 			min_e = logic_edges.front();
 
 			std::pop_heap( logic_edges.begin(), logic_edges.end() );
 			logic_edges.pop_back();
-            cout<<"155\n";
 
 			logic_edge_counter[min_e.source]--;
 			logic_edge_counter[min_e.target]--;
 
 			//recycle resources
-            cout<<"161\n";
 			if( logic_edge_counter[min_e.source] == 0 ){
 				logic_edge_counter.erase( min_e.source );
 				if( node_deleted.count( min_e.source ) )
@@ -169,7 +165,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 				if( node_deleted.count( min_e.target ) )
 					available_new_id.push_back( min_e.target );
 			}
-            cout<<"172\n";
 
 			//if deleted
 			if( node_deleted.count( min_e.source ) || node_deleted.count( min_e.target ) )
@@ -200,10 +195,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					node_deleted.erase( new_id ); //it is ensured that new_id is not in heap
 
 					nit = this->contract_node_list[new_id].begin();
-                    cout<<"203\n";
-                    int i = 0;
-					for(; nit != this->contract_node_list[new_id].end(); nit++, i++){
-                        cout<<"i: "<<i<<endl;
+					for(; nit != this->contract_node_list[new_id].end(); nit++){
 						vector<A_Edge*>::const_iterator reit =
 							this->node_list[*nit].get_adj_list().begin();
 						for(; reit != this->node_list[*nit].get_adj_list().end(); reit++){
@@ -219,12 +211,10 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 							}
 						}
 					}//end for
-                    cout<<"221\n";
 					if( logic_edge_counter.count(new_id) )
 						logic_edge_counter[new_id] += accumulate_wet.size();
 					else
 						logic_edge_counter[new_id] = accumulate_wet.size();
-                    cout<<"226\n";
 					map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
 					for(; nleit != accumulate_wet.end(); nleit++){
 
@@ -241,9 +231,8 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					}
 
 			}//end if contract
-            i++;
 		}//end while
-        cout<<"Initialize heap done.\n";
+        cout<<"\nInitialize heap done.\n";
 		this->del_cnt_node.assign( available_new_id.begin(), available_new_id.end() );
 		return;
 }
