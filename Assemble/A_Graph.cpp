@@ -98,7 +98,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 }
 
 void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
-		
+		cout<<"Initializing logic edges...\n";
 		//initialize the logic edge structure
 		vector<Logic_Edge> logic_edges;
 		map<NodeID, size_t> logic_edge_counter;
@@ -134,8 +134,10 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 			//sym edge
 			eit++;
 		}
+        cout<<"Initialize logic edge done.\n";
 		
 		//initial heap
+        cout<<"Initializing heap...\n";
 		std::make_heap( logic_edges.begin(), logic_edges.end() ); // !!默认是最大堆!!这里貌似有问题
 		//end initial
 
@@ -234,9 +236,8 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 			}//end if contract
 
 		}//end while
-
+        cout<<"Initialize heap done.\n";
 		this->del_cnt_node.assign( available_new_id.begin(), available_new_id.end() );
-
 		return;
 }
 

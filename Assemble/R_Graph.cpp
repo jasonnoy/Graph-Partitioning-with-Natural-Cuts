@@ -18,8 +18,8 @@ void R_Graph::read_graph(string co_path, string gr_path){
 		infile>>node_count;
 		this->node_list.reserve( node_count );
 
-		char tc = 0;
-		char skip[200];
+//		char tc = 0;
+//		char skip[200];
 		NodeID tid = 0;
 		int tlt = 0, tlg = 0;
 		while( !infile.eof() ){
