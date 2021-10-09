@@ -135,7 +135,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //					this->node_list[*nit].get_lng() );
                 outfile<<(*nit)<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<";";
 			}
-            cout<<endl;
+            outfile<<endl;
 		}
 //		outfile<<"\n============================\n";
 		outfile.close();
