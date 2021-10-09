@@ -111,11 +111,9 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		vector<Logic_Edge>::iterator leit;
 		//size_t min_pos = 0;
 		//min_e.score = numeric_limits<double>::max();
-        int i = 0;
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
-		logic_edges.reserve( 10 * this->edge_list.size() );
-		for(; eit != this->edge_list.end(); eit++, i++){
-            cout<<"i: "<<i<<endl;
+		logic_edges.reserve( 100 * this->edge_list.size() );
+		for(; eit != this->edge_list.end(); eit++){
 			s = this->contract_to[eit->get_source()];
 			t = this->contract_to[eit->get_target()];
 			Logic_Edge le(s, t, eit->get_weight());
