@@ -33,7 +33,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
             infile>>tid>>tlg>>tlt;
 //			fscanf_s( co_f, "%u %d %d\n", &tid, &tlg, &tlt );
 			//G_Node tnode(tid-1, tlt, tlg);
-			R_Node tnode(tlt/REALLATLNG, tlg/REALLATLNG);
+			R_Node tnode(tlt, tlg);
 			this->node_list.push_back( tnode );
 		}
         infile.close();
@@ -133,7 +133,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //				fprintf_s( fpcl, "%u %lf, %lf\n", (*nit)+1,
 //					this->node_list[*nit].get_lat(),
 //					this->node_list[*nit].get_lng() );
-                outfile<<(*nit)<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<";";
+                outfile<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<";";
 			}
             outfile<<endl;
 		}
