@@ -117,7 +117,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
         cout<<"logic size: "<<10 * this->edge_list.size();
 		for(; eit != this->edge_list.end(); eit++, i++){
             if (i>70000) {
-                cout<<i<<"\r";
+                cout<<i<<"\n";
             }
 			s = this->contract_to[eit->get_source()];
 			t = this->contract_to[eit->get_target()];
