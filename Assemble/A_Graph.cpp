@@ -9,7 +9,9 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //		check_file( gr_f, gr_path.c_str() );
         cout<<"Reading files...\n";
         cout<<"Reading in node...\n";
-        ifstream infile(co_path);
+        cout<<"co_path: "<<co_path<<endl;
+        ifstream infile;
+        infile.open(co_path);
         if (!infile.is_open()) {
             cout<<"Error! Read file failed.\n";
         }
