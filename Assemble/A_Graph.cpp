@@ -17,9 +17,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
         }
 		//read in node
 		NodeID node_count;
-		if( !infile>>node_count ){
-			cout<<"Node file format error.\n";
-		}
+		infile>>node_count;
         cout<<node_count<<" lines in node file.\n";
 		this->node_list.reserve( node_count );
 		id_map.resize( node_count );
