@@ -72,6 +72,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		}
         infile.close();
 //		fclose( co_f );
+        cout<<tid<<" edges\n";
         cout<<"Read in edge success!\n";
 
 		//fill symmetric edge id
