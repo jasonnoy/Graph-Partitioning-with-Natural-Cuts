@@ -201,8 +201,9 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 
 					nit = this->contract_node_list[new_id].begin();
                     cout<<"203\n";
-					for(; nit != this->contract_node_list[new_id].end(); nit++){
-
+                    int i = 0;
+					for(; nit != this->contract_node_list[new_id].end(); nit++, i++){
+                        cout<<"i: "<<i<<endl;
 						vector<A_Edge*>::const_iterator reit =
 							this->node_list[*nit].get_adj_list().begin();
 						for(; reit != this->node_list[*nit].get_adj_list().end(); reit++){
