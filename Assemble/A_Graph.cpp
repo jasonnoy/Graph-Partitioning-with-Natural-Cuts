@@ -200,6 +200,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					node_deleted.erase( new_id ); //it is ensured that new_id is not in heap
 
 					nit = this->contract_node_list[new_id].begin();
+                    cout<<"203\n";
 					for(; nit != this->contract_node_list[new_id].end(); nit++){
 
 						vector<A_Edge*>::const_iterator reit =
@@ -217,11 +218,12 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 							}
 						}
 					}//end for
+                    cout<<"221\n";
 					if( logic_edge_counter.count(new_id) )
 						logic_edge_counter[new_id] += accumulate_wet.size();
 					else
 						logic_edge_counter[new_id] = accumulate_wet.size();
-
+                    cout<<"226\n";
 					map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
 					for(; nleit != accumulate_wet.end(); nleit++){
 
