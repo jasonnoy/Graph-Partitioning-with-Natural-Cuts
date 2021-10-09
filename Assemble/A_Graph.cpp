@@ -78,7 +78,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
-		for( i = 0; i < this->edge_list.size(); i++ ){
+		for( int i = 0; i < this->edge_list.size(); i++ ){
 
 			if( i%2 )
 				this->sym_id[i] = i+1;
