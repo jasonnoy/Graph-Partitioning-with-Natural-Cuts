@@ -145,7 +145,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( !logic_edges.empty() ){
-            cout<<".";
 			min_e = logic_edges.front();
 
 			std::pop_heap( logic_edges.begin(), logic_edges.end() );
