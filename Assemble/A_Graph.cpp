@@ -15,7 +15,11 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
         if (!infile.is_open()) {
             cout<<"Error! Read file failed.\n";
         }
-
+        for(int i = 0; i < 100; i++) {
+            int n;
+            infile>>n;
+            cout<<n<<" ";
+        }
 		//read in node
 		NodeID node_count = 0;
 		if( !infile>>node_count ){
