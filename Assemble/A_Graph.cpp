@@ -57,7 +57,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		if( !infile.eof() ){
 			infile>>edge_count;
 		}
-		this->edge_list.reserve( edge_count );
+		this->edge_list.reserve( edge_count + 1);
         cout<<edge_count<<"lines in edge file\n";
 		NodeID ts = 0, tt = 0, tw = 0;
 		tid = 0;
@@ -68,7 +68,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
             cout<<tid*100/edge_count<<"%\r";
 			A_Edge e(ts, tt, tw, tid++);
 			this->edge_list.push_back(e);
-			this->node_list[ts].get_adj_list().push_back((A_Edge*)&(this->edge_list.back()));
+			this->node_list[ts].get_adj_list().push_back(&edge_list.back());
 		}
         infile.close();
 //		fclose( co_f );
