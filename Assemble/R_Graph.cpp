@@ -122,21 +122,22 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //		fopen_s( &fpcl, node_clusters_p.c_str(), "w" );
 //		check_file( fpcl, "write result: node_clusters_p" );
 
-		outfile<<"there are total "<<final_result.size()<<" partitions\nthey are:\n";
+//		outfile<<"there are total "<<final_result.size()<<" partitions\nthey are:\n";
 		cit = final_result.begin();
 		for(size_t i = 0; cit != final_result.end(); cit++, i++){
 
-			outfile<<"============================\n";
-			outfile<<"partition "<<i<<":\n";
+//			outfile<<"============================\n";
+//			outfile<<"partition "<<i<<":\n";
 			vector< NodeID >::const_iterator nit = cit->begin();
 			for(; nit != cit->end(); nit++){
 //				fprintf_s( fpcl, "%u %lf, %lf\n", (*nit)+1,
 //					this->node_list[*nit].get_lat(),
 //					this->node_list[*nit].get_lng() );
-                outfile<<(*nit)<<": {"<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<"}, ";
+                outfile<<(*nit)<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<";";
 			}
+            cout<<endl;
 		}
-		outfile<<"\n============================\n";
+//		outfile<<"\n============================\n";
 		outfile.close();
 		outfile.clear(ios::goodbit);
 
@@ -160,7 +161,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //					this->node_list[s].get_lng(),
 //					this->node_list[t].get_lat(),
 //					this->node_list[t].get_lng() );
-                outfile<<"{"<<this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<"},{"<<this->node_list[t].get_lat()<<","<<this->node_list[t].get_lng()<<"}\n";
+                outfile<<this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<","<<this->node_list[t].get_lat()<<this->node_list[t].get_lng()<<";";
 			}
 		}
         outfile.close();
