@@ -1,7 +1,8 @@
 #include <iostream>
-#include <math.h>
 #include <stdlib.h>
-#include <string>
+#include <cstring>
+#include <string.h>
+#include <ctime>
 using namespace std;
 
 #include "A_Graph.h"
@@ -48,6 +49,8 @@ void write_result( R_Graph& g, vector< vector<NodeID> >& result, vector< vector<
 }
 
 int main( int argc, char** argv){
+    clock_t start, end;
+    start = clock();
 
 	srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'
 
@@ -113,10 +116,14 @@ int main( int argc, char** argv){
 				a_g.use_combine = true;
 		}
 
+        cout<<"Before read\n";
 		read_a_graph( a_g, id_map, a_co_path, a_gr_path );
 		multistart_and_combination( a_g, result, sz_lim );
 	}
 	write_result( r_g, result, id_map, co_path, gr_path, result_path );
 
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Assemble spent time: "<<time<<"s\n";
 	return 0;
 }

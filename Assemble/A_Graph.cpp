@@ -7,33 +7,33 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //		check_file( co_f, co_path.c_str() );
 //		fopen_s( &gr_f, gr_path.c_str(), "r");
 //		check_file( gr_f, gr_path.c_str() );
-
-        ifstream infile(co_path);
+        cout<<"Reading files...\n";
+        cout<<"Reading in node...\n";
+        cout<<"co_path: "<<co_path<<endl;
+        ifstream infile;
+        infile.open(co_path);
         if (!infile.is_open()) {
             cout<<"Error! Read file failed.\n";
         }
-
 		//read in node
-		NodeID node_count = 0;
-		if( !infile>>node_count ){
-			cout<<"Node file format error.\n";
-		}
+		NodeID node_count;
+		infile>>node_count;
+        cout<<node_count<<" lines in node file.\n";
 		this->node_list.reserve( node_count );
 		id_map.resize( node_count );
 
 		NodeID tid = 0;
 		NodeSize sz = 0;
-		int i = 0;
 		while( !infile.eof() ){
-
-            infile>>tid>>sz;
+            char gap;
+            infile>>tid>>sz>>gap;
 //			fscanf_s( co_f, "%u %u:", &tid, &sz );
 			//G_Node tnode(tid-1, tlt, tlg);
 			A_Node tnode( tid, sz );
 			this->node_list.push_back( tnode );
-
+            cout<<tid*100/node_count<<"%\r";
 			vector<NodeID> contain_id;
-			for( i = 0; i < sz; i++ ){
+			for( int i = 0; i < sz; i++ ){
 				NodeID map_id = 0;
                 infile>>map_id;
 //				fscanf_s( co_f, "%u ", &map_id );
@@ -42,11 +42,13 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 			id_map[tid] = contain_id;
 			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
 		}
+        cout<<"Read in node success!\n";
         infile.close();
         infile.clear(ios::goodbit);
 //		fclose( co_f );
 
 		//read in edge
+        cout<<"Reading in edge...\n";
         infile.open(gr_path);
         if (!infile.is_open()) {
             cout<<"gr_path open file error.\n";
@@ -55,43 +57,48 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		if( !infile.eof() ){
 			infile>>edge_count;
 		}
-		this->edge_list.reserve( edge_count );
-
+		this->edge_list.reserve( edge_count + 1);
+        cout<<edge_count<<"lines in edge file\n";
 		NodeID ts = 0, tt = 0, tw = 0;
 		tid = 0;
 		while( !infile.eof() ){
 
 //			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
             infile>>ts>>tt>>tw;
-			A_Edge e(ts, tt, tw, tid++);
+            cout<<tid*100/edge_count<<"%\r";
+			A_Edge e(ts, tt, tw, tid);
 			this->edge_list.push_back(e);
-			this->node_list[ts].get_adj_list().push_back((A_Edge*)&(this->edge_list.back()));
+			this->node_list[ts].get_adj_list().push_back(&edge_list.back());
+            tid++;
 		}
         infile.close();
 //		fclose( co_f );
-
+        cout<<tid<<" edges\n";
+        cout<<"Read in edge success!\n";
 		//fill symmetric edge id
+        cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
-		for( i = 0; i < this->edge_list.size(); i++ ){
+		for( int i = 0; i < this->edge_list.size(); i++ ){
 
 			if( i%2 )
 				this->sym_id[i] = i+1;
 			else
 				this->sym_id[i] = i-1;
 		}
+        cout<<"Filling symmetric edges done!\n";
 
 		//intial contraction
+        cout<<"Initial contraction...\n";
 		this->contract_to.resize( this->node_list.size() );
 		for( size_t i = 0; i < this->node_list.size(); i++ )
 			contract_to[i] = i;
 		this->contract_node_list.resize( this->node_list.size() );
 		for( size_t i = 0; i < this->node_list.size(); i++ )
 			this->contract_node_list[i].push_back( i );
-
+        cout<<"Initial contraction done!\n";
 }
 
 void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
-		
 		//initialize the logic edge structure
 		vector<Logic_Edge> logic_edges;
 		map<NodeID, size_t> logic_edge_counter;
@@ -104,11 +111,9 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		vector<Logic_Edge>::iterator leit;
 		//size_t min_pos = 0;
 		//min_e.score = numeric_limits<double>::max();
-
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
 		logic_edges.reserve( 10 * this->edge_list.size() );
 		for(; eit != this->edge_list.end(); eit++){
-
 			s = this->contract_to[eit->get_source()];
 			t = this->contract_to[eit->get_target()];
 			Logic_Edge le(s, t, eit->get_weight());
@@ -125,7 +130,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 			else
 				logic_edge_counter[t] = 1;
 			//sym edge
-			eit++;
 		}
 		
 		//initial heap
@@ -137,7 +141,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( !logic_edges.empty() ){
-
 			min_e = logic_edges.front();
 
 			std::pop_heap( logic_edges.begin(), logic_edges.end() );
@@ -188,7 +191,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 
 					nit = this->contract_node_list[new_id].begin();
 					for(; nit != this->contract_node_list[new_id].end(); nit++){
-
 						vector<A_Edge*>::const_iterator reit =
 							this->node_list[*nit].get_adj_list().begin();
 						for(; reit != this->node_list[*nit].get_adj_list().end(); reit++){
@@ -208,7 +210,6 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 						logic_edge_counter[new_id] += accumulate_wet.size();
 					else
 						logic_edge_counter[new_id] = accumulate_wet.size();
-
 					map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
 					for(; nleit != accumulate_wet.end(); nleit++){
 
@@ -225,11 +226,8 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 					}
 
 			}//end if contract
-
 		}//end while
-
 		this->del_cnt_node.assign( available_new_id.begin(), available_new_id.end() );
-
 		return;
 }
 
@@ -1425,7 +1423,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 							//vector< vector<NodeID> > node_clusters;
 							//EdgeWeight item_weight;
 			//this->greedy_algorithm( sz_lim );
-			VERBOSE(printf("first greedy algorithm...");)
+			VERBOSE(printf("first greedy algorithm...\n");)
 			this->greedy_algorithm_heap( sz_lim );
 			VERBOSE(printf("done!\n");)
 
