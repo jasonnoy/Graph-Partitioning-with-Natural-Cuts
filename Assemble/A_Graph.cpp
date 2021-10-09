@@ -114,7 +114,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
         int i = 0;
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
 		logic_edges.reserve( 10 * this->edge_list.size() );
-        cout<<"logic size: "<<10 * this->edge_list.size();
+        cout<<"logic size: "<<(10 * this->edge_list.size())<<endl;
 		for(; eit != this->edge_list.end(); eit++, i++){
             if (i>70000) {
                 cout<<i<<"\n";
