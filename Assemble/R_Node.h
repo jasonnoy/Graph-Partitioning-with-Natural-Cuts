@@ -30,8 +30,8 @@ public:
 
 private:
 
-	Coordinate lat;
-	Coordinate lng;
+	unsigned int lat;
+	unsigned int lng;
 };
 
 
