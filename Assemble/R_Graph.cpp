@@ -15,9 +15,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
             cout<<"open file error!\n";
         }
 		NodeID node_count = 0;
-		if( !infile>>node_count ){
-			cout<<"co file format error.\n";
-		}
+		infile>>node_count;
 		this->node_list.reserve( node_count );
 
 		char tc = 0;
@@ -48,10 +46,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
         if (!infile.is_open()) {
             cout<<"open file error!\n";
         }
-        if (!infile>>edge_count) {
-            cout<<"graph file format error!\n";
-            exit(0);
-        }
+        infile>>edge_count;
 //		if( !feof(gr_f) ){
 //			fscanf_s( gr_f, "%u\n", &edge_count );
 //		}
