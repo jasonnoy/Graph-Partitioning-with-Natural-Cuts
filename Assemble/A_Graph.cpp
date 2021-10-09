@@ -120,23 +120,23 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
             if (i>70000) {
                 cout<<i<<"\n";
             }
-			s = this->contract_to[eit->get_source()];
-			t = this->contract_to[eit->get_target()];
-			Logic_Edge le(s, t, eit->get_weight());
-			le.score = this->cal_edge_score( le );
-			logic_edges.push_back( le );
-
-			if( logic_edge_counter.count(s) )
-				logic_edge_counter[s]++;
-			else
-				logic_edge_counter[s] = 1;
-
-			if( logic_edge_counter.count(t) )
-				logic_edge_counter[t]++;
-			else
-				logic_edge_counter[t] = 1;
-			//sym edge
-			eit++;
+//			s = this->contract_to[eit->get_source()];
+//			t = this->contract_to[eit->get_target()];
+//			Logic_Edge le(s, t, eit->get_weight());
+//			le.score = this->cal_edge_score( le );
+//			logic_edges.push_back( le );
+//
+//			if( logic_edge_counter.count(s) )
+//				logic_edge_counter[s]++;
+//			else
+//				logic_edge_counter[s] = 1;
+//
+//			if( logic_edge_counter.count(t) )
+//				logic_edge_counter[t]++;
+//			else
+//				logic_edge_counter[t] = 1;
+//			//sym edge
+//			eit++;
 		}
         cout<<"Initialize logic edge done.\n";
 		
