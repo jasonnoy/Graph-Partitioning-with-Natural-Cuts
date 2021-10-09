@@ -1458,18 +1458,14 @@ void G_Graph::convert_n_output( string r_path ){
             exit(1);
         }
 
-        outfile<<ag->node_list.size()<<endl;
-
 		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
-            outfile<<anit->get_id()<<" "<<anit->get_size()<<":{";
-
 			vector<NodeID>::const_iterator idmnit = idmit->begin();
 			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<"["<<this->node_list[*idmnit].get_geo_info().latitude<<","<<this->node_list[*idmnit].get_geo_info().longitude<<"],";
+                outfile<<this->node_list[*idmnit].get_geo_info().latitude<<","<<this->node_list[*idmnit].get_geo_info().longitude<<";";
 			}
-            outfile<<"}\n";
+            outfile<<"\n";
 		}
         outfile.close();
         outfile.clear(ios::goodbit);
