@@ -152,11 +152,13 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 
 			std::pop_heap( logic_edges.begin(), logic_edges.end() );
 			logic_edges.pop_back();
+            cout<<"155\n";
 
 			logic_edge_counter[min_e.source]--;
 			logic_edge_counter[min_e.target]--;
 
 			//recycle resources
+            cout<<"161\n";
 			if( logic_edge_counter[min_e.source] == 0 ){
 				logic_edge_counter.erase( min_e.source );
 				if( node_deleted.count( min_e.source ) )
@@ -167,6 +169,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 				if( node_deleted.count( min_e.target ) )
 					available_new_id.push_back( min_e.target );
 			}
+            cout<<"172\n";
 
 			//if deleted
 			if( node_deleted.count( min_e.source ) || node_deleted.count( min_e.target ) )
