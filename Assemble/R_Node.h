@@ -20,11 +20,11 @@ public:
 		:lat(lt), lng(lg){
 	}
 
-	Coordinate get_lat(){
+	unsigned int get_lat(){
 		return this->lat;
 	}
 	 
-	Coordinate get_lng(){
+	unsigned int get_lng(){
 		return this->lng;
 	}
 
