@@ -1,5 +1,5 @@
-#ifndef __G_NODE_H__
-#define __G_NODE_H__
+#ifndef G_NODE_H
+#define G_NODE_H
 
 #include <vector>
 #include <map>
@@ -39,4 +39,4 @@ private:
 };
 
 
-#endif __G_NODE_H__
+#endif G_NODE_H

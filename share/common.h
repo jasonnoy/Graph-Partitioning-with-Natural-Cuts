@@ -1,5 +1,5 @@
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#ifndef COMMON_H
+#define COMMON_H
 
 #include<vector>
 #include<time.h>
@@ -37,4 +37,4 @@ typedef unsigned long long Bits;
 //#define M  4 //multistart and combination number of iteration
 
 
-#endif __COMMON_H__
+#endif COMMON_H

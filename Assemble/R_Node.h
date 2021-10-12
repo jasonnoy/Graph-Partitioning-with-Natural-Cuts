@@ -1,5 +1,5 @@
-#ifndef __R_NODE_H__
-#define __R_NODE_H__
+#ifndef R_NODE_H
+#define R_NODE_H
 
 #include <vector>
 #include <map>
@@ -35,4 +35,4 @@ private:
 };
 
 
-#endif __G_NODE_H__
+#endif G_NODE_H

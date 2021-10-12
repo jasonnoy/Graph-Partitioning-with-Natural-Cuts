@@ -1,5 +1,5 @@
-#ifndef __R_GRAPH_H__
-#define __R_GRAPH_H__
+#ifndef R_GRAPH_H
+#define R_GRAPH_H
 
 #include <vector>
 #include <stdio.h>
@@ -40,7 +40,7 @@ public:
 	void fill_contract_to( vector< vector<NodeID> >& final_result );
 
 	EdgeWeight write_result( vector< vector<NodeID> >& result, vector< vector<NodeID> >& id_map, 
-		string& co_path, string& gr_path, string& r_path );
+		const string& co_path, const string& gr_path, const string& r_path );
 
 private:
 	//basic
@@ -52,4 +52,4 @@ private:
 };
 
 
-#endif __R_GRAPH_H__
+#endif R_GRAPH_H

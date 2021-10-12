@@ -1,5 +1,5 @@
-#ifndef __PUSH_RELABEL__
-#define __PUSH_ERLABEL__
+#ifndef PUSH_RELABEL
+#define PUSH_ERLABEL
 
 //2012-12-07 from http://www.stanford.edu/~liszt90/acm/notebook.html#file3
 // Adjacency list implementation of FIFO push relabel maximum flow
@@ -130,4 +130,4 @@ struct PushRelabel {
   }
 };
 
-#endif __PUSH_RELABEL__
+#endif PUSH_RELABEL

@@ -1,5 +1,5 @@
-#ifndef __POOL_ITEM__
-#define __POOL_ITEM__
+#ifndef POOL_ITEM
+#define POOL_ITEM
 
 #include "../share/common.h"
 
@@ -14,4 +14,4 @@ public:
 };
 
 
-#endif __POOL_ITEM__
+#endif POOL_ITEM

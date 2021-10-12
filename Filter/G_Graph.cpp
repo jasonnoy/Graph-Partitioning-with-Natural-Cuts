@@ -140,7 +140,7 @@ void G_Graph::two_cuts_edge_class( vector<bool>& edge_in_fi,
 	/*b = (unsigned int)ceil( ( log((double)graph.get_node_list().size())
 		+ 2.0*log((double)graph.get_edge_list().size()) ) / log(2.0) );*/
 	//for efficiency concern, we give up using vector<bool> or bitset,
-	//but unsigned __int64 or unsigned long long instead
+	//but unsigned int64 or unsigned long long instead
 	b = 64;
 
 	//vector<bool> b_bit( b, false );

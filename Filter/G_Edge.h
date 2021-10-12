@@ -1,5 +1,5 @@
-#ifndef __G_EDGE_H__
-#define __G_EDGE_H__
+#ifndef G_EDGE_H
+#define G_EDGE_H
 
 #include "../share/common.h"
 
@@ -34,4 +34,4 @@ private:
 
 
 
-#endif __G_EDGE_H__
+#endif G_EDGE_H

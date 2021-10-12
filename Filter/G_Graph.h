@@ -1,5 +1,5 @@
-﻿#ifndef __G_GRAPH_H__
-#define __G_GRAPH_H__
+﻿#ifndef G_GRAPH_H
+#define G_GRAPH_H
 
 #include <vector>
 #include <stdio.h>
@@ -190,4 +190,4 @@ private:
 };
 
 
-#endif __G_GRAPH_H__
+#endif G_GRAPH_H
