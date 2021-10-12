@@ -88,7 +88,7 @@ void R_Graph::fill_contract_to( vector< vector<NodeID> >& final_result ){
 }
 
 EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vector<NodeID> >& id_map, 
-	string& co_path, string& gr_path, string& r_path ){
+	const string& co_path, const string& gr_path, const string& r_path ){
 
 		vector< vector<NodeID> > final_result( result.size() );
 		vector< vector<NodeID> >::const_iterator cit = result.begin();

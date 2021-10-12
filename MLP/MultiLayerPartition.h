@@ -34,8 +34,8 @@ public:
     void generateMLP() {
         this->MLP();
     }
-    int getL(){return L};
-    void setL(int l){L = l};
+    int getL(){return L;}
+    void setL(int l){L = l;}
 };
 
 #endif //GRAPH_PARTITIONING_WITH_NATURAL_CUTS_MULTILAYERPARTITION_H

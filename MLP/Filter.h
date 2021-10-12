@@ -32,8 +32,8 @@ public:
     };
     ~Filter() = default;
     void runFilter();
-    int getF(){return F};
-    void setF(int f){F = f};
+    int getF(){return F;}
+    void setF(int f){F = f;}
 };
 
 
