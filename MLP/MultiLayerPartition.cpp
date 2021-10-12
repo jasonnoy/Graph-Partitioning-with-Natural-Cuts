@@ -16,6 +16,7 @@ void MultiLayerPartition::MLP() {
     int l;
     infile>>l;
     this->setL(l);
+    parameters.resize(this->getL());
     cout<<"Layer number: "<<this->getL()<<endl;
     for (int i = 0; i < this->getL(); i++) {
         for (int j = 0; j < this->ParaNum; j++) {
