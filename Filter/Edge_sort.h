@@ -76,4 +76,4 @@ public:
 	Bits bits;
 };
 
-#endif EDGE_SORT_H
+#endif //EDGE_SORT_H

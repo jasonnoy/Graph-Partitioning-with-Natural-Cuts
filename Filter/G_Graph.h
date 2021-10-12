@@ -190,4 +190,4 @@ private:
 };
 
 
-#endif G_GRAPH_H
+#endif //G_GRAPH_H

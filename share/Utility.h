@@ -13,4 +13,4 @@ void check_file( FILE* fp, const char* filename );
 void check_new( void* np, const char* parts);
 
 
-#endif UTILITY_H
+#endif //UTILITY_H

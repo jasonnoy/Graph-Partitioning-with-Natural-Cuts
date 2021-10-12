@@ -28,4 +28,4 @@ private:
 };
 
 
-#endif R_EDGE_H
+#endif //R_EDGE_H

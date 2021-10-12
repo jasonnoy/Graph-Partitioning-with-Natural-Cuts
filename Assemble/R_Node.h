@@ -35,4 +35,4 @@ private:
 };
 
 
-#endif G_NODE_H
+#endif //G_NODE_H

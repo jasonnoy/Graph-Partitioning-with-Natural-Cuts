@@ -41,4 +41,4 @@ public:
 
 
 
-#endif LOGIC_EDGE_H
+#endif //LOGIC_EDGE_H

@@ -37,4 +37,4 @@ typedef unsigned long long Bits;
 //#define M  4 //multistart and combination number of iteration
 
 
-#endif COMMON_H
+#endif //COMMON_H

@@ -52,4 +52,4 @@ private:
 };
 
 
-#endif R_GRAPH_H
+#endif //R_GRAPH_H

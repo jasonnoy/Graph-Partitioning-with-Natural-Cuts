@@ -42,4 +42,4 @@ private:
 
 
 
-#endif A_EDGE_H
+#endif //A_EDGE_H

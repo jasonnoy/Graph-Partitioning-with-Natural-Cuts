@@ -34,4 +34,4 @@ private:
 
 
 
-#endif G_EDGE_H
+#endif //G_EDGE_H

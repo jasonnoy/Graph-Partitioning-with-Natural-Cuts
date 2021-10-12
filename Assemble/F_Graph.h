@@ -59,4 +59,4 @@ private:
 };
 
 
-#endif A_GRAPH_H
+#endif //A_GRAPH_H
