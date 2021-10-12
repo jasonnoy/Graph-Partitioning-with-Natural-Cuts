@@ -3,6 +3,7 @@
 //
 
 #include "MultiLayerPartition.h"
+#include <ctime>
 
 void MultiLayerPartition::MLP() {
     const string aNodePath = outPath + "anode.txt";
@@ -48,10 +49,15 @@ int main(int argc, char** argv) {
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
         exit(0);
     }
+    clock_t start, end;
+    start = clock();
     string paraPath(argv[1]);
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
     MultiLayerPartition mlp(paraPath, nodePath, edgePath, outPath);
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"MLP run time: "<<time<<"s.\n";
     mlp.generateMLP();
 }
