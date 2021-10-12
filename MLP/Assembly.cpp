@@ -20,7 +20,7 @@ void Assembly::multistart_and_combination(){
 void Assembly::write_result(){
     cout<<"write result into target directory...\n";
     EdgeWeight weight = 0;
-    weight = real_graph.write_result( result, id_map, nodePath, graphPath, outPath );
+    weight = real_graph.write_result( result, id_map, "./real_nodes.txt", "./real_edges.txt", outPath ); // for test only
     printf("Done! Total weight of the cut edges is: %u\n", weight);
 }
 

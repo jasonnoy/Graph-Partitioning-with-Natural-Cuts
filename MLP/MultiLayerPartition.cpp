@@ -34,6 +34,7 @@ void MultiLayerPartition::MLP() {
         cout<<"Filter phase completed!\n";
         cout<<"Running assembly phase...\n";
         Assembly assembly(U, FI, M, false, coPath, grPath, aNodePath, aEdgePath, outPath);
+        assembly.runAssembly();
         cout<<"Assembly phase completed!\n";
     }
 }
@@ -51,5 +52,5 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
     MultiLayerPartition mlp(paraPath, nodePath, edgePath, outPath);
-
+    mlp.generateMLP();
 }
