@@ -28,6 +28,7 @@ void MultiLayerPartition::MLP() {
             parameters[i].push_back(para);
         }
     }
+    infile.close();
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
         int U, C, FI, M, PS;
