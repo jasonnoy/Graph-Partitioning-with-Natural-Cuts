@@ -62,7 +62,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
         cout<<edge_count<<"lines in edge file\n";
 		NodeID ts = 0, tt = 0, tw = 0;
 		tid = 0;
-		while( !infile.eof() ){
+		for (int i = 0; i < edge_count; i++){
 
 //			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
             infile>>ts>>tt>>tw;
