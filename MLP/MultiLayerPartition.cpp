@@ -31,7 +31,12 @@ void MultiLayerPartition::MLP() {
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     auto layer_iter = parameters.begin();
     for (; layer_iter != parameters.end(); layer_iter++) {
-        const int U(layer_iter[0]), C(layer_iter[1]), FI(layer_iter[2]), M(layer_iter[3]), PS(layer_iter[4]);    // 暂时默认PS = sqrt(M)
+        int U, C, FI, M, PS;
+        U = layer_iter[0];
+        C = layer_iter[1];
+        FI = layer_iter[2];
+        M = layer_iter[3];
+        PS = layer_iter[4]; // 暂时默认PS = sqrt(M)
         cout<<"Running filter phase...\n";
         Filter filter(U, C, coPath, grPath, outPath);
         filter.runFilter();
