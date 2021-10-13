@@ -29,7 +29,7 @@ void MultiLayerPartition::MLP() {
         }
     }
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
-    for (l - 1; l >= 0; l--) {
+    for (--l; l >= 0; l--) {
         int U, C, FI, M, PS;
         U = parameters[l][0];
         C = parameters[l][1];
