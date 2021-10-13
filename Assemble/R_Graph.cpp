@@ -33,7 +33,7 @@ void R_Graph::read_graph(string co_path, string gr_path){
             infile>>tid>>tlg>>tlt;
 //			fscanf_s( co_f, "%u %d %d\n", &tid, &tlg, &tlt );
 			//G_Node tnode(tid-1, tlt, tlg);
-			R_Node tnode(tlt/REALLATLNG, tlg/REALLATLNG);
+			R_Node tnode(tlt, tlg);
 			this->node_list.push_back( tnode );
 		}
         infile.close();
@@ -88,23 +88,25 @@ void R_Graph::fill_contract_to( vector< vector<NodeID> >& final_result ){
 }
 
 EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vector<NodeID> >& id_map, 
-	string& co_path, string& gr_path, string& r_path ){
+	const string& co_path, const string& gr_path, const string& r_path ){
 
 		vector< vector<NodeID> > final_result( result.size() );
 		vector< vector<NodeID> >::const_iterator cit = result.begin();
+        cout<<"result size: "<<result.size()<<endl;
+        int max = 0;
 		for(size_t i = 0; cit != result.end(); cit++, i++){
-
+//            cout<<"i: "<<i<<endl;
 			vector< NodeID >::const_iterator nit = cit->begin();
 			final_result[i].reserve( 10 * cit->size() );
 			for(; nit != cit->end(); nit++){
-
-				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
+                for (auto map_iter : id_map[*nit]) {
+                    final_result[i].push_back(map_iter);
+                }
+//				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
 			}
 		}
-
 		this->read_graph( co_path, gr_path );
 		this->fill_contract_to( final_result );
-
 		string node_clusters_p = "node_clusters.txt";
 		string cut_edges_p = "cut_edges.txt";
 
@@ -122,21 +124,22 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //		fopen_s( &fpcl, node_clusters_p.c_str(), "w" );
 //		check_file( fpcl, "write result: node_clusters_p" );
 
-		outfile<<"there are total "<<final_result.size()<<" partitions\nthey are:\n";
+		cout<<"there are total "<<final_result.size()<<" partitions\n";
 		cit = final_result.begin();
 		for(size_t i = 0; cit != final_result.end(); cit++, i++){
 
-			outfile<<"============================\n";
-			outfile<<"partition "<<i<<":\n";
+//			outfile<<"============================\n";
+//			outfile<<"partition "<<i<<":\n";
 			vector< NodeID >::const_iterator nit = cit->begin();
 			for(; nit != cit->end(); nit++){
 //				fprintf_s( fpcl, "%u %lf, %lf\n", (*nit)+1,
 //					this->node_list[*nit].get_lat(),
 //					this->node_list[*nit].get_lng() );
-                outfile<<(*nit)<<": {"<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<"}, ";
+                outfile<<this->node_list[*nit].get_lat()<<","<<this->node_list[*nit].get_lng()<<";";
 			}
+            outfile<<endl;
 		}
-		outfile<<"\n============================\n";
+//		outfile<<"\n============================\n";
 		outfile.close();
 		outfile.clear(ios::goodbit);
 
@@ -160,7 +163,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //					this->node_list[s].get_lng(),
 //					this->node_list[t].get_lat(),
 //					this->node_list[t].get_lng() );
-                outfile<<"{"<<this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<"},{"<<this->node_list[t].get_lat()<<","<<this->node_list[t].get_lng()<<"}\n";
+                outfile<<this->node_list[s].get_lat()<<","<<this->node_list[s].get_lng()<<";"<<this->node_list[t].get_lat()<<","<<this->node_list[t].get_lng()<<";\n";
 			}
 		}
         outfile.close();

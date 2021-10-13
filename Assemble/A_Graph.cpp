@@ -24,7 +24,8 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 
 		NodeID tid = 0;
 		NodeSize sz = 0;
-		while( !infile.eof() ){
+
+		for (int j = 0; j < node_count; j++){
             char gap;
             infile>>tid>>sz>>gap;
 //			fscanf_s( co_f, "%u %u:", &tid, &sz );
@@ -57,11 +58,11 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 		if( !infile.eof() ){
 			infile>>edge_count;
 		}
-		this->edge_list.reserve( edge_count + 1);
+		this->edge_list.reserve( edge_count );
         cout<<edge_count<<"lines in edge file\n";
 		NodeID ts = 0, tt = 0, tw = 0;
 		tid = 0;
-		while( !infile.eof() ){
+		for (int i = 0; i < edge_count; i++){
 
 //			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
             infile>>ts>>tt>>tw;

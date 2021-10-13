@@ -1,5 +1,5 @@
-#ifndef __EDGE_SORT_H__
-#define __EDGE_SORT_H__
+#ifndef EDGE_SORT_H
+#define EDGE_SORT_H
 
 #include "../share/common.h"
 
@@ -76,4 +76,4 @@ public:
 	Bits bits;
 };
 
-#endif __EDGE_SORT_H__
+#endif //EDGE_SORT_H

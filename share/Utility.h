@@ -1,5 +1,5 @@
-#ifndef __UTILITY_H__
-#define __UTILITY_H__
+#ifndef UTILITY_H
+#define UTILITY_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,4 +13,4 @@ void check_file( FILE* fp, const char* filename );
 void check_new( void* np, const char* parts);
 
 
-#endif __UTILITY_H__
+#endif //UTILITY_H

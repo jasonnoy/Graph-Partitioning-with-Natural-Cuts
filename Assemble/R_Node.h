@@ -1,5 +1,5 @@
-#ifndef __R_NODE_H__
-#define __R_NODE_H__
+#ifndef R_NODE_H
+#define R_NODE_H
 
 #include <vector>
 #include <map>
@@ -20,19 +20,19 @@ public:
 		:lat(lt), lng(lg){
 	}
 
-	Coordinate get_lat(){
+	unsigned int get_lat(){
 		return this->lat;
 	}
 	 
-	Coordinate get_lng(){
+	unsigned int get_lng(){
 		return this->lng;
 	}
 
 private:
 
-	Coordinate lat;
-	Coordinate lng;
+	unsigned int lat;
+	unsigned int lng;
 };
 
 
-#endif __G_NODE_H__
+#endif //G_NODE_H

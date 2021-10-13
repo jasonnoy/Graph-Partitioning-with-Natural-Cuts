@@ -1,5 +1,5 @@
-#ifndef __LOGIC_EDGE_H__
-#define __LOGIC_EDGE_H__
+#ifndef LOGIC_EDGE_H
+#define LOGIC_EDGE_H
 
 #include "../share/common.h"
 
@@ -41,4 +41,4 @@ public:
 
 
 
-#endif __LOGIC_EDGE_H__
+#endif //LOGIC_EDGE_H
