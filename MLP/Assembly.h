@@ -30,8 +30,8 @@ public:
     const string aGraphPath;
     const string outPath;
 
-    Assembly(int u, const string nPath, const string gPath, const string aNPath, const string aGPath, const string oPath):
-        U(u), nodePath(nPath), graphPath(gPath), aNodePath(aNPath), aGraphPath(aGPath), outPath(oPath){};
+    Assembly(int u, const string realNodePath, const string realGraphPath, const string aNPath, const string aGPath, const string oPath):
+        U(u), nodePath(realNodePath), graphPath(realGraphPath), aNodePath(aNPath), aGraphPath(aGPath), outPath(oPath){};
     Assembly(int u, int fi, int m, bool combine, const string nPath, const string gPath, const string aNPath, const string aGPath, const string oPath):
     U(u), FI(fi), M(m), COMBINE(combine), nodePath(nPath), graphPath(gPath), aNodePath(aNPath), aGraphPath(aGPath), outPath(oPath){};
     void runAssembly();

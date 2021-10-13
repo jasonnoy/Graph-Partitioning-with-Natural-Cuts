@@ -8,6 +8,8 @@
 void MultiLayerPartition::MLP() {
     const string aNodePath = outPath + "anode.txt";
     const string aEdgePath = outPath + "aedge.txt";
+    const string realNodePath = outPath + "real_nodes.txt";
+    const string realGraphPath = outPath + "real_edges.txt";
     ifstream infile;
     infile.open(paraPath);
     if (!infile.is_open()) {
@@ -35,7 +37,7 @@ void MultiLayerPartition::MLP() {
         filter.runFilter();
         cout<<"Filter phase completed!\n";
         cout<<"Running assembly phase...\n";
-        Assembly assembly(U, FI, M, false, coPath, grPath, aNodePath, aEdgePath, outPath);
+        Assembly assembly(U, FI, M, false, realNodePath, realGraphPath, aNodePath, aEdgePath, outPath);
         assembly.runAssembly();
         cout<<"Assembly phase completed!\n";
     }
