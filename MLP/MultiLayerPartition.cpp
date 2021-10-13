@@ -58,8 +58,8 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
     MultiLayerPartition mlp(paraPath, nodePath, edgePath, outPath);
+    mlp.generateMLP();
     end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;
     cout<<"MLP run time: "<<time<<"s.\n";
-    mlp.generateMLP();
 }
