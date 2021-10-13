@@ -36,7 +36,7 @@ void MultiLayerPartition::MLP() {
         FI = parameters[l][2];
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
-        cout<<"Layer "
+        cout<<"Layer "<<getL()<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
         cout<<"Running filter phase...\n";
         Filter filter(U, C, coPath, grPath, outPath);
         filter.runFilter();
