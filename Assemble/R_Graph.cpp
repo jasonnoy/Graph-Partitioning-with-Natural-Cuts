@@ -98,7 +98,10 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 			final_result[i].reserve( 1000 * cit->size() );
 			for(; nit != cit->end(); nit++){
 //                cout<<"id_map[*nit] size: "<<id_map[*nit].size()<<endl;
-				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
+                for (auto map_iter : id_map[*nit]) {
+                    final_result[i].push_back(map_iter);
+                }
+//				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
 			}
 		}
 
