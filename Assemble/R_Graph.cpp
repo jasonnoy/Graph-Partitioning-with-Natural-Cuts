@@ -95,7 +95,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
         cout<<"result size: "<<result.size()<<endl;
         int max = 0;
 		for(size_t i = 0; cit != result.end(); cit++, i++){
-            cout<<"i: "<<i<<endl;
+//            cout<<"i: "<<i<<endl;
 			vector< NodeID >::const_iterator nit = cit->begin();
 			final_result[i].reserve( 1000 * cit->size() );
 			for(; nit != cit->end(); nit++){
@@ -108,7 +108,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
                     cout<<"max id: "<<max<<endl;
                 }
                 if(i > 260) {
-                    cout<<"nit: "<<*nit<<"idmap size: "<<id_map[*nit].size()<<endl;
+//                    cout<<"nit: "<<*nit<<"idmap size: "<<id_map[*nit].size()<<endl;
                 }
                 for (auto map_iter : id_map[*nit]) {
                     final_result[i].push_back(map_iter);
