@@ -40,7 +40,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //				fscanf_s( co_f, "%u ", &map_id );
 				contain_id.push_back( map_id );
 			}
-            if (i>20240) {
+            if (j>20240) {
                 cout<<"i: "<<i<<" tid: "<<tid<<endl;
             }
 			id_map[tid] = contain_id;
