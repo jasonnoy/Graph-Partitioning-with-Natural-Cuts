@@ -24,6 +24,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 
 		NodeID tid = 0;
 		NodeSize sz = 0;
+        int j = 0;
 		while( !infile.eof() ){
             char gap;
             infile>>tid>>sz>>gap;
@@ -39,10 +40,14 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //				fscanf_s( co_f, "%u ", &map_id );
 				contain_id.push_back( map_id );
 			}
+            if (i>20240) {
+                cout<<"i: "<<i<<" tid: "<<tid<<endl;
+            }
 			id_map[tid] = contain_id;
 			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
 		}
         cout<<"Read in node success!\n";
+        cout<<"node list size: "<<node_list.size()<<endl;
         cout<<"last node_list: "<<node_list.end()->get_id()<<endl;
         infile.close();
         infile.clear(ios::goodbit);
