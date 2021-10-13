@@ -103,6 +103,8 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 			}
 		}
 
+        cout<<"106\n";
+
 		this->read_graph( co_path, gr_path );
 		this->fill_contract_to( final_result );
 
