@@ -99,28 +99,14 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 			vector< NodeID >::const_iterator nit = cit->begin();
 			final_result[i].reserve( 1000 * cit->size() );
 			for(; nit != cit->end(); nit++){
-//                cout<<"id_map[*nit] size: "<<id_map[*nit].size()<<endl;
-                if (*nit == 0) {
-                    cout<<"0 found\n";
-                }
-                if (*nit > max) {
-                    max = *nit;
-                    cout<<"max id: "<<max<<endl;
-                }
-                if(i > 260) {
-//                    cout<<"nit: "<<*nit<<"idmap size: "<<id_map[*nit].size()<<endl;
-                }
                 for (auto map_iter : id_map[*nit]) {
                     final_result[i].push_back(map_iter);
                 }
 //				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
 			}
 		}
-        cout<<"107\n";
 		this->read_graph( co_path, gr_path );
-        cout<<"109\n";
 		this->fill_contract_to( final_result );
-        cout<<"111\n";
 		string node_clusters_p = "node_clusters.txt";
 		string cut_edges_p = "cut_edges.txt";
 
