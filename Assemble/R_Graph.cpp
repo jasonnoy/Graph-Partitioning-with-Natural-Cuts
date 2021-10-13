@@ -95,15 +95,11 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 		for(size_t i = 0; cit != result.end(); cit++, i++){
 
 			vector< NodeID >::const_iterator nit = cit->begin();
-            cout<<"cur cit size:"<<cit->size()<<" max size: "<<cit->max_size()<<endl;
 			final_result[i].reserve( 100 * cit->size() );
 			for(; nit != cit->end(); nit++){
-                cout<<"insert size: "<<id_map[*nit].size()<<endl;
 				final_result[i].insert(final_result[i].end(), id_map[*nit].begin(), id_map[*nit].end() );
 			}
 		}
-
-        cout<<"106\n";
 
 		this->read_graph( co_path, gr_path );
 		this->fill_contract_to( final_result );
@@ -125,7 +121,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 //		fopen_s( &fpcl, node_clusters_p.c_str(), "w" );
 //		check_file( fpcl, "write result: node_clusters_p" );
 
-//		outfile<<"there are total "<<final_result.size()<<" partitions\nthey are:\n";
+		cout<<"there are total "<<final_result.size()<<" partitions\n";
 		cit = final_result.begin();
 		for(size_t i = 0; cit != final_result.end(); cit++, i++){
 
