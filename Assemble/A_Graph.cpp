@@ -24,8 +24,8 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 
 		NodeID tid = 0;
 		NodeSize sz = 0;
-        int j = 0;
-		while( !infile.eof() ){
+
+		for (int j = 0; j < node_count; j++){
             char gap;
             infile>>tid>>sz>>gap;
 //			fscanf_s( co_f, "%u %u:", &tid, &sz );
@@ -40,7 +40,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
 //				fscanf_s( co_f, "%u ", &map_id );
 				contain_id.push_back( map_id );
 			}
-            if (j>20240) {
+            if (j>20230) {
                 cout<<"j: "<<j<<" tid: "<<tid<<endl;
             }
 			id_map[tid] = contain_id;
