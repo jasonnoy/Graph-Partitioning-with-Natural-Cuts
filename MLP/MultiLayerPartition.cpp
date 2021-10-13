@@ -40,7 +40,7 @@ void MultiLayerPartition::MLP() {
         cout<<"Running filter phase...\n";
         Filter filter(U, C, coPath, grPath, outPath);
         filter.runFilter();
-        ~filter();
+        filter.~Filter();
         cout<<"Filter phase completed!\n";
         cout<<"Running assembly phase...\n";
         Assembly assembly(U, FI, M, false, realNodePath, realGraphPath, aNodePath, aEdgePath, outPath);
