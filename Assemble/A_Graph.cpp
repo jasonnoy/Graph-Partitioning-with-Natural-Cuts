@@ -45,6 +45,7 @@ void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_pa
             }
 			id_map[tid] = contain_id;
 			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
+            j++;
 		}
         cout<<"Read in node success!\n";
         cout<<"node list size: "<<node_list.size()<<endl;
