@@ -88,12 +88,13 @@ void R_Graph::fill_contract_to( vector< vector<NodeID> >& final_result ){
 }
 
 EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vector<NodeID> >& id_map, 
-	const string& co_path, const string& gr_path, const string& r_path ){
+	const string& co_path, const string& gr_path, const string& r_path, bool isPhantom ){
 
 		vector< vector<NodeID> > final_result( result.size() );
 		vector< vector<NodeID> >::const_iterator cit = result.begin();
         cout<<"result size: "<<result.size()<<endl;
         int max = 0;
+        // !!!这里貌似会丢失cit的值 - 又貌似并不会-idmap里包含第一个点 - test一下
 		for(size_t i = 0; cit != result.end(); cit++, i++){
 //            cout<<"i: "<<i<<endl;
 			vector< NodeID >::const_iterator nit = cit->begin();
@@ -109,6 +110,9 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 		this->fill_contract_to( final_result );
 		string node_clusters_p = "node_clusters.txt";
 		string cut_edges_p = "cut_edges.txt";
+        if (isPhantom) {
+            node_clusters_p = "Phantom"
+        }
 
 		node_clusters_p.insert( node_clusters_p.begin(), r_path.begin(), r_path.end() );
 		cut_edges_p.insert( cut_edges_p.begin(), r_path.begin(), r_path.end() );

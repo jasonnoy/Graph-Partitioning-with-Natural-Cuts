@@ -1,7 +1,7 @@
 #ifndef G_EDGE_H
 #define G_EDGE_H
 
-#include "../share/common.h"
+#include "../Common/common.h"
 
 class G_Edge{
 

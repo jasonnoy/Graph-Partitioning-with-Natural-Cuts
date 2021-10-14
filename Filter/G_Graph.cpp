@@ -2,63 +2,65 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph(string co_path, string gr_path){
+void G_Graph::read_graph( vector<NodeID>& nodes, vector<vector<NodeID>>& edges){
 
     // read in node
     cout<<"read in nodes...\n";
-    std::vector<node_info_t> nodes;
-    std::ifstream fs;
-    fs.open(co_path, std::ios::binary);
-    if (!fs.is_open()) {
-        cout<<"co_file open failed!\n";
-        exit(1);
-    }
-
-    uint32_t count;
-    fs.read((char *)&count, sizeof(uint32_t));
-    nodes.resize(count);
-    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
-    unsigned int counter = 0;
-    auto node_iter = nodes.begin();
-    for (; node_iter != nodes.end(); node_iter++) {
-        if (counter % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\r";
-        }
-        G_Node node(counter);
-        this->node_list.push_back(node);
-        counter++;
-    }
-    fs.close();
-    fs.clear(ios::goodbit);
-    nodes.clear();
+    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
+//    std::vector<node_info_t> nodes;
+//    std::ifstream fs;
+//    fs.open(co_path, std::ios::binary);
+//    if (!fs.is_open()) {
+//        cout<<"co_file open failed!\n";
+//        exit(1);
+//    }
+//
+//    uint32_t count;
+//    fs.read((char *)&count, sizeof(uint32_t));
+//    nodes.resize(count);
+//    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
+//    unsigned int counter = 0;
+//    auto node_iter = nodes.begin();
+//    for (; node_iter != nodes.end(); node_iter++) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        G_Node node(counter);
+//        this->node_list.push_back(node);
+//        counter++;
+//    }
+//    fs.close();
+//    fs.clear(ios::goodbit);
+//    nodes.clear();
     cout<<"read nodes done\n";
     cout<<"there are "<<node_list.size()<<" nodes\n";
 
     // read in edges
     cout<<"read edges...\n";
-    std::vector<link_info_t> links;
-    fs.open(gr_path, std::ios::binary);
-    if (!fs.is_open()) {
-        cout<<"gr_file open failed!\n";
-        exit(1);
-    }
-    fs.read((char *)&count, sizeof(uint32_t));
-    links.resize(count);
-    this->edge_list.reserve(2 * count + 1);
-    fs.read((char *)&links[0], sizeof(link_info_t) * count);
-    counter = 0;
-    auto edge_iter = links.begin();
-    for (; edge_iter != links.end(); edge_iter++) {
-        if (counter % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\r";
-        }
-        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
-        this->edge_list.push_back(edge);
-        this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
-        counter++;
-    }
-    links.clear();
-    fs.close();
+    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
+//    std::vector<link_info_t> links;
+//    fs.open(gr_path, std::ios::binary);
+//    if (!fs.is_open()) {
+//        cout<<"gr_file open failed!\n";
+//        exit(1);
+//    }
+//    fs.read((char *)&count, sizeof(uint32_t));
+//    links.resize(count);
+//    this->edge_list.reserve(2 * count + 1);
+//    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+//    counter = 0;
+//    auto edge_iter = links.begin();
+//    for (; edge_iter != links.end(); edge_iter++) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
+//        this->edge_list.push_back(edge);
+//        this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
+//        counter++;
+//    }
+//    links.clear();
+//    fs.close();
     cout<<"read edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 
@@ -1340,7 +1342,7 @@ void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 		return;
 }
 
-void G_Graph::convert_n_output( string r_path ){
+void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<NodeID>>& aedges ){
 		
 		A_Graph * ag;
 		ag = new A_Graph;
@@ -1451,43 +1453,57 @@ void G_Graph::convert_n_output( string r_path ){
 		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
 
 		//write node and id map
-        ofstream outfile;
-		outfile.open(node_n);
-        if (!outfile.is_open()) {
-            cout<<"open node outfile failed!\n";
-            exit(1);
+//        ofstream outfile;
+//		outfile.open(node_n);
+//        if (!outfile.is_open()) {
+//            cout<<"open node outfile failed!\n";
+//            exit(1);
+//        }
+//
+//        outfile<<ag->node_list.size()<<endl;
+
+        anodes.resize(ag->node_list.size());
+        for (int i = 0; i < ag->node_list.size(); i++) {
+            NodeID nid = ag->node_list[i].get_id();
+            anodes[i].reserve(id_map[nid].size() + 1);
+            anodes[i].push_back(nid);
+            anodes[i].insert(anodes[i].end(), id_map[nid].begin(), id_map[nid].end());
         }
 
-        outfile<<ag->node_list.size()<<endl;
-
-		vector<A_Node>::const_iterator anit = ag->node_list.begin();
-		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
-		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
-            outfile<<anit->get_id()<<" "<<anit->get_size()<<":";
-
-			vector<NodeID>::const_iterator idmnit = idmit->begin();
-			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<" "<<this->node_list[*idmnit].get_id();
-			}
-            outfile<<"\n";
-		}
-        outfile.close();
-        outfile.clear(ios::goodbit);
+//		vector<A_Node>::const_iterator anit = ag->node_list.begin();
+//		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
+//		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
+//            outfile<<anit->get_id()<<" "<<anit->get_size()<<":";
+//
+//			vector<NodeID>::const_iterator idmnit = idmit->begin();
+//			for(; idmnit != idmit->end(); idmnit++){
+//                outfile<<" "<<this->node_list[*idmnit].get_id();
+//			}
+//            outfile<<"\n";
+//		}
+//        outfile.close();
+//        outfile.clear(ios::goodbit);
 
 		//write edge
-        outfile.open(edge_n);
-        if (!outfile.is_open()) {
-            cout<<"open edge outfile failed!\n";
-            exit(1);
+//        outfile.open(edge_n);
+//        if (!outfile.is_open()) {
+//            cout<<"open edge outfile failed!\n";
+//            exit(1);
+//        }
+
+        aedges.reserve(ag->edge_list.size());
+        for (int i = 0; i < ag->edge_list.size(); i++) {
+            aedges[i].push_back(ag->edge_list[i].get_source());
+            aedges[i].push_back(ag->edge_list[i].get_target());
+            aedges[i].push_back(ag->edge_list[i].get_weight());
         }
-
-        outfile<<ag->edge_list.size()<<endl;
-
-		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
-		for(; aeit != ag->edge_list.end(); aeit++){
-            outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
-		}
-        outfile.close();
+//        outfile<<ag->edge_list.size()<<endl;
+//
+//		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
+//		for(; aeit != ag->edge_list.end(); aeit++){
+//            outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
+//		}
+//        outfile.close();
 
 		delete ag;
 		return;

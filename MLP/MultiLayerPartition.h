@@ -10,6 +10,8 @@
 #include "../Assemble/R_Graph.h"
 #include "Assembly.h"
 #include "Filter.h"
+#include "GraphPrinter.h"
+#include <string>
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
@@ -24,12 +26,14 @@ private:
     const string coPath;
     const string grPath;
     const string outPath;
+    const unsigned int nodeNum;
+    const bool phantom;
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
 
-    MultiLayerPartition(const string pPath, const string nPath, const string gPath, const string oPath):
-        paraPath(pPath), coPath(nPath), grPath(gPath), outPath(oPath){};
+    MultiLayerPartition(const string pPath, const string nPath, const string gPath, const string oPath, const bool isPhantom):
+        paraPath(pPath), coPath(nPath), grPath(gPath), outPath(oPath), phantom(isPhantom){};
     ~MultiLayerPartition() = default;
     void generateMLP() {
         this->MLP();

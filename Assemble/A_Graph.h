@@ -18,7 +18,7 @@
 using namespace std;
 
 #include "A_Node.h"
-#include "../share/Utility.h"
+#include "../Common/Utility.h"
 #include "Logic_Edge.h"
 #include "F_Graph.h"
 #include "Pool_Item.h"
@@ -80,7 +80,7 @@ public:
 
 	/////////////////////////////main methods////////////////////////////
 
-	void read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_path, string gr_path);
+	void read_graph_n_idmap(vector<vector<NodeID>>& id_map, const vector<vector<NodeID>>& anodes, const vector<vector<NodeID>>& aedges);
 
 	void greedy_algorithm( NodeSize sz_lim );
 

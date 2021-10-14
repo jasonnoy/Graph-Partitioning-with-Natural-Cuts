@@ -17,23 +17,28 @@ private:
     const int U;
     const int C;
     int F = 10;
-    const string NodePath;
-    const string GraphPath;
-    const string OutPath;
+    const vector<unsigned int>& nodes;
+    const vector<vector<unsigned int>>& edges;
+    vector<vector<unsigned int>>& anodes;
+    vector<vector<unsigned int>>& aedges;
 
     void read_in_graph();
     void contract_tiny_cuts();
     void contract_natural_cuts();
     void convert_and_output();
 public:
-    Filter(int u, int c, const string nPath, const string gPath, const string oPath): U(u), C(c), NodePath(nPath), GraphPath(gPath), OutPath(oPath){
+    Filter(int u, int c, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
+    U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
     };
-    Filter(int u, int c, int f, const string nPath, const string gPath, const string oPath): U(u), C(c), F(f), NodePath(nPath), GraphPath(gPath), OutPath(oPath){
+    Filter(int u, int c, int f, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
+            U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
     };
     ~Filter() = default;
     void runFilter();
     int getF(){return F;}
     void setF(int f){F = f;}
+    vector<vector<unsigned int>>& get_anodes(){return anodes;}
+    vector<vector<unsigned int>>& get_aedges(){return aedges;}
 };
 
 

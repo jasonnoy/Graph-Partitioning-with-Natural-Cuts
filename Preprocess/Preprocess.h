@@ -5,7 +5,7 @@
 #ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_PREPROCESS_H
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_PREPROCESS_H
 
-#include "../share/sw_basetypes.h"
+#include "../Common/sw_basetypes.h"
 #include <vector>
 #include <fstream>
 #include <iostream>

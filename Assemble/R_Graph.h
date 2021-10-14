@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "R_Node.h"
-#include "../share/Utility.h"
+#include "../Common/Utility.h"
 
 class R_Graph{
 
@@ -40,7 +40,7 @@ public:
 	void fill_contract_to( vector< vector<NodeID> >& final_result );
 
 	EdgeWeight write_result( vector< vector<NodeID> >& result, vector< vector<NodeID> >& id_map, 
-		const string& co_path, const string& gr_path, const string& r_path );
+		const string& co_path, const string& gr_path, const string& r_path, bool isPhantom );
 
 private:
 	//basic

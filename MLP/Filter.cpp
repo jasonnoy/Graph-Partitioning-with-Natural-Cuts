@@ -7,7 +7,7 @@
 void Filter::read_in_graph(){
     //read in graph
     cout<<"Reading input file...\n";
-    gGraph.read_graph(NodePath, GraphPath);
+    gGraph.read_graph(nodes, edges);
     cout<<"Done!\n";
 }
 
@@ -91,7 +91,7 @@ void Filter::contract_natural_cuts(){
 void Filter::convert_and_output(){
 
     cout<<"convert to assemble gGraph and output...\n";
-    gGraph.convert_n_output( OutPath );
+    gGraph.convert_n_output( anodes, aedges );
     cout<<"done!\n";
 
 }
