@@ -1494,6 +1494,8 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 		}
 		result.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
+        cout<<"Assembly result size: "<<result.size()<<endl;
+        cout<<"result[0][0]: "<<result[0][0]<<endl;
 		return;
 }
 
