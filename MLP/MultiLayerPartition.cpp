@@ -97,7 +97,7 @@ void MultiLayerPartition::MLP() {
         unsigned int cellCount = 0, edgeCount = 0;
 
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
-            bool node_map[nodeNum] = {0}; // for finding edges in cell
+            bool node_map[nodeNum] = new bool[nodeNum]; // for finding edges in cell
             for (unsigned int nid : cell_iter) {
                 node_map[nid] = 1;
             }
@@ -182,7 +182,8 @@ int main(int argc, char** argv) {
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
-    MultiLayerPartition mlp(paraPath, nodePath, edgePath, outPath);
+    Preprocess preprocess(nodePath, edgePath, outPath);
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
     mlp.generateMLP();
     end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;

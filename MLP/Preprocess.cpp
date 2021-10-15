@@ -26,6 +26,7 @@ void Preprocess::preprocess() {
 
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
+    nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
     outfile<<count<<endl;
     for (int i = 0; i < count; i++) {
@@ -51,6 +52,7 @@ void Preprocess::preprocess() {
         exit(1);
     }
     infile.read((char *)&count, sizeof(uint32_t));
+    edgeNum = count;
     cout<<"There are "<<count<<" edges in layer 0\n";
     links.resize(count);
     infile.read((char *)&links[0], sizeof(link_info_t) * count);

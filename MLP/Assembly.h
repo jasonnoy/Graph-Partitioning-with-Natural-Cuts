@@ -32,7 +32,7 @@ public:
 
     Assembly(int u, const vector<vector<NodeID>>& a_nodes, const vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
         U(u), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
-    Assembly(int u, int fi, int m, bool combine, const vector<vector<NodeID>>& a_nodes, const vector<vector<NodeID>>& a_edges, const string oPath, bool phantom, const string oPath, bool phantom):
+    Assembly(int u, int fi, int m, bool combine, const vector<vector<NodeID>>& a_nodes, const vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
     U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
     void runAssembly();
     const vector<vector<NodeID>>& get_result(){return result;}
