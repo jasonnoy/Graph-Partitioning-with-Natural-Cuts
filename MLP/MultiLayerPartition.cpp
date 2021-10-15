@@ -140,10 +140,7 @@ void MultiLayerPartition::MLP() {
             cout<<cell_edges.size()<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
-
-            for(int i = 0; i < 20; i++) {
-                cout<<"filter nid: "<<filter.get_anodes()[0][i]<<endl;
-            }
+            cout<<"filter anodes size: "<<filter.get_anodes().size()<<endl;
             Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
             cout<<"assembly result size: "<<assembly.get_result().size()<<endl;
