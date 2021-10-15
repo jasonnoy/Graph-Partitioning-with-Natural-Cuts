@@ -81,7 +81,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"there are "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size() * 2, 0);
+    this->sym_id.resize( this->edge_list.size(), 0);
     cout<<"counter: "<<counter<<endl;
     size_t eid = counter;
     for (int i = 0; i < counter; i++) {
@@ -98,6 +98,9 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //        sym_id[i] = eid;
 //        sym_id[eid] = i;
 //        eid++;
+    }
+    for (int i = 0; i < 20; i++) {
+        cout<<"sym_id"<<i<<": "<<sym_id[i]<<endl;
     }
     cout<<"fill symmetric edge done\n";
 
