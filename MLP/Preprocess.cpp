@@ -28,7 +28,7 @@ void Preprocess::preprocess() {
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<count<<endl;
+    outfile<<"1\n"<<count<<" ";
     for (int i = 0; i < count; i++) {
         outfile<<i<<" ";
     }
