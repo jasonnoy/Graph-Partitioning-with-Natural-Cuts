@@ -99,6 +99,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     for (int i = 1; i < edge_list.size(); i++) {
         sym_id[i-1] = i;
         sym_id[i] = i - 1;
+        i++;
     }
 
     for (int i = 0; i < 20; i++) {
