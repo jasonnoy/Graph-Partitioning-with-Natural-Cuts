@@ -144,8 +144,8 @@ void MultiLayerPartition::MLP() {
         }
 
         // option: 改写为不读取size
-        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
-        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
+        string out_node_path = outPath + "layer" + cur_layer + "_nodes1.txt";
+        string out_cut_path = outPath + "layer" + cur_layer + "_cuts1.txt";
         ofstream outfile;
 
         infile.open(out_node_path);
