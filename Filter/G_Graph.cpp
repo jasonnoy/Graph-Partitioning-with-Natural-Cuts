@@ -1383,7 +1383,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 				continue;
 			old_to_new[i] = new_id++;
 		}
-
+        cout<<"1386\n";
 		//node
 		ag->node_list.reserve( new_id );
 		id_map.resize( new_id );
@@ -1400,7 +1400,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 				this->contract_node_list[i].end() );
 			s_id++;
 		}
-
+        cout<<"1403\n";
 		//edge
 		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		ag->sym_id.resize( this->edge_list.size(), 0 );
@@ -1437,7 +1437,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 						accumulate_wet[nt_id] = 1;
 				}//for all edges
 			}//for all contained nodes
-
+            cout<<"1440\n";
 			//make new nodes and incident edges
 			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
@@ -1458,7 +1458,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 			//next node
 			s_id++;
 		}
-
+        cout<<"1461\n";
 		ag->sym_id.resize( e_id );
 		//ag->edge_list.resize( e_id );
 
@@ -1494,7 +1494,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
             anodes[i].push_back(nid);
             anodes[i].insert(anodes[i].end(), id_map[nid].begin(), id_map[nid].end());
         }
-
+        cout<<"1497\n";
 //		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 //		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 //		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
