@@ -7,7 +7,7 @@
 void GraphPrinter::write_MLP_result(const string layer) {
     MLP_result();
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
-    string out_edge_path = out_path + "layer" + layer + "_edges.txt";
+    string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
     ofstream outfile;
     outfile.open(out_node_path, ios::app);
     if (!outfile.is_open()) {
@@ -16,9 +16,9 @@ void GraphPrinter::write_MLP_result(const string layer) {
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        outfile<<cell_iter->size()<<" ";
+        outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
-            outfile<<*nid_i<<" ";
+            outfile<<" "<<*nid_i;
         }
         outfile<<"\n";
     }
@@ -26,8 +26,8 @@ void GraphPrinter::write_MLP_result(const string layer) {
     outfile.clear(ios::goodbit);
     cout<<"Done\n";
 
-    outfile.open(out_edge_path, ios::app);
-    cout<<"Printing edges of layer "<<layer<<endl;
+    outfile.open(out_cut_path, ios::app);
+    cout<<"Printing cuts of layer "<<layer<<endl;
     for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
         outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
     }
@@ -50,7 +50,14 @@ void GraphPrinter::MLP_result() {
         }
     }
 
-    filter_edges();
+    result_edges.reserve(cell_edges.size());
+    for (int i = 0; i < cell_edges.size(); i++) {
+        unsigned int sid = cell_edges[i][0];
+        unsigned int tid = cell_edges[i][1];
+        vector<unsigned int> edge = {sid, tid};
+        result_edges.push_back(edge);
+    }
+//    filter_edges();
 }
 
 void GraphPrinter::filter_edges() {

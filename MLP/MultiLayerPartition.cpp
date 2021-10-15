@@ -30,10 +30,34 @@ void MultiLayerPartition::MLP() {
 //    vector<vector<vector<int>>> cut_edges_list;
     infile.close();
     infile.clear(ios::goodbit);
+
+    unsigned int count;
+
+    // read edges
+    vector<vector<unsigned int>> graph_edges;
+    infile.open(in_edge_path);
+    if (!infile.is_open()) {
+        cout<<"layer edge file open failed!\n";
+        exit(1);
+    }
+    infile>>count;
+    cout<<"Layer "<<layer<<" has "<<count<<" edges\n";
+    graph_edges.resize(count);
+    for (int i = 0; i < count; i++) {
+        unsigned int sid, tid;
+        infile>>sid>>tid;
+        graph_edges[i].push_back(sid);
+        graph_edges[i].push_back(tid);
+//            graph_edges[i].push_back(weight);
+    }
+    infile.close();
+    infile.clear(ios::goodbit);
+
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
         int prefix = l == getL() - 1 ? -1 : l + 1;
-        string layer = to_string(prefix);
+        string last_layer = to_string(prefix);
+        string cur_layer = to_string(getL());
         int U, C, FI, M, PS;
         U = parameters[l][0];
         C = parameters[l][1];
@@ -47,8 +71,8 @@ void MultiLayerPartition::MLP() {
         }
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
-        string in_node_path = outPath + "layer" + layer + "_nodes.txt";
-        string in_edge_path = outPath + "layer" + layer + "_edges.txt";
+        string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
+        string in_edge_path = outPath + "layer" + last_layer + "_edges.txt";
         cout<<"input node: "<<in_node_path<<" input edge: "<<in_edge_path<<endl;
         if (phantom) {
             in_node_path = outPath + "layer0_nodes.txt";
@@ -60,7 +84,6 @@ void MultiLayerPartition::MLP() {
             cout<<"layer node file open failed!\n";
             exit(1);
         }
-        unsigned int count;
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
         vector<vector<unsigned int>> cells;
@@ -79,25 +102,7 @@ void MultiLayerPartition::MLP() {
         }
         infile.close();
         infile.clear(ios::goodbit);
-        // read edges
-        vector<vector<unsigned int>> edges;
-        infile.open(in_edge_path);
-        if (!infile.is_open()) {
-            cout<<"layer edge file open failed!\n";
-            exit(1);
-        }
-        infile>>count;
-        cout<<"Layer "<<layer<<" has "<<count<<" edges\n";
-        edges.resize(count);
-        for (int i = 0; i < count; i++) {
-            unsigned int sid, tid;
-            infile>>sid>>tid;
-            edges[i].push_back(sid);
-            edges[i].push_back(tid);
-//            edges[i].push_back(weight);
-        }
-        infile.close();
-        infile.clear(ios::goodbit);
+
         cout<<"Nodes and edges read in succeed!\n";
 
         unsigned int cellCount = 0, edgeCount = 0;
@@ -116,7 +121,8 @@ void MultiLayerPartition::MLP() {
 
             vector<vector<unsigned int>> output_edges; // for ram storage
 
-            for (vector<unsigned int> edge : edges) {
+            //filter inner edges inside cell.
+            for (vector<unsigned int> edge : graph_edges) {
                 if (node_map[edge[0]] && node_map[edge[1]]) {
                     cell_edges.push_back(edge);
                 }
@@ -129,14 +135,14 @@ void MultiLayerPartition::MLP() {
             assembly.runAssembly();
 
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
-            graphPrinter.write_MLP_result(layer);
+            graphPrinter.write_MLP_result(cur_layer);
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.edges_result_size();
         }
 
         // option: 改写为不读取size
-        string out_node_path = outPath + "layer" + to_string(l) + "_nodes.txt";
-        string out_edge_path = outPath + "layer" + to_string(l) + "_edges.txt";
+        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
+        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         ofstream outfile;
 
         infile.open(out_node_path);
@@ -150,13 +156,13 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
 
-        infile.open(out_edge_path);
+        infile.open(out_cut_path);
         string buffer2((istreambuf_iterator<char>(infile)), istreambuf_iterator<char>());
         buffer = to_string(edgeCount) + buffer2;
         infile.close();
         infile.clear(ios::goodbit);
 
-        outfile.open(out_edge_path);
+        outfile.open(out_cut_path);
         outfile<<buffer2;
         outfile.close();
         outfile.clear(ios::goodbit);
