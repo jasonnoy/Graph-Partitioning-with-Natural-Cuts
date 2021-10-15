@@ -158,7 +158,7 @@ void MultiLayerPartition::MLP() {
 
         infile.open(out_cut_path);
         string buffer2((istreambuf_iterator<char>(infile)), istreambuf_iterator<char>());
-        buffer2 = to_string(edgeCount) + buffer2;
+        buffer2 = to_string(edgeCount) + "\n" + buffer2;
         infile.close();
         infile.clear(ios::goodbit);
 
