@@ -15,11 +15,14 @@ void GraphPrinter::write_MLP_result(const string layer) {
         exit(1);
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
+    bool a = 1;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
+            if (a){cout<<"nid: "<<*nid_i<<endl;}
             outfile<<" "<<*nid_i;
         }
+        a=0;
         outfile<<"\n";
     }
     outfile.close();

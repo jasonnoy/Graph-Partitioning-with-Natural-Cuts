@@ -93,10 +93,6 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     size_t eid = counter;
     for (int i = 0; i < counter; i++) {
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
-        if (i < 20) {
-            cout<<"node adjacent size: "<<node_list[i].get_adj_list().size()<<endl;
-            cout<<"source:"<<edge_list[i].get_source()<<" target: "<<edge_list[i].get_target()<<endl;
-        }
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
@@ -109,9 +105,6 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         sym_id[i] = eid;
         sym_id[eid] = i;
         eid++;
-    }
-    for (int i = 0; i < 20; i++) {
-        cout<<"sym_id"<<i<<": "<<sym_id[i]<<endl;
     }
     cout<<"fill symmetric edge done\n";
 
@@ -1388,7 +1381,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 				continue;
 			old_to_new[i] = new_id++;
 		}
-        cout<<"1386\n";
+
 		//node
 		ag->node_list.reserve( new_id );
 		id_map.resize( new_id );
@@ -1405,7 +1398,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 				this->contract_node_list[i].end() );
 			s_id++;
 		}
-        cout<<"1403\n";
+
 		//edge
 		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		ag->sym_id.resize( this->edge_list.size(), 0 );
@@ -1463,7 +1456,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 			//next node
 			s_id++;
 		}
-        cout<<"1461\n";
+
 		ag->sym_id.resize( e_id );
 		//ag->edge_list.resize( e_id );
 
@@ -1499,7 +1492,6 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
             anodes[i].push_back(nid);
             anodes[i].insert(anodes[i].end(), id_map[nid].begin(), id_map[nid].end());
         }
-        cout<<"1497\n";
 //		vector<A_Node>::const_iterator anit = ag->node_list.begin();
 //		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
 //		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
