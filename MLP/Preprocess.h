@@ -17,8 +17,8 @@ using namespace std;
 class Preprocess {
 private:
     void preprocess();
-    unsigned int nodeNum = 0;
-    unsigned int edgeNum = 0;
+    int nodeNum = 0;
+    int edgeNum = 0;
 public:
     const string sw_node_path;
     const string sw_link_path;
