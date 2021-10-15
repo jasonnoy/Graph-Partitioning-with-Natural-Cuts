@@ -97,9 +97,9 @@ void MultiLayerPartition::MLP() {
         unsigned int cellCount = 0, edgeCount = 0;
 
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
-            bool node_map[nodeNum] = new bool[nodeNum]; // for finding edges in cell
-            for (unsigned int nid : cell_iter) {
-                node_map[nid] = 1;
+            bool* node_map = new bool[nodeNum](); // for finding edges in cell
+            for (auto nid : cell_iter) {
+                node_map[*nid] = 1;
             }
             vector<vector<int>> cell_edges;
             vector<vector<int>> anodes;
@@ -112,13 +112,13 @@ void MultiLayerPartition::MLP() {
                     cell_edges.push_back(edge);
                 }
             }
-            Filter filter(U, C, cell_iter, cell_edges, anodes, aedges);
+            Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
 
-            Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath); // ttodo: convert file into bin type, delete outpath intake
+            Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
 
-            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), cell_iter, cell_edges, outPath, phantom);
+            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
             graphPrinter.write_MLP_result(layer);
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.edges_result_size();

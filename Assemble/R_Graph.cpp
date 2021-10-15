@@ -111,7 +111,7 @@ EdgeWeight R_Graph::write_result( vector< vector<NodeID> >& result, vector< vect
 		string node_clusters_p = "node_clusters.txt";
 		string cut_edges_p = "cut_edges.txt";
         if (isPhantom) {
-            node_clusters_p = "Phantom"
+            node_clusters_p = "Phantom";
         }
 
 		node_clusters_p.insert( node_clusters_p.begin(), r_path.begin(), r_path.end() );

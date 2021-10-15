@@ -2,7 +2,7 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph( vector<NodeID>& nodes, vector<vector<NodeID>>& edges){
+void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges){
 
     // read in node
     cout<<"read in nodes...\n";

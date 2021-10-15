@@ -42,7 +42,7 @@ void GraphPrinter::MLP_result() {
     unsigned int index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
-        result_nodes[i].reserve( 10 * cit->size() );
+        result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (auto map_iter : id_map[*nit]) {
                 result_nodes[index].push_back(map_iter);
@@ -54,7 +54,7 @@ void GraphPrinter::MLP_result() {
 }
 
 void GraphPrinter::filter_edges() {
-    bool edge_map[cell_nodes.size()] = {0};
+    bool* edge_map = new bool[cell_nodes.size()]();
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
             edge_map[*nit] = 1;

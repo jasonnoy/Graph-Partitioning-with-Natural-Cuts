@@ -16,6 +16,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
+#include <streambuf>
 
 using namespace std;
 
