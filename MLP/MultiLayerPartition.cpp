@@ -6,8 +6,9 @@
 #include <ctime>
 
 void MultiLayerPartition::MLP() {
-    const string realNodePath = outPath + "real_nodes.txt";
-    const string realGraphPath = outPath + "real_edges.txt";
+//    const string realNodePath = outPath + "real_nodes.txt";
+//    const string realGraphPath = outPath + "real_edges.txt";
+    string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
     infile.open(paraPath);
     if (!infile.is_open()) {
@@ -37,11 +38,11 @@ void MultiLayerPartition::MLP() {
     vector<vector<unsigned int>> graph_edges;
     infile.open(in_edge_path);
     if (!infile.is_open()) {
-        cout<<"layer edge file open failed!\n";
+        cout<<"graph edge file open failed!\n";
         exit(1);
     }
     infile>>count;
-    cout<<"Layer "<<layer<<" has "<<count<<" edges\n";
+    cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
     for (int i = 0; i < count; i++) {
         unsigned int sid, tid;
@@ -72,7 +73,6 @@ void MultiLayerPartition::MLP() {
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
-        string in_edge_path = outPath + "layer" + last_layer + "_edges.txt";
         cout<<"input node: "<<in_node_path<<" input edge: "<<in_edge_path<<endl;
         if (phantom) {
             in_node_path = outPath + "layer0_nodes.txt";
