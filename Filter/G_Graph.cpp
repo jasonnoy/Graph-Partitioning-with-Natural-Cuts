@@ -87,6 +87,9 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     for (int i = 0; i < counter; i++) {
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
+            if (i < 20) {
+                cout<<"source: "<<this->edge_list[i].get_source()<<" target: "<<(*sym_edge_iter)->get_target()<<endl;
+            }
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
                 break;
