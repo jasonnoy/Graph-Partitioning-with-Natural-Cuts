@@ -14,8 +14,8 @@ private:
     int M = 1;
     bool COMBINE = false;
     bool PHANTOM;
-    const vector<vector<NodeID>>& anodes;
-    const vector<vector<NodeID>>& aedges;
+    vector<vector<NodeID>>& anodes;
+    vector<vector<NodeID>>& aedges;
 
     vector<vector<NodeID>> result;
     vector<vector<NodeID>> id_map;
@@ -30,13 +30,13 @@ public:
     const int U;
     const string outPath;
 
-    Assembly(int u, const vector<vector<NodeID>>& a_nodes, const vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
+    Assembly(int u, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
         U(u), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
-    Assembly(int u, int fi, int m, bool combine, const vector<vector<NodeID>>& a_nodes, const vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
+    Assembly(int u, int fi, int m, bool combine, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
     U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
     void runAssembly();
-    const vector<vector<NodeID>>& get_result(){return result;}
-    const vector<vector<NodeID>>& get_id_map(){return id_map;}
+    vector<vector<NodeID>>& get_result(){return result;}
+    vector<vector<NodeID>>& get_id_map(){return id_map;}
 };
 
 
