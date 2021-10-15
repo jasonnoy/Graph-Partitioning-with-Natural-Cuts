@@ -70,8 +70,10 @@ void MultiLayerPartition::MLP() {
             infile>>cellSize;
             cells[i].reserve(cellSize);
             for (int j = 0; j < cellSize; j++) {
+
                 unsigned int nid;
                 infile>>nid;
+                if (j<20){cout<<nid<<endl;}
                 cells[i].push_back(nid);
             }
         }
@@ -92,7 +94,7 @@ void MultiLayerPartition::MLP() {
             infile>>sid>>tid>>weight;
             edges[i].push_back(sid);
             edges[i].push_back(tid);
-            edges[i].push_back(weight);
+//            edges[i].push_back(weight);
         }
         infile.close();
         infile.clear(ios::goodbit);

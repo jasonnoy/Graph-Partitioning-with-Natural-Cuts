@@ -7,10 +7,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     // read in node
     cout<<"read in nodes...\n";
     node_list.reserve(nodes.size());
-    int n = 0;
     for (NodeID nid : nodes) {
-        cout<<"nid:"<<nid<<endl;
-        n++;
         G_Node node(nid);
         node_list.push_back(node);
     }
