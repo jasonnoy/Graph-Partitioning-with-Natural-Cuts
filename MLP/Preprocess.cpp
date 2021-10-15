@@ -57,7 +57,7 @@ void Preprocess::preprocess() {
     links.resize(count);
     infile.read((char *)&links[0], sizeof(link_info_t) * count);
     auto edge_iter = links.begin();
-    outfile<<count<<endl;
+    outfile<<count * 2<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
         outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" ";
         outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" ";
