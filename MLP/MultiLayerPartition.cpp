@@ -85,7 +85,7 @@ void MultiLayerPartition::MLP() {
             exit(1);
         }
         infile>>count;
-        cout<<"Layer "<<layer<<" has "<<count<<"edges\n";
+        cout<<"Layer "<<layer<<" has "<<count<<" edges\n";
         edges.resize(count);
         for (int i = 0; i < count; i++) {
             unsigned int sid, tid, weight;
@@ -105,6 +105,7 @@ void MultiLayerPartition::MLP() {
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
                 node_map[*nid] = 1;
             }
+            cout<<"bit map finished\n";
             vector<vector<unsigned int>> cell_edges;
             vector<vector<unsigned int>> anodes;
             vector<vector<unsigned int>> aedges;
@@ -116,6 +117,7 @@ void MultiLayerPartition::MLP() {
                     cell_edges.push_back(edge);
                 }
             }
+            cout<<cell_edges<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
 
