@@ -1437,7 +1437,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 						accumulate_wet[nt_id] = 1;
 				}//for all edges
 			}//for all contained nodes
-            cout<<"1440\n";
+
 			//make new nodes and incident edges
 			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
@@ -1520,7 +1520,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
         for (int i = 0; i < ag->edge_list.size(); i++) {
             aedges[i].push_back(ag->edge_list[i].get_source());
             aedges[i].push_back(ag->edge_list[i].get_target());
-            aedges[i].push_back(ag->edge_list[i].get_weight());
+//            aedges[i].push_back(ag->edge_list[i].get_weight());
         }
 //        outfile<<ag->edge_list.size()<<endl;
 //
