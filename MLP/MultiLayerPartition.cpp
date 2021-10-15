@@ -56,7 +56,7 @@ void MultiLayerPartition::MLP() {
 
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
-        int prefix = l == getL() - 1 ? -1 : l + 1;
+        int prefix = l == getL() - 1 ? -1 : l + 2;
         string last_layer = to_string(prefix);
         string cur_layer = to_string(getL());
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";

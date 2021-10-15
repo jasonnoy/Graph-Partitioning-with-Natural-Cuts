@@ -2,14 +2,17 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges){
+void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, map<unsigned int, unsigned int>& real_map){
 
     // read in node
     cout<<"read in nodes...\n";
     node_list.reserve(nodes.size());
+    // use relative node id for punch, map real nid for output
+    unsigned int id = 0;
     for (NodeID nid : nodes) {
-        G_Node node(nid);
+        G_Node node(id++);
         node_list.push_back(node);
+        real_map[nid] = i;
     }
 //    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
 
@@ -44,10 +47,10 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in edges
     cout<<"read edges...\n";
-    edge_list.reserve(edges.size() * 2);
+    edge_list.reserve(edges.size());
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
-        G_Edge gEdge(edge[0], edge[1], counter++);
+        G_Edge gEdge(real_map[edge[0]], real_map[edge[1]], counter++);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
@@ -87,25 +90,30 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"there are "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size() * 2, 0);
-//    edge_list.reserve(this->edge_list.size() * 2);
-    cout<<"counter: "<<counter<<endl;
-    size_t eid = counter;
-    for (int i = 0; i < counter; i++) {
-        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
-        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
-            if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
-                this->sym_id[i] = (*sym_edge_iter)->get_id();
-                break;
-            }
-        }
-        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
-        edge_list.push_back(newEdge);
-        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
-        sym_id[i] = eid;
-        sym_id[eid] = i;
-        eid++;
+    this->sym_id.resize( this->edge_list.size(), 0);
+
+    for (int i = 1; i < edge_list.size(); i++) {
+        sym_id[i-1] = i;
+        sym_id[i] = i - 1;
     }
+//    edge_list.reserve(this->edge_list.size() * 2);
+//    cout<<"counter: "<<counter<<endl;
+//    size_t eid = counter;
+//    for (int i = 0; i < counter; i++) {
+//        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
+//        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
+//            if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
+//                this->sym_id[i] = (*sym_edge_iter)->get_id();
+//                break;
+//            }
+//        }
+//        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
+//        edge_list.push_back(newEdge);
+//        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
+//        sym_id[i] = eid;
+//        sym_id[eid] = i;
+//        eid++;
+//    }
     cout<<"fill symmetric edge done\n";
 
     //initial contraction
