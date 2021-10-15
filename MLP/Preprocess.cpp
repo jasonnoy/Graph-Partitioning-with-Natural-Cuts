@@ -68,9 +68,9 @@ int main(int argc, char** argv[]) {
     clock_t start, end;
     start = clock();
     cout<<"Preprocessing layer 0...\n";
-    string sw_nodes(argv[1]);
-    string sw_links(argv[2]);
-    string output(argv[3]);
+    string sw_nodes = argv[1];
+    string sw_links = argv[2];
+    string output = argv[3];
     Preprocess preprocess(sw_nodes, sw_links, output);
     preprocess.runPreprocess();
     end = clock();
