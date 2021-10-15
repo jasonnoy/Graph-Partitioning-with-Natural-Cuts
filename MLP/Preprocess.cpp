@@ -57,8 +57,10 @@ void Preprocess::preprocess() {
     auto edge_iter = links.begin();
     outfile<<count<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
-        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" ";
-        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<" ";
+        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<1<<" "; //目前假设weight为1
+        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<1<<" ";
+//        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" "; //目前假设weight为1
+//        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<" ";
     }
     infile.close();
 
