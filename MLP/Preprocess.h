@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "../Common/sw_basetypes.h"
 
 using namespace std;
