@@ -60,7 +60,7 @@ void Preprocess::preprocess() {
     outfile<<count<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
         outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" ";
-//        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" ";
+        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" ";
 //        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" "; //目前假设weight为1
 //        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<" ";
     }
