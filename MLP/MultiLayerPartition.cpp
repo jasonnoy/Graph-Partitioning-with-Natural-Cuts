@@ -117,7 +117,7 @@ void MultiLayerPartition::MLP() {
                     cell_edges.push_back(edge);
                 }
             }
-            cout<<cell_edges<<" edges in cell_edges\n";
+            cout<<cell_edges.size()<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
 
