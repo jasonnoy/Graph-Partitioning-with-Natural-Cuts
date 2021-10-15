@@ -27,9 +27,9 @@ void Preprocess::preprocess() {
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<count<<" ";
+    outfile<<count<<endl;
     for (int i = 0; i < count; i++) {
-        outfile<<i<<endl;
+        outfile<<i<<" ";
     }
     infile.close();
     infile.clear(ios::goodbit);
