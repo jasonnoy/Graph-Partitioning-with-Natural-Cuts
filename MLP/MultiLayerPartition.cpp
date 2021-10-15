@@ -90,8 +90,8 @@ void MultiLayerPartition::MLP() {
         cout<<"Layer "<<layer<<" has "<<count<<" edges\n";
         edges.resize(count);
         for (int i = 0; i < count; i++) {
-            unsigned int sid, tid, weight;
-            infile>>sid>>tid>>weight;
+            unsigned int sid, tid;
+            infile>>sid>>tid;
             edges[i].push_back(sid);
             edges[i].push_back(tid);
 //            edges[i].push_back(weight);
