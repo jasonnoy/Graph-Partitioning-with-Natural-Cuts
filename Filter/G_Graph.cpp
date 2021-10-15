@@ -10,6 +10,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     // use relative node id for punch, map real nid for output
     unsigned int id = 0;
     map<unsigned int, unsigned int> real_to_nid;
+    real_map.reserve(nodes.size());
     for (NodeID nid : nodes) {
         G_Node node(id);
         node_list.push_back(node);
@@ -98,6 +99,11 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     for (int i = 1; i < edge_list.size(); i++) {
         sym_id[i-1] = i;
         sym_id[i] = i - 1;
+    }
+
+    for (int i = 0; i < 20; i++) {
+        cout<<"Node id: "<<node_list[i].get_id()<<" adj size: "<<node_list[i].get_adj_list().size()<<endl;
+        cout<<"edge "<<i<<" source: "<<edge_list[i].get_source()<<" target: "<<edge_list[i].get_target()<<endl;
     }
 //    edge_list.reserve(this->edge_list.size() * 2);
 //    cout<<"counter: "<<counter<<endl;
