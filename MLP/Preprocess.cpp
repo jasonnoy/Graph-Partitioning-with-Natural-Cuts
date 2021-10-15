@@ -59,7 +59,7 @@ void Preprocess::preprocess() {
     cout<<"Done! There are "<<count<<" edges in layer 0\n";
 }
 
-int main(int argc, char** argv[]) {
+int main(int argc, char* argv[]) {
     if (argc != 4) {
         printf("usage:\n<arg1> sw_node file path, e.g. ../data/node.txt\n");
         printf("<arg2> sw_link file path, e.g. e.g. ../data/link.txt\n");
@@ -68,7 +68,6 @@ int main(int argc, char** argv[]) {
     }
     clock_t start, end;
     start = clock();
-    cout<<"argv[1]: "<<argv[1]<<endl;
     cout<<"Preprocessing layer 0...\n";
     string sw_nodes(argv[1]);
     string sw_links(argv[2]);
