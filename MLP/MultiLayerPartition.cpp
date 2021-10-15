@@ -117,7 +117,9 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
 
+        int cell_count = 0;
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
+            cout<<"cell No."<<cell_count++<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             cout<<"nodeNum: "<<nodeNum<<endl;
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
@@ -137,13 +139,11 @@ void MultiLayerPartition::MLP() {
                     cell_edges.push_back(edge);
                 }
             }
-            cout<<cell_edges.size()<<" edges in cell_edges\n";
+            cout<<cell_iter->size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
-            cout<<"filter anodes size: "<<filter.get_anodes().size()<<endl;
             Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
-            cout<<"assembly result size: "<<assembly.get_result().size()<<endl;
 
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map());

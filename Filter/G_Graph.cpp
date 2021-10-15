@@ -102,10 +102,6 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         i++;
     }
 
-    for (int i = 0; i < 20; i++) {
-        cout<<"Node id: "<<node_list[i].get_id()<<" adj size: "<<node_list[i].get_adj_list().size()<<endl;
-        cout<<"edge "<<i<<" source: "<<edge_list[i].get_source()<<" target: "<<edge_list[i].get_target()<<endl;
-    }
 //    edge_list.reserve(this->edge_list.size() * 2);
 //    cout<<"counter: "<<counter<<endl;
 //    size_t eid = counter;
