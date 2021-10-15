@@ -62,7 +62,7 @@ void MultiLayerPartition::MLP() {
         unsigned int count;
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
-        vector<vector<int>> cells;
+        vector<vector<unsigned int>> cells;
         cells.resize(count);
         for (int i = 0; i < count; i++) {
             unsigned int cellSize;
@@ -98,16 +98,16 @@ void MultiLayerPartition::MLP() {
 
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
-            for (auto nid : cell_iter) {
+            for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
                 node_map[*nid] = 1;
             }
-            vector<vector<int>> cell_edges;
-            vector<vector<int>> anodes;
-            vector<vector<int>> aedges;
+            vector<vector<unsigned int>> cell_edges;
+            vector<vector<unsigned int>> anodes;
+            vector<vector<unsigned int>> aedges;
 
-            vector<vector<int>> output_edges; // for ram storage
+            vector<vector<unsignedint>> output_edges; // for ram storage
 
-            for (vector<int> edge : edges) {
+            for (vector<unsigned int> edge : edges) {
                 if (node_map[edge[0]] && node_map[edge[1]]) {
                     cell_edges.push_back(edge);
                 }
@@ -130,7 +130,7 @@ void MultiLayerPartition::MLP() {
         ofstream outfile;
 
         infile.open(out_node_path);
-        string buffer((istreambuf_iterator::istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
+        string buffer((istreambuf_iterator<char>(infile)), istreambuf_iterator<char>()); // read entire file
         buffer = to_string(cellCount) + buffer;
         infile.close();
         infile.clear(ios::goodbit);
@@ -141,7 +141,7 @@ void MultiLayerPartition::MLP() {
         outfile.clear(ios::goodbit);
 
         infile.open(out_edge_path);
-        string buffer2((istreambuf_iterator::istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
+        string buffer2((istreambuf_iterator<char>(infile)), istreambuf_iterator<char>());
         buffer = to_string(edgeCount) + buffer2;
         infile.close();
         infile.clear(ios::goodbit);

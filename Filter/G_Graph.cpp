@@ -6,7 +6,14 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in node
     cout<<"read in nodes...\n";
-    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
+    node_list.reserve(nodes.size());
+    for (NodeID nid : nodes) {
+        G_Node node(nid);
+        node_list.push_back(nid);
+    }
+//    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
+
+
 //    std::vector<node_info_t> nodes;
 //    std::ifstream fs;
 //    fs.open(co_path, std::ios::binary);
@@ -37,7 +44,15 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in edges
     cout<<"read edges...\n";
-    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
+    edge_list.reserve(edges.size());
+    for (vector<NodeID>edge : edges) {
+        G_Edge gEdge(edge[0], edge[1]);
+        edge_list.push_back(gEdge);
+    }
+//    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
+
+
+
 //    std::vector<link_info_t> links;
 //    fs.open(gr_path, std::ios::binary);
 //    if (!fs.is_open()) {
@@ -66,6 +81,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size() * 2, 0);
+    NodeID counter = this->edge_list.size();
     size_t eid = counter;
     cout<<"counter: "<<counter<<endl;
     for (int i = 0; i < counter; i++) {
@@ -1446,11 +1462,11 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 			ag->contract_node_list[i].push_back( i );
 
 		//convert done, start writing
-		string node_n = "anode.txt";
-		string edge_n = "aedge.txt";
-
-		node_n.insert( node_n.begin(), r_path.begin(), r_path.end() );
-		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
+//		string node_n = "anode.txt";
+//		string edge_n = "aedge.txt";
+//
+//		node_n.insert( node_n.begin(), r_path.begin(), r_path.end() );
+//		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
 
 		//write node and id map
 //        ofstream outfile;
