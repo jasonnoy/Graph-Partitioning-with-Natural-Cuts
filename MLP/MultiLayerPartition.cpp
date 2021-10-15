@@ -49,6 +49,7 @@ void MultiLayerPartition::MLP() {
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + layer + "_nodes.txt";
         string in_edge_path = outPath + "layer" + layer + "_edges.txt";
+        cout<<"input node: "<<in_node_path<<" input edge: "<<in_edge_path<<endl;
         if (phantom) {
             in_node_path = outPath + "layer0_nodes.txt";
             in_edge_path = outPath + "layer0_edges.txt";
