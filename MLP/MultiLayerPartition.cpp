@@ -103,6 +103,7 @@ void MultiLayerPartition::MLP() {
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
+                cout<<"nid: "<<*nid<<endl;
                 node_map[*nid] = 1;
             }
             cout<<"bit map finished\n";
