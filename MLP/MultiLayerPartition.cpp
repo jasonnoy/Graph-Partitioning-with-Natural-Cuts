@@ -85,15 +85,18 @@ void MultiLayerPartition::MLP() {
             exit(1);
         }
         infile>>count;
+        cout<<"Layer "<<layer<<" has "<<count<<"edges\n";
         edges.resize(count);
         for (int i = 0; i < count; i++) {
-            unsigned int sid, tid;
-            infile>>sid>>tid;
+            unsigned int sid, tid, weight;
+            infile>>sid>>tid>>weight;
             edges[i].push_back(sid);
             edges[i].push_back(tid);
+            edges[i].push_back(weight);
         }
         infile.close();
         infile.clear(ios::goodbit);
+        cout<<"Nodes and edges read in succeed!\n";
 
         unsigned int cellCount = 0, edgeCount = 0;
 
