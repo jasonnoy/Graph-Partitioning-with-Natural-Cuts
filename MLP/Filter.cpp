@@ -20,7 +20,7 @@ void Filter::contract_tiny_cuts(){
     //make a dfs tree on the graph
     cout<<"get DFS tree...\n";
     vector<bool> edge_in_fi( gGraph.get_edge_list().size(), true );
-    gGraph.dfs_tree( 10000, edge_in_fi, 0);
+    gGraph.dfs_tree( 0, edge_in_fi, 0);
 
     size_t ten = 0;
     for( int i = 0; i < edge_in_fi.size(); i++ ){
