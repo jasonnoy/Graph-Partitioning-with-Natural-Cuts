@@ -190,10 +190,18 @@ int main(int argc, char** argv) {
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
+
+    cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
+    preprocess.runPreprocess();
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Preprocess run time: "<<time<<"s.\n";
+
+
     MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
     mlp.generateMLP();
     end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
+    time = (end - start) / CLOCKS_PER_SEC;
     cout<<"MLP run time: "<<time<<"s.\n";
 }

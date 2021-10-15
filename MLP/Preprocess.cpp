@@ -68,23 +68,23 @@ void Preprocess::preprocess() {
 
 }
 
-int main(int argc, char* argv[]) {
-    if (argc != 4) {
-        printf("usage:\n<arg1> sw_node file path, e.g. ../data/node.txt\n");
-        printf("<arg2> sw_link file path, e.g. e.g. ../data/link.txt\n");
-        printf("<arg3> output path, e.g. ../result/\n");
-        exit(0);
-    }
-    clock_t start, end;
-    start = clock();
-    cout<<"Preprocessing layer 0...\n";
-    string sw_nodes(argv[1]);
-    string sw_links(argv[2]);
-    string output(argv[3]);
-    Preprocess preprocess(sw_nodes, sw_links, output);
-    preprocess.runPreprocess();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Preprocess run time: "<<time<<"s.\n";
-    return 0;
-}
+//int main(int argc, char* argv[]) {
+//    if (argc != 4) {
+//        printf("usage:\n<arg1> sw_node file path, e.g. ../data/node.txt\n");
+//        printf("<arg2> sw_link file path, e.g. e.g. ../data/link.txt\n");
+//        printf("<arg3> output path, e.g. ../result/\n");
+//        exit(0);
+//    }
+//    clock_t start, end;
+//    start = clock();
+//    cout<<"Preprocessing layer 0...\n";
+//    string sw_nodes(argv[1]);
+//    string sw_links(argv[2]);
+//    string output(argv[3]);
+//    Preprocess preprocess(sw_nodes, sw_links, output);
+//    preprocess.runPreprocess();
+//    end = clock();
+//    int time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"Preprocess run time: "<<time<<"s.\n";
+//    return 0;
+//}
