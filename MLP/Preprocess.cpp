@@ -27,13 +27,16 @@ void Preprocess::preprocess() {
 
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
+    cout<<"There are "<<count<<" nodes in layer 0\n";
     outfile<<count<<endl;
     for (int i = 0; i < count; i++) {
         outfile<<i<<" ";
     }
     infile.close();
     infile.clear(ios::goodbit);
-    cout<<"Done! There are "<<count<<" nodes in layer 0\n";
+    outfile.close();
+    outfile.clear(ios::goodbit);
+
 
     // read in edges
     cout<<"generating layer 0 edges...\n";
@@ -43,6 +46,7 @@ void Preprocess::preprocess() {
         cout<<"gr_file open failed!\n";
         exit(1);
     }
+
     outfile.open(out_edge_path);
     if (!outfile.is_open()) {
         cout<<"out_edge_file open failed!\n";
@@ -50,13 +54,14 @@ void Preprocess::preprocess() {
     }
     auto edge_iter = links.begin();
     infile.read((char *)&count, sizeof(uint32_t));
+    cout<<"There are "<<count<<" edges in layer 0\n";
     outfile<<count<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
         outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" ";
         outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<" ";
     }
     infile.close();
-    cout<<"Done! There are "<<count<<" edges in layer 0\n";
+
 }
 
 int main(int argc, char* argv[]) {
