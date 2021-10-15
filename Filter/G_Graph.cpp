@@ -46,7 +46,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"read edges...\n";
     edge_list.reserve(edges.size());
     for (vector<NodeID>edge : edges) {
-        G_Edge gEdge(edge[0], edge[1]);
+        G_Edge gEdge(edge[0], edge[1], edge[2]);
         edge_list.push_back(gEdge);
     }
 //    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());

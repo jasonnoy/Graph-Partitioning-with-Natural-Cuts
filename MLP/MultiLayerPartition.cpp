@@ -77,7 +77,7 @@ void MultiLayerPartition::MLP() {
         infile.close();
         infile.clear(ios::goodbit);
         // read edges
-        vector<vector<int>> edges;
+        vector<vector<unsigned int>> edges;
         infile.open(in_edge_path);
         if (!infile.is_open()) {
             cout<<"layer edge file open failed!\n";
@@ -105,7 +105,7 @@ void MultiLayerPartition::MLP() {
             vector<vector<unsigned int>> anodes;
             vector<vector<unsigned int>> aedges;
 
-            vector<vector<unsignedint>> output_edges; // for ram storage
+            vector<vector<unsigned int>> output_edges; // for ram storage
 
             for (vector<unsigned int> edge : edges) {
                 if (node_map[edge[0]] && node_map[edge[1]]) {
