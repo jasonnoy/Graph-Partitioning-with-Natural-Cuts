@@ -31,7 +31,8 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
             node_size = anodes[i].size();
             A_Node anode(to_node_id, node_size);
             this->node_list.push_back(anode);
-            vector<NodeID> contain_id(node_size);
+            vector<NodeID> contain_id;
+            contain_id.reserve(node_size);
             contain_id.insert(contain_id.end(), anodes[i].begin()+1, anodes[i].end());
             id_map[to_node_id] = contain_id;
         }
