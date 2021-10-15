@@ -27,7 +27,7 @@ void Preprocess::preprocess() {
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<count<<endl;
+    outfile<<count<<" ";
     for (int i = 0; i < count; i++) {
         outfile<<i<<endl;
     }
@@ -57,8 +57,8 @@ void Preprocess::preprocess() {
     auto edge_iter = links.begin();
     outfile<<count<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
-        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<endl;
-        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<endl;
+        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" ";
+        outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" "<<edge_iter->backward_res_weigh<<" ";
     }
     infile.close();
 
