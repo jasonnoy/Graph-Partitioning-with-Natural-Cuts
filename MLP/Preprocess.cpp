@@ -37,7 +37,7 @@ void Preprocess::preprocess() {
     // read in edges
     cout<<"generating layer 0 edges...\n";
     std::vector<link_info_t> links;
-    infile.open(gr_path, std::ios::binary);
+    infile.open(sw_link_path, std::ios::binary);
     if (!infile.is_open()) {
         cout<<"gr_file open failed!\n";
         exit(1);
@@ -68,9 +68,9 @@ int main(int argc, char** argv[]) {
     clock_t start, end;
     start = clock();
     cout<<"Preprocessing layer 0...\n";
-    string sw_nodes = argv[1];
-    string sw_links = argv[2];
-    string output = argv[3];
+    string sw_nodes(argv[1]);
+    string sw_links(argv[2]);
+    string output(argv[3]);
     Preprocess preprocess(sw_nodes, sw_links, output);
     preprocess.runPreprocess();
     end = clock();

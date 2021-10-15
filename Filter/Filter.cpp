@@ -133,7 +133,7 @@ int main( int argc, char** argv){
 	NodeSize sz_lim = atoi( argv[1] );
 	string co_path( argv[2] );
 	string gr_path( argv[3] );
-	string result_path = ( argv[4] );
+	string result_path ( argv[4] );
 
 	VERBOSE( printf("Node size limit: %d\n", sz_lim); )
 	
