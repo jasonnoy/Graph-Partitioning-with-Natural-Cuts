@@ -11,10 +11,11 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     unsigned int id = 0;
     map<unsigned int, unsigned int> real_to_nid;
     for (NodeID nid : nodes) {
-        G_Node node(id++);
+        G_Node node(id);
         node_list.push_back(node);
         real_map.push_back(nid);
-        real_to_nid[nid] = i;
+        real_to_nid[nid] = id;
+        id++;
     }
 //    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
 
