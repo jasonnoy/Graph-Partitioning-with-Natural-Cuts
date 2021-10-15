@@ -58,7 +58,7 @@ void MultiLayerPartition::MLP() {
     for (--l; l >= 0; l--) {
         int prefix = l == getL() - 1 ? -1 : l + 2;
         string last_layer = to_string(prefix);
-        string cur_layer = to_string(getL());
+        string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         int U, C, FI, M, PS;
