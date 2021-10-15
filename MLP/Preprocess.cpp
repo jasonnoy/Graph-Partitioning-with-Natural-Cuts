@@ -12,7 +12,6 @@ void Preprocess::preprocess() {
     string out_node_path = out_path + "layer0_nodes.txt";
     string out_edge_path = out_path + "layer0_edges.txt";
 
-    cout<<"generating layer 0 nodes...\n";
     infile.open(sw_node_path, std::ios::binary);
     vector<node_info_t> nodes;
     if (!infile.is_open()) {
@@ -39,7 +38,6 @@ void Preprocess::preprocess() {
 
 
     // read in edges
-    cout<<"generating layer 0 edges...\n";
     std::vector<link_info_t> links;
     infile.open(sw_link_path, std::ios::binary);
     if (!infile.is_open()) {
@@ -52,9 +50,11 @@ void Preprocess::preprocess() {
         cout<<"out_edge_file open failed!\n";
         exit(1);
     }
-    auto edge_iter = links.begin();
     infile.read((char *)&count, sizeof(uint32_t));
     cout<<"There are "<<count<<" edges in layer 0\n";
+    links.resize(count);
+    infile.read((char *)&links[0], sizeof(link_info_t) * count);
+    auto edge_iter = links.begin();
     outfile<<count<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
         outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" ";
@@ -81,6 +81,6 @@ int main(int argc, char* argv[]) {
     preprocess.runPreprocess();
     end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Filter run time: "<<time<<"s.\n";
+    cout<<"Preprocess run time: "<<time<<"s.\n";
     return 0;
 }
