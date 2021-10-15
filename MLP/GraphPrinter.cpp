@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(const string layer) {
+void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map) {
     MLP_result();
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
@@ -15,14 +15,11 @@ void GraphPrinter::write_MLP_result(const string layer) {
         exit(1);
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
-    bool a = 1;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
-            if (a){cout<<"nid: "<<*nid_i<<endl;}
-            outfile<<" "<<*nid_i;
+            outfile<<" "<<real_map[*nid_i];
         }
-        a=0;
         outfile<<"\n";
     }
     outfile.close();
@@ -32,7 +29,7 @@ void GraphPrinter::write_MLP_result(const string layer) {
     outfile.open(out_cut_path, ios::app);
     cout<<"Printing cuts of layer "<<layer<<endl;
     for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
-        outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
+        outfile<<real_map[edge_iter->at(0)]<<" "<<real_map[edge_iter->at(1)]<<endl;
     }
     outfile.close();
     cout<<"Done\n";

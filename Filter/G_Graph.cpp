@@ -2,17 +2,19 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, map<unsigned int, unsigned int>& real_map){
+void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map){
 
     // read in node
     cout<<"read in nodes...\n";
     node_list.reserve(nodes.size());
     // use relative node id for punch, map real nid for output
     unsigned int id = 0;
+    map<unsigned int, unsigned int> real_to_nid;
     for (NodeID nid : nodes) {
         G_Node node(id++);
         node_list.push_back(node);
-        real_map[nid] = i;
+        real_map.push_back(nid);
+        real_to_nid[nid] = i;
     }
 //    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
 
@@ -50,7 +52,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     edge_list.reserve(edges.size());
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
-        G_Edge gEdge(real_map[edge[0]], real_map[edge[1]], counter++);
+        G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], counter++);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }

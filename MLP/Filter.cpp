@@ -7,7 +7,7 @@
 void Filter::read_in_graph(){
     //read in graph
     cout<<"Reading input file...\n";
-    gGraph.read_graph(nodes, edges);
+    gGraph.read_graph(nodes, edges, real_map);
     cout<<"Done!\n";
 }
 

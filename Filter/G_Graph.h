@@ -88,7 +88,7 @@ public:
 
 	/////////////////////////////main methods////////////////////////////
 
-	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges );
+	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map );
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
 

@@ -21,6 +21,7 @@ private:
     const vector<vector<unsigned int>>& edges;
     vector<vector<unsigned int>>& anodes;
     vector<vector<unsigned int>>& aedges;
+    vector<unsigned int> real_map;
 
     void read_in_graph();
     void contract_tiny_cuts();
@@ -39,6 +40,7 @@ public:
     void setF(int f){F = f;}
     vector<vector<unsigned int>>& get_anodes(){return anodes;}
     vector<vector<unsigned int>>& get_aedges(){return aedges;}
+    vector<unsigned int>& get_real_map(){return real_map;}
 };
 
 

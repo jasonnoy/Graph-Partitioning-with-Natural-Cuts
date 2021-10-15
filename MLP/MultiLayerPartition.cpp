@@ -146,7 +146,7 @@ void MultiLayerPartition::MLP() {
             cout<<"assembly result size: "<<assembly.get_result().size()<<endl;
 
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
-            graphPrinter.write_MLP_result(cur_layer);
+            graphPrinter.write_MLP_result(cur_layer, filter.get_real_map());
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.edges_result_size();
         }
