@@ -98,7 +98,6 @@ void MultiLayerPartition::MLP() {
 
                 unsigned int nid;
                 infile>>nid;
-                if (j<20){cout<<nid<<endl;}
                 cells[i].push_back(nid);
             }
         }
