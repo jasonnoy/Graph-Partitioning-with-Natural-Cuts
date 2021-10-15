@@ -51,6 +51,11 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
+//    sym_id.resize(edge_list.size());
+//    for (int i = 1; i < edge_list.size(); i++) {
+//        sym_id[i] = edge_list[i - 1].get_id();
+//        sym_id[i - 1] = edge_list[i].get_id();
+//    }
 //    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
 
 
@@ -1516,7 +1521,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 //            exit(1);
 //        }
 
-        aedges.reserve(ag->edge_list.size());
+        aedges.resize(ag->edge_list.size());
         for (int i = 0; i < ag->edge_list.size(); i++) {
             aedges[i].push_back(ag->edge_list[i].get_source());
             aedges[i].push_back(ag->edge_list[i].get_target());
