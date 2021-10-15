@@ -89,9 +89,9 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
         if (i < 20) {
             cout<<"node adjacent size: "<<node_list[i].get_adj_list().size()<<endl;
+            cout<<"source:"<<edge_list[i].get_source()<<" target: "<<edge_list[i].get_target()<<endl;
         }
         for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
-
             if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
                 this->sym_id[i] = (*sym_edge_iter)->get_id();
                 break;
