@@ -49,6 +49,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     for (vector<NodeID>edge : edges) {
         G_Edge gEdge(edge[0], edge[1], counter++);
         edge_list.push_back(gEdge);
+        node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
 //    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
 
