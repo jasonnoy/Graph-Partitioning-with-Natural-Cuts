@@ -44,7 +44,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in edges
     cout<<"read edges...\n";
-    edge_list.reserve(edges.size());
+    edge_list.reserve(edges.size() * 2);
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
         G_Edge gEdge(edge[0], edge[1], counter++);
@@ -82,7 +82,8 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"there are "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size(), 0);
+    this->sym_id.resize( this->edge_list.size() * 2, 0);
+//    edge_list.reserve(this->edge_list.size() * 2);
     cout<<"counter: "<<counter<<endl;
     size_t eid = counter;
     for (int i = 0; i < counter; i++) {
@@ -97,12 +98,12 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
                 break;
             }
         }
-//        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
-//        edge_list.push_back(newEdge);
-//        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
-//        sym_id[i] = eid;
-//        sym_id[eid] = i;
-//        eid++;
+        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
+        edge_list.push_back(newEdge);
+        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
+        sym_id[i] = eid;
+        sym_id[eid] = i;
+        eid++;
     }
     for (int i = 0; i < 20; i++) {
         cout<<"sym_id"<<i<<": "<<sym_id[i]<<endl;
