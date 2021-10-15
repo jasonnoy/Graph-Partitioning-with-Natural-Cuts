@@ -71,7 +71,7 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 //		}
 		this->edge_list.reserve( aedges.size() );
         cout<<aedges.size()<<"edges in aedge\n";
-        for (int i = 0; i > aedges.size(); i++) {
+        for (int i = 0; i < aedges.size(); i++) {
             NodeID sid = aedges[i][0];
             A_Edge edge(sid, aedges[i][1], aedges[i][2], i);
             edge_list.push_back(edge);
