@@ -40,7 +40,7 @@ void GraphPrinter::write_MLP_result(const string layer) {
 
 void GraphPrinter::MLP_result() {
     fill_contracts();
-
+    cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {

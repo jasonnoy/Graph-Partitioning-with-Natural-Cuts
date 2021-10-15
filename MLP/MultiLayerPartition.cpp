@@ -59,6 +59,8 @@ void MultiLayerPartition::MLP() {
         int prefix = l == getL() - 1 ? -1 : l + 1;
         string last_layer = to_string(prefix);
         string cur_layer = to_string(getL());
+        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
+        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         int U, C, FI, M, PS;
         U = parameters[l][0];
         C = parameters[l][1];
@@ -106,6 +108,14 @@ void MultiLayerPartition::MLP() {
         cout<<"Nodes and edges read in succeed!\n";
 
         unsigned int cellCount = 0, edgeCount = 0;
+        ofstream outfile;
+        // delete old files if any
+        outfile.open(out_node_path);
+        outfile.close();
+        outfile.clear(ios::goodbit);
+        outfile.open(out_cut_path);
+        outfile.close();
+        outfile.clear(ios::goodbit);
 
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
@@ -136,6 +146,7 @@ void MultiLayerPartition::MLP() {
             }
             Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
+            cout<<"assembly result size: "<<assembly.get_result().size()<<endl;
 
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
             graphPrinter.write_MLP_result(cur_layer);
@@ -144,9 +155,7 @@ void MultiLayerPartition::MLP() {
         }
 
         // option: 改写为不读取size
-        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
-        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
-        ofstream outfile;
+
 
         infile.open(out_node_path);
         string buffer((istreambuf_iterator<char>(infile)), istreambuf_iterator<char>()); // read entire file
