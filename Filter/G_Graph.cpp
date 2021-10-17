@@ -1555,8 +1555,12 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 		root_pos = this->build_component_tree( one_cut_edges, component_tree );
 
 		//fill subtree size
-        cout<<"filling subtree size...\n";
-		this->fill_subtree_size( component_tree, root_pos );
+        if (component_tree.empty()) {
+            cout<<"Component tree empty, skipping..\n";
+        } else {
+            cout<<"filling subtree size...\n";
+            this->fill_subtree_size( component_tree, root_pos );
+        }
 
 		//contract those components on the condition of first pass
         cout<<"cnt_proper_tree_components...\n";
@@ -1637,7 +1641,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			}//while the component is expanding
 //            cout<<"1638\n";
 			if( component.empty() )
-                cout<<"component empty.\n";
 				continue;
 
 			edge_cncted_comp tree_node;
@@ -1688,6 +1691,9 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 	NodeSize sz_lim ){
 
 		//just in case
+        if (component_tree.empty()) {
+            return;
+        }
 		if( !component_tree[root_p].subtree_size ) //component_tree[root_p].subtree_size is 0
 			return;
 
