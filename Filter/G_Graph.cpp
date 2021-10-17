@@ -1653,7 +1653,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			component_tree.push_back( tree_node );
 
 		}
-        cout<<"1656\n";
+        cout<<"1656: component_tree.size: "<<component_tree.size()<<endl;
 		//now we have all the tree nodes and their sizes, then we build the tree
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
@@ -1662,7 +1662,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			for(; cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
-
+        cout<<"1665\n";
 		//recursively link the tree
 		this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
 
