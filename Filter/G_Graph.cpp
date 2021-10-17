@@ -1564,8 +1564,9 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 		//contract those components on the condition of first pass
         cout<<"cnt_proper_tree_components...\n";
-		this->cnt_proper_tree_components( component_tree, root_pos, sz_lim );
-		
+        if (!component_tree.empty())
+		    this->cnt_proper_tree_components( component_tree, root_pos, sz_lim );
+		cout<<"Done.\n";
 		return;
 }
 
