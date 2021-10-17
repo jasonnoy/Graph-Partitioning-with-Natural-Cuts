@@ -22,6 +22,7 @@ private:
     const vector<vector<NodeID>>& a_result;
     vector<vector<NodeID>> result_nodes;
     vector<vector<NodeID>> result_edges;
+    vector<vector<NodeID>> result_cuts;
     const string out_path;
     bool isPhantom;
     vector<NodeID> contract_to;

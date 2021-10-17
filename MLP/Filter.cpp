@@ -46,7 +46,8 @@ void Filter::contract_tiny_cuts(){
     /* of them are contained in the same contracted node, and they are thus ingored. */
 
     //edge_equl_cls[0] is the class of 1-cut
-    cout<<"contract one cuts...";
+    cout<<"contract one cuts...\n";
+    cout<<"size of 1-cut: "<<edge_equl_cls[0].size()<<endl;
     gGraph.cnt_one_cuts( edge_equl_cls[0], U );
     printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
