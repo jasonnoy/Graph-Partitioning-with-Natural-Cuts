@@ -1551,12 +1551,15 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 		size_t root_pos;
 		//build component tree T
+        cout<<"building comp tree...\n";
 		root_pos = this->build_component_tree( one_cut_edges, component_tree );
 
 		//fill subtree size
+        cout<<"filling subtree size...\n";
 		this->fill_subtree_size( component_tree, root_pos );
 
 		//contract those components on the condition of first pass
+        cout<<"cnt_proper_tree_components...\n";
 		this->cnt_proper_tree_components( component_tree, root_pos, sz_lim );
 		
 		return;
