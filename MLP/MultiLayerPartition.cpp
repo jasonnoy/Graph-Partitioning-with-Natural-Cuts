@@ -95,6 +95,7 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
 
+        unsigned int cellCount = 0, edgeCount = 0;
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
         vector<vector<unsigned int>> cells;
@@ -105,6 +106,7 @@ void MultiLayerPartition::MLP() {
             unsigned int cellSize;
             infile>>cellSize;
             if (cellSize < U/1000) {
+                cellCount++;
                 outfile<<cellSize;
                 for (int j = 0; j < cellSize; j++) {
                     unsigned int nid;
@@ -131,8 +133,6 @@ void MultiLayerPartition::MLP() {
 
         cout<<"Nodes and edges read in succeed!\n";
         cout<<"Valid cells for next step: "<<real_cell_count<<endl;
-
-        unsigned int cellCount = 0, edgeCount = 0;
 
         int cell_count = 0;
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
