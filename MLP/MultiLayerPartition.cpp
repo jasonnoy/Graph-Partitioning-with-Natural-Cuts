@@ -58,7 +58,7 @@ void MultiLayerPartition::MLP() {
     for (--l; l >= 0; l--) {
         int prefix = l == getL() - 1 ? -1 : l + 2;
         if (prefix == -1 && !phantom) {
-            phantom = true;
+//            phantom = true;
         } else {
             phantom = false;
         }
@@ -72,13 +72,14 @@ void MultiLayerPartition::MLP() {
         FI = parameters[l][2];
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
-        if (phantom) {
-            U = 32, C = 4, FI = 4, M = 4;
-            l++;
-            cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-        } else {
-            cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-        }
+        cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        if (phantom) {
+//            U = 32, C = 4, FI = 4, M = 4;
+//            l++;
+//            cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        } else {
+//            cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        }
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
