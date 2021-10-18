@@ -105,7 +105,7 @@ void MultiLayerPartition::MLP() {
             unsigned int cellSize;
             infile>>cellSize;
             if (cellSize < U/1000) {
-                outfile>>cellSize;
+                outfile<<cellSize;
                 for (int j = 0; j < cellSize; j++) {
                     unsigned int nid;
                     infile>>nid;
