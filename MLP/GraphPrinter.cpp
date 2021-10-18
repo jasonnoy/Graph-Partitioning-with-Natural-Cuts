@@ -37,8 +37,8 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     int i = 0;
     for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++, i++) {
         if (i<20)
-            cout<<"source: "<<edge_iter->at(0)<<" relative id: "<<real_map[edge_iter->at(0)]<<" target: "<<edge_iter->at(1)<<" relative id: "<<real_map[edge_iter->at(1)]<<endl;
-        outfile<<real_map[edge_iter->at(0)]<<" "<<real_map[edge_iter->at(1)]<<endl;
+//            cout<<"source: "<<edge_iter->at(0)<<" relative id: "<<real_map[edge_iter->at(0)]<<" target: "<<edge_iter->at(1)<<" relative id: "<<real_map[edge_iter->at(1)]<<endl;
+        outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
     }
     outfile.close();
     cout<<"Done\n";
