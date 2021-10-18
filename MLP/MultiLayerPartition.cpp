@@ -86,27 +86,6 @@ void MultiLayerPartition::MLP() {
             cout<<"layer node file open failed!\n";
             exit(1);
         }
-        infile>>count;
-        cout<<"current layer has "<<count<<" cells.\n";
-        vector<vector<unsigned int>> cells;
-        cells.resize(count);
-        for (int i = 0; i < count; i++) {
-            unsigned int cellSize;
-            infile>>cellSize;
-            cells[i].reserve(cellSize);
-            for (int j = 0; j < cellSize; j++) {
-
-                unsigned int nid;
-                infile>>nid;
-                cells[i].push_back(nid);
-            }
-        }
-        infile.close();
-        infile.clear(ios::goodbit);
-
-        cout<<"Nodes and edges read in succeed!\n";
-
-        unsigned int cellCount = 0, edgeCount = 0;
         ofstream outfile;
         // delete old files if any
         outfile.open(out_node_path);
@@ -115,6 +94,43 @@ void MultiLayerPartition::MLP() {
         outfile.open(out_cut_path);
         outfile.close();
         outfile.clear(ios::goodbit);
+
+        infile>>count;
+        cout<<"current layer has "<<count<<" cells.\n";
+        vector<vector<unsigned int>> cells;
+        cells.reserve(count);
+        outfile.open(out_node_path, ios::app);
+        unsigned int real_cell_count = 0;
+        for (int i = 0; i < count; i++) {
+            unsigned int cellSize;
+            infile>>cellSize;
+            if (cellSize < U/1000) {
+                for (int j = 0; j < cellSize; j++) {
+                    unsigned int nid;
+                    infile>>nid;
+                    outfile<<" "<<nid;
+                }
+                outfile<<"\n";
+            } else {
+                vector<unsigned int> cell_nodes;
+                cell_nodes.reserve(cellSize);
+                for (int j = 0; j < cellSize; j++) {
+                    unsigned int nid;
+                    cell_nodes.push_back(nid);
+                }
+                cells.push_back(cell_nodes);
+                real_cell_count++;
+            }
+        }
+        outfile.close();
+        outfile.clear(ios::goodbit);
+        infile.close();
+        infile.clear(ios::goodbit);
+
+        cout<<"Nodes and edges read in succeed!\n";
+        cout<<"Valid cells for next step: "<<real_cell_count<<endl;
+
+        unsigned int cellCount = 0, edgeCount = 0;
 
         int cell_count = 0;
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
