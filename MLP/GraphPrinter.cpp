@@ -4,8 +4,13 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map) {
-    MLP_result();
+void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom) {
+    if (isPhantom) {
+        phantom_result();
+    } else {
+        MLP_result();
+    }
+
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
     ofstream outfile;
@@ -33,6 +38,25 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     }
     outfile.close();
     cout<<"Done\n";
+}
+
+void GraphPrinter::phantom_result() {
+    fill_contracts();
+    cout<<"aresult size: "<<a_result.size()<<endl;
+    result_nodes.resize(a_result.size());
+    unsigned int index = 0;
+    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
+        result_nodes[index].reserve( cit->size() );
+        result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
+    }
+
+    result_edges.reserve(cell_edges.size());
+    for (int i = 0; i < cell_edges.size(); i++) {
+        unsigned int sid = cell_edges[i][0];
+        unsigned int tid = cell_edges[i][1];
+        vector<unsigned int> edge = {sid, tid};
+        result_edges.push_back(edge);
+    }
 }
 
 void GraphPrinter::MLP_result() {

@@ -11,6 +11,8 @@
 #include <vector>
 #include <algorithm>
 #include "../Common/sw_basetypes.h"
+#include "Assembly.h"
+#include "Filter.h"
 
 using namespace std;
 

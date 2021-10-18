@@ -57,6 +57,11 @@ void MultiLayerPartition::MLP() {
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
         int prefix = l == getL() - 1 ? -1 : l + 2;
+        if (prefix == -1 && !phantom) {
+            phantom = true;
+        } else {
+            phantom = false;
+        }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
@@ -68,6 +73,8 @@ void MultiLayerPartition::MLP() {
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
         if (phantom) {
+            U = 32, C = 4, FI = 4, M = 4;
+            i++;
             cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
         } else {
             cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
@@ -162,8 +169,8 @@ void MultiLayerPartition::MLP() {
             Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
 
-            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, phantom);
-            graphPrinter.write_MLP_result(cur_layer, filter.get_real_map());
+            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath);
+            graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.edges_result_size();
         }
