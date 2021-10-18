@@ -116,6 +116,7 @@ void MultiLayerPartition::MLP() {
                 cell_nodes.reserve(cellSize);
                 for (int j = 0; j < cellSize; j++) {
                     unsigned int nid;
+                    infile>>nid;
                     cell_nodes.push_back(nid);
                 }
                 cells.push_back(cell_nodes);
