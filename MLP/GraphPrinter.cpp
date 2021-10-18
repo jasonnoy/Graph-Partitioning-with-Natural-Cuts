@@ -34,7 +34,10 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 
     outfile.open(out_cut_path, ios::app);
     cout<<"Printing cuts of layer"<<layer<<endl;
-    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
+    int i = 0;
+    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++, i++) {
+        if (i<20)
+            cout<<"source: "<<edge_iter->at(0)<<" relative id: "<<real_map[edge_iter->at(0)]<<" target: "<<edge_iter->at(1)<<" relative id: "<<real_map[edge_iter->at(1)]<<endl;
         outfile<<real_map[edge_iter->at(0)]<<" "<<real_map[edge_iter->at(1)]<<endl;
     }
     outfile.close();
