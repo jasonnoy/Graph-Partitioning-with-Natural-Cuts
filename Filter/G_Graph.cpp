@@ -1640,7 +1640,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 					}//for all edges
 				}//for all contained nodes
 			}//while the component is expanding
-            cout<<"1638\n";
 			if( component.empty() )
 				continue;
 
