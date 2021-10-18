@@ -74,7 +74,7 @@ void MultiLayerPartition::MLP() {
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
         if (phantom) {
             U = 32, C = 4, FI = 4, M = 4;
-            i++;
+            l++;
             cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
         } else {
             cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;

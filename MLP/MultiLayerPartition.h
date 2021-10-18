@@ -27,12 +27,12 @@ private:
     const string paraPath;
     const string outPath;
     const unsigned int nodeNum;
-    const bool phantom;
+    bool phantom;
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
 
-    MultiLayerPartition(const string pPath, const string oPath, const unsigned int node_num, const bool isPhantom):
+    MultiLayerPartition(const string pPath, const string oPath, const unsigned int node_num, bool isPhantom):
         paraPath(pPath), outPath(oPath), nodeNum(node_num), phantom(isPhantom){};
     ~MultiLayerPartition() = default;
     void generateMLP() {

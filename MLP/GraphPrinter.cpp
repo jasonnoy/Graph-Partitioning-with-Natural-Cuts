@@ -5,11 +5,12 @@
 #include "GraphPrinter.h"
 
 void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom) {
-    if (isPhantom) {
-        phantom_result();
-    } else {
-        MLP_result();
-    }
+//    if (isPhantom) {
+//        phantom_result();
+//    } else {
+//        MLP_result();
+//    }
+    MLP_result();
 
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
