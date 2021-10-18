@@ -169,8 +169,8 @@ void MultiLayerPartition::MLP() {
             filter.runFilter();
             Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
-            PostProgress postProgress(filter.get_anodes(), filter.get_aedges(), cell_iter->size(), U);
-            postProgress.runPostProgress();
+//            PostProgress postProgress(filter.get_anodes(), filter.get_aedges(), cell_iter->size(), U);
+//            postProgress.runPostProgress();
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath);
             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
             cellCount += graphPrinter.nodes_result_size();
