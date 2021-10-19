@@ -222,7 +222,7 @@ void print_final_result(const string out_path, const int layer, const unsigned i
     string origin_nodes = out_path + "layer0_nodes.txt";
     string result_path = out_path + "node_partitions.txt";
     vector<vector<unsigned int>> node_parti;
-    vector<int> temp(3);
+    vector<unsigned int> temp(3);
     node_parti.resize(node_num, temp);
 
     ofstream outfile;
