@@ -66,9 +66,9 @@ void AdaptivePrinter::print_final_result() {
     outfile.open(result_path);
     outfile2.open(filtered_nodes_path);
 
-    outfile2<<layer<<endl;
-    for (int i : cell_nums) {
-        outfile<<cell_nums[i]<<"\n";
+    outfile<<layer<<endl;
+    for (int num : cell_nums) {
+        outfile<<num<<"\n";
     }
 
 
