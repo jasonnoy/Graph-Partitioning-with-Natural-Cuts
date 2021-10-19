@@ -52,7 +52,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         for (int i = 0; i < cell_num; i++) {
             unsigned int nid;
             infile>>nid;
-            outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<" ";
+            outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<";";
         }
         outfile<<"\n";
         outfile.close();
