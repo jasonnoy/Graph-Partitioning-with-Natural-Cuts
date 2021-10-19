@@ -40,7 +40,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
     infile.close();
     infile.clear(ios::goodbit);
 
-    for (int l = 1; l < layer; l++) {
+    for (int l = 1; l <= layer; l++) {
         const string layer_nodes = out_path + "layer" + to_string(l) + "_nodes.txt";
         const string result_nodes = out_path + "layer" + to_string(l) + "_node_co.txt";
         infile.open(layer_nodes);
