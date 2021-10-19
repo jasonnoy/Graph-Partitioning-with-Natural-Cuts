@@ -50,11 +50,15 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         int cell_num;
         infile>>cell_num;
         for (int i = 0; i < cell_num; i++) {
-            unsigned int nid;
-            infile>>nid;
-            outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<";";
+            int node_size;
+            infile>>node_size;
+            for (int j = 0; j<node_size; j++) {
+                unsigned int nid;
+                infile>>nid;
+                outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<";";
+            }
+            outfile<<"\n";
         }
-        outfile<<"\n";
         outfile.close();
     }
 }
