@@ -249,6 +249,7 @@ int main(int argc, char** argv) {
 //    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
+    adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
 //    end = clock();
 //    time = (end - start) / CLOCKS_PER_SEC;
