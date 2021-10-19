@@ -13,6 +13,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     MLP_result();
 
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
+    string out_edge_path = out_path + "layer" + layer + "_edges.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
     ofstream outfile;
     outfile.open(out_node_path, ios::app);
@@ -33,7 +34,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     cout<<"Done\n";
 
     outfile.open(out_cut_path, ios::app);
-    cout<<"Printing cuts of layer"<<layer<<endl;
+    cout<<"Printing edges for layer"<<layer<<endl;
     int i = 0;
     for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++, i++) {
 //        if (i<20)

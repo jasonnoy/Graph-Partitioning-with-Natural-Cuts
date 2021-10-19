@@ -218,6 +218,39 @@ void MultiLayerPartition::MLP() {
     }
 }
 
+void print_final_result(const string out_path, const int layer, const unsigned int node_num) {
+    string origin_nodes = out_path + "layer0_nodes.txt";
+    string result_path = out_path + "node_partitions.txt";
+    vector<vector<unsigned int>> node_parti;
+    vector<int> temp(3);
+    node_parti.resize(node_num, temp);
+
+    ofstream outfile;
+    outfile.open(result_path);
+
+    for (int l = 1; l <= layer; l++) {
+        string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
+        ifstream infile;
+        infile.open(layer_node_path);
+        int cell_num;
+        infile>>cell_num;
+        outfile<<cell_num<<" ";
+        cout<<"layer "<<to_string(l)<<" has "<<cell_num<<" cells.\n";
+        for (int cell_count = 0; cell_count < cell_num; cell_count++) {
+            unsigned int nid;
+            infile>>nid;
+            node_parti[nid][l-1] = cell_count;
+        }
+    }
+    outfile<<"\n";
+    for (unsigned int nid = 0; nid < node_num; nid++) {
+        for (int l = 0; l < layer; l++) {
+            outfile<<node_parti[nid][l]<<" ";
+        }
+        outfile<<"\n";
+    }
+}
+
 int main(int argc, char** argv) {
     if (argc != 5) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
@@ -234,16 +267,20 @@ int main(int argc, char** argv) {
     string outPath(argv[4]);
 
     cout<<"Dealing with layer 0...\n";
-    Preprocess preprocess(nodePath, edgePath, outPath);
-    preprocess.runPreprocess();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Preprocess run time: "<<time<<"s.\n";
+//    Preprocess preprocess(nodePath, edgePath, outPath);
+//    preprocess.runPreprocess();
+//    end = clock();
+//    int time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"Preprocess run time: "<<time<<"s.\n";
+//
+//
+//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+//    mlp.generateMLP();
 
+    print_final_result(outPath, 3, 723624);
+//    print_final_result(outPath, mlp.getL(), preprocess.getNodeNum());
 
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-    mlp.generateMLP();
-    end = clock();
-    time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"MLP run time: "<<time<<"s.\n";
+//    end = clock();
+//    time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"MLP run time: "<<time<<"s.\n";
 }

@@ -17,6 +17,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
+#include <vector>
 #include <streambuf>
 
 using namespace std;
