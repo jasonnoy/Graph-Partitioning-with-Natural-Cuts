@@ -252,7 +252,7 @@ void print_final_result(const string out_path, const int layer, const unsigned i
     for (unsigned int nid = 0; nid < node_num; nid++) {
         if (node_parti[nid][0] || node_parti[nid][1] || node_parti[nid][2]) {
             for (int l = 0; l < layer; l++) {
-                outfile<<node_parti[nid][l]<<" ";
+                outfile<<node_parti[nid][l] - 1<<" ";
             }
             outfile<<"\n";
             filtered_nodes.push_back(nid);
