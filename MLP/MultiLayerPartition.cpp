@@ -218,52 +218,6 @@ void MultiLayerPartition::MLP() {
     }
 }
 
-void print_final_result(const string out_path, const int layer, const unsigned int node_num) {
-    string filtered_nodes_path = out_path + "result_nodes.txt";
-    string result_path = out_path + "node_partitions.txt";
-    vector<vector<unsigned int>> node_parti;
-    vector<unsigned int> temp(3);
-    node_parti.resize(node_num, temp);
-
-    ofstream outfile, outfile2;
-    outfile.open(result_path);
-    outfile2.open(filtered_nodes_path);
-
-    for (int l = 1; l <= layer; l++) {
-        string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
-        ifstream infile;
-        infile.open(layer_node_path);
-        int cell_num;
-        infile>>cell_num;
-        outfile<<cell_num<<" ";
-        cout<<"layer "<<to_string(l)<<" has "<<cell_num<<" cells.\n";
-        for (int cell_count = 0; cell_count < cell_num; cell_count++) {
-            int node_size;
-            infile>>node_size;
-            for (int i = 0; i < node_size; i++) {
-                unsigned int nid;
-                infile>>nid;
-                node_parti[nid][l-1] = cell_count;
-            }
-        }
-    }
-    outfile<<"\n";
-    vector<unsigned int> filtered_nodes;
-    for (unsigned int nid = 0; nid < node_num; nid++) {
-        if (node_parti[nid][0] || node_parti[nid][1] || node_parti[nid][2]) {
-            for (int l = 0; l < layer; l++) {
-                outfile<<node_parti[nid][l] - 1<<" ";
-            }
-            outfile<<"\n";
-            filtered_nodes.push_back(nid);
-        }
-    }
-    outfile2<<filtered_nodes.size()<<"\n";
-    for (auto node_iter = filtered_nodes.begin(); node_iter != filtered_nodes.end(); node_iter++) {
-        outfile2<<*node_iter<<"\n";
-    }
-}
-
 int main(int argc, char** argv) {
     if (argc != 5) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
@@ -280,20 +234,20 @@ int main(int argc, char** argv) {
     string outPath(argv[4]);
 
     cout<<"Dealing with layer 0...\n";
-//    Preprocess preprocess(nodePath, edgePath, outPath);
-//    preprocess.runPreprocess();
-//    end = clock();
-//    int time = (end - start) / CLOCKS_PER_SEC;
-//    cout<<"Preprocess run time: "<<time<<"s.\n";
-//
-//
-//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-//    mlp.generateMLP();
+    Preprocess preprocess(nodePath, edgePath, outPath);
+    preprocess.runPreprocess();
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Preprocess run time: "<<time<<"s.\n";
 
-    print_final_result(outPath, 3, 723624);
-//    print_final_result(outPath, mlp.getL(), preprocess.getNodeNum());
 
-//    end = clock();
-//    time = (end - start) / CLOCKS_PER_SEC;
-//    cout<<"MLP run time: "<<time<<"s.\n";
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    mlp.generateMLP();
+
+//    print_final_result(outPath, 3, 723624);
+    print_final_result(outPath, mlp.getL(), preprocess.getNodeNum());
+
+    end = clock();
+    time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"MLP run time: "<<time<<"s.\n";
 }
