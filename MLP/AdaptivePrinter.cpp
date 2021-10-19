@@ -29,7 +29,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
 
     vector<node_info_t> nodes;
     unsigned int count;
-    infile.read(&count, sizeof(uint32_t));
+    infile.read((char*)&count, sizeof(uint32_t));
     if (count != node_num) {
         cout<<"count != code_num\n";
     }
