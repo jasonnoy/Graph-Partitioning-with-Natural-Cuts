@@ -11,7 +11,7 @@ void AdaptivePrinter::filter_result() {
         infile>>cell_nums[l-1];
         vector<unsigned int> temp(layer);
         node_parti.resize(node_num, temp);
-        cout<<"layer "<<to_string(l)<<" has "<<cell_num<<" cells.\n";
+        cout<<"layer "<<to_string(l)<<" has "<<cell_nums[l-1]<<" cells.\n";
         for (int cell_count = 0; cell_count < cell_num; cell_count++) {
             int node_size;
             infile>>node_size;
