@@ -245,7 +245,9 @@ int main(int argc, char** argv) {
     mlp.generateMLP();
 
 //    print_final_result(outPath, 3, 723624);
-    print_final_result(outPath, mlp.getL(), preprocess.getNodeNum());
+    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+    adaptivePrinter.filter_result();
+    adaptivePrinter.print_final_result();
 
     end = clock();
     time = (end - start) / CLOCKS_PER_SEC;

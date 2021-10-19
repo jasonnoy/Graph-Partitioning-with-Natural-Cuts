@@ -12,6 +12,7 @@
 #include "Filter.h"
 #include "GraphPrinter.h"
 #include "Preprocess.h"
+#include "AdaptivePrinter.h"
 //#include "PostProgress.h"
 #include <string>
 #include <iostream>
