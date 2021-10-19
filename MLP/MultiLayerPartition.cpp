@@ -201,20 +201,6 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
 
-//        cout<<"Running filter phase...\n";
-//
-//        /*
-//         * parameter: U, C, const &node<int>, const &edge<<int>>, o_node<<int>>, o_edge<<int>>
-//         */
-//        Filter filter(U, C, coPath, grPath, outPath);
-//        filter.runFilter();
-////        filter.~Filter();
-//        cout<<"Filter phase completed!\n";
-//        cout<<"Running assembly phase...\n";
-//        Assembly assembly(U, FI, M, false, realNodePath, realGraphPath, aNodePath, aEdgePath, outPath);
-//        assembly.runAssembly();
-//        cout<<"Assembly phase completed!\n";
-
     }
 }
 
@@ -233,25 +219,25 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
 
-//    cout<<"Dealing with layer 0...\n";
-//    Preprocess preprocess(nodePath, edgePath, outPath);
-//    preprocess.runPreprocess();
-//    end = clock();
-//    int time = (end - start) / CLOCKS_PER_SEC;
-//    cout<<"Preprocess run time: "<<time<<"s.\n";
-//
-//
-//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-//    mlp.generateMLP();
+    cout<<"Dealing with layer 0...\n";
+    Preprocess preprocess(nodePath, edgePath, outPath);
+    preprocess.runPreprocess();
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Preprocess run time: "<<time<<"s.\n";
 
-//    print_final_result(outPath, 3, 723624);
-    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
-//    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    mlp.generateMLP();
+
+
+//    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
+    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
     adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
-//    end = clock();
-//    time = (end - start) / CLOCKS_PER_SEC;
-//    cout<<"MLP run time: "<<time<<"s.\n";
+    end = clock();
+    time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"MLP run time: "<<time<<"s.\n";
 }
