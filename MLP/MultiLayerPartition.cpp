@@ -242,6 +242,7 @@ void print_final_result(const string out_path, const int layer, const unsigned i
             infile>>node_size;
             for (int i = 0; i < node_size; i++) {
                 unsigned int nid;
+                infile>>nid;
                 node_parti[nid][l-1] = cell_count;
             }
         }
