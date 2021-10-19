@@ -59,7 +59,10 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
             }
             outfile<<"\n";
         }
+        infile.close();
+        infile.clear(ios::goodbit);
         outfile.close();
+        outfile.clear(ios::goodbit);
     }
 }
 void AdaptivePrinter::print_final_result() {
