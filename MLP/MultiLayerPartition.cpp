@@ -219,14 +219,15 @@ void MultiLayerPartition::MLP() {
 }
 
 void print_final_result(const string out_path, const int layer, const unsigned int node_num) {
-    string origin_nodes = out_path + "layer0_nodes.txt";
+    string filtered_nodes = out_path + "result_nodes.txt";
     string result_path = out_path + "node_partitions.txt";
     vector<vector<unsigned int>> node_parti;
     vector<unsigned int> temp(3);
     node_parti.resize(node_num, temp);
 
-    ofstream outfile;
+    ofstream outfile, outfile2;
     outfile.open(result_path);
+    outfile2.open(filtered_nodes);
 
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
@@ -237,17 +238,28 @@ void print_final_result(const string out_path, const int layer, const unsigned i
         outfile<<cell_num<<" ";
         cout<<"layer "<<to_string(l)<<" has "<<cell_num<<" cells.\n";
         for (int cell_count = 0; cell_count < cell_num; cell_count++) {
-            unsigned int nid;
-            infile>>nid;
-            node_parti[nid][l-1] = cell_count + 1;
+            int node_size;
+            infile>>node_size;
+            for (int i = 0; i < node_size; i++) {
+                unsigned int nid;
+                node_parti[nid][l-1] = cell_count;
+            }
         }
     }
     outfile<<"\n";
+    vector<unsigned int> filtered_nodes;
     for (unsigned int nid = 0; nid < node_num; nid++) {
-        for (int l = 0; l < layer; l++) {
-            outfile<<node_parti[nid][l]<<" ";
+        if (node_parti[nid][0] || node_parti[nid][1] || node_parti[nid][2]) {
+            for (int l = 0; l < layer; l++) {
+                outfile<<node_parti[nid][l]<<" ";
+            }
+            outfile<<"\n";
+            filtered_nodes.push_back(nid);
         }
-        outfile<<"\n";
+    }
+    outfile2<<filtered_nodes.size()<<"\n";
+    for (auto node_iter = filtered_nodes.begin(); node_iter != filtered_nodes.end(); node_iter++) {
+        outfile2<<*node_iter<<"\n";
     }
 }
 
