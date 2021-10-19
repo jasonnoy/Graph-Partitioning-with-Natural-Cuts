@@ -239,7 +239,7 @@ void print_final_result(const string out_path, const int layer, const unsigned i
         for (int cell_count = 0; cell_count < cell_num; cell_count++) {
             unsigned int nid;
             infile>>nid;
-            node_parti[nid][l-1] = cell_count;
+            node_parti[nid][l-1] = cell_count + 1;
         }
     }
     outfile<<"\n";
