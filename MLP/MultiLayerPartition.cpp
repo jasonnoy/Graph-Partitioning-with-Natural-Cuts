@@ -245,7 +245,8 @@ int main(int argc, char** argv) {
 //    mlp.generateMLP();
 
 //    print_final_result(outPath, 3, 723624);
-    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+    AdaptivePrinter adaptivePrinter(outPath, 1, 723624);
+//    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
 
