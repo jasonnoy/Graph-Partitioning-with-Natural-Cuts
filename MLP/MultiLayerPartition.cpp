@@ -219,7 +219,7 @@ void MultiLayerPartition::MLP() {
 }
 
 void print_final_result(const string out_path, const int layer, const unsigned int node_num) {
-    string filtered_nodes = out_path + "result_nodes.txt";
+    string filtered_nodes_path = out_path + "result_nodes.txt";
     string result_path = out_path + "node_partitions.txt";
     vector<vector<unsigned int>> node_parti;
     vector<unsigned int> temp(3);
@@ -227,7 +227,7 @@ void print_final_result(const string out_path, const int layer, const unsigned i
 
     ofstream outfile, outfile2;
     outfile.open(result_path);
-    outfile2.open(filtered_nodes);
+    outfile2.open(filtered_nodes_path);
 
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
