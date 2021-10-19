@@ -233,23 +233,23 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
 
-    cout<<"Dealing with layer 0...\n";
-    Preprocess preprocess(nodePath, edgePath, outPath);
-    preprocess.runPreprocess();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Preprocess run time: "<<time<<"s.\n";
-
-
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-    mlp.generateMLP();
+//    cout<<"Dealing with layer 0...\n";
+//    Preprocess preprocess(nodePath, edgePath, outPath);
+//    preprocess.runPreprocess();
+//    end = clock();
+//    int time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"Preprocess run time: "<<time<<"s.\n";
+//
+//
+//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+//    mlp.generateMLP();
 
 //    print_final_result(outPath, 3, 723624);
     AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
 
-    end = clock();
-    time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"MLP run time: "<<time<<"s.\n";
+//    end = clock();
+//    time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"MLP run time: "<<time<<"s.\n";
 }

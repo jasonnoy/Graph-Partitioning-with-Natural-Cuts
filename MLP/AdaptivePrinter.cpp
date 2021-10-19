@@ -9,6 +9,8 @@ void AdaptivePrinter::filter_result() {
         ifstream infile;
         infile.open(layer_node_path);
         infile>>cell_num;
+        vector<unsigned int> temp(layer);
+        node_parti.resize(node_num, temp);
         cout<<"layer "<<to_string(l)<<" has "<<cell_num<<" cells.\n";
         for (int cell_count = 0; cell_count < cell_num; cell_count++) {
             int node_size;
@@ -59,9 +61,6 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
 void AdaptivePrinter::print_final_result() {
     string filtered_nodes_path = out_path + "result_nodes.txt";
     string result_path = out_path + "node_partitions.txt";
-
-    vector<unsigned int> temp(layer);
-    node_parti.resize(node_num, temp);
 
     ofstream outfile, outfile2;
     outfile.open(result_path);
