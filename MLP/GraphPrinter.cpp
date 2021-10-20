@@ -80,9 +80,9 @@ void GraphPrinter::MLP_result() {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
-            for (auto map_iter : id_map[*nit]) {
-                node_cell[map_iter] = index;
-                result_nodes[index].push_back(map_iter);
+            for (NodeID contain_nid : id_map[*nit]) {
+                node_cell[contain_nid] = index;
+                result_nodes[index].push_back(contain_nid);
             }
         }
     }
