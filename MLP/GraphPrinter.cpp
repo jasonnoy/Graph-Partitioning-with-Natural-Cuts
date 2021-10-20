@@ -43,7 +43,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     cout<<"Done\n";
 
     outfile.open(out_edge_path, ios::app);
-    cout<<"Printing cuts of layer "<<layer<<endl;
+    cout<<"Printing edges of layer "<<layer<<endl;
     for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
         outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
     }
@@ -103,7 +103,7 @@ void GraphPrinter::MLP_result() {
 //    filter_edges();
 }
 
-void GraphPrinter::filter_edges() {
+void GraphPrinter::filter_cells() {
     bool* edge_map = new bool[cell_nodes.size()]();
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
