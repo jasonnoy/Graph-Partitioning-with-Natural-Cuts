@@ -11,7 +11,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 //        MLP_result();
 //    }
     MLP_result();
-
+    contract_tiny_cells();
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
     string out_edge_path = out_path + "layer" + layer + "_edges.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
@@ -70,7 +70,7 @@ void GraphPrinter::phantom_result() {
     }
 }
 
-void GraphPrinter::contract_tiny_cells(const int u) {
+void GraphPrinter::contract_tiny_cells() {
     int* num_cell = new int[cell_nodes.size()]();
     int cell_id = 0;
     vector<vector<unsigned int>> node_edges;
@@ -81,7 +81,7 @@ void GraphPrinter::contract_tiny_cells(const int u) {
         }
     }
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
-        if (cell_iter->size() > u/10 || cell_iter->size() > 100)
+        if (cell_iter->size() > U/10 || cell_iter->size() > 100)
             continue;
         int* cell_count = new int[cell_iter->size()]();
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
