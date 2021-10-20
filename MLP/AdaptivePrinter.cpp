@@ -82,7 +82,7 @@ void AdaptivePrinter::print_final_result() {
     vector<unsigned int> filtered_nodes;
     for (unsigned int nid = 0; nid < node_num; nid++) {
         for (int l = 0; l < layer; l++) {
-            outfile<<node_parti[nid][l] - 1<<" ";
+            outfile<<node_parti[nid][l]<<" ";
         }
         outfile<<"\n";
         filtered_nodes.push_back(nid);
