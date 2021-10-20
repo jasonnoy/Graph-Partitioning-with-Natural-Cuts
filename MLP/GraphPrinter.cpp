@@ -70,7 +70,7 @@ void GraphPrinter::phantom_result() {
     }
 }
 
-void GraphPrinter::contract_tiny_result_nodes() {
+void GraphPrinter::contract_tiny_cells() {
     unsigned int* num_cell = new unsigned int[cell_nodes.size()]();
     int cell_id = 0;
     vector<vector<unsigned int>> node_edges;
