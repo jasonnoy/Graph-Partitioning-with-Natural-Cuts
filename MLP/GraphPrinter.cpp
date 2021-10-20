@@ -85,7 +85,10 @@ void GraphPrinter::contract_tiny_cells(const int u) {
             continue;
         int* cell_count = new int[cell_iter->size()]();
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            cell_count[num_cell[node_edges[*nid]]]++;
+            for (unsigned int tid : node_edges[*nid]) {
+                cell_count[num_cell[tid]]++;
+            }
+//            cell_count[num_cell[node_edges[*nid]]]++;
         }
         int max_count = 0;
         int max_cell = 0;
