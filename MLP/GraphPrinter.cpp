@@ -103,7 +103,7 @@ void GraphPrinter::MLP_result() {
 //    filter_edges();
 }
 
-void GraphPrinter::filter_cells() {
+void GraphPrinter::filter_edges() {
     bool* edge_map = new bool[cell_nodes.size()]();
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
