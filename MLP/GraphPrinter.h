@@ -36,7 +36,7 @@ public:
         a_result(in_result), id_map(in_id_map), cell_nodes(cellNodes), cell_edges(cellEdges), out_path(o_path){}
     void write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom);
     unsigned int nodes_result_size(){return result_nodes.size();}
-    unsigned int edges_result_size(){return result_edges.size();}
+    unsigned int cuts_result_size(){return result_cuts.size();}
 };
 
 

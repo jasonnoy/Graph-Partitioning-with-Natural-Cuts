@@ -34,11 +34,17 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     cout<<"Done\n";
 
     outfile.open(out_cut_path, ios::app);
-    cout<<"Printing edges for layer"<<layer<<endl;
-    int i = 0;
-    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++, i++) {
-//        if (i<20)
-//            cout<<"source: "<<edge_iter->at(0)<<" relative id: "<<real_map[edge_iter->at(0)]<<" target: "<<edge_iter->at(1)<<" relative id: "<<real_map[edge_iter->at(1)]<<endl;
+    cout<<"Printing cuts of layer "<<layer<<endl;
+    for (auto cut_iter = result_cuts.begin(); cut_iter != result_cuts.end(); cut_iter++) {
+        outfile<<cut_iter->at(0)<<" "<<cut_iter->at(1)<<endl;
+    }
+    outfile.close();
+    outfile.clear(ios::goodbit);
+    cout<<"Done\n";
+
+    outfile.open(out_edge_path, ios::app);
+    cout<<"Printing cuts of layer "<<layer<<endl;
+    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
         outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
     }
     outfile.close();
@@ -55,12 +61,12 @@ void GraphPrinter::phantom_result() {
         result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
     }
 
-    result_edges.reserve(cell_edges.size());
+    result_cuts.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
         vector<unsigned int> edge = {sid, tid};
-        result_edges.push_back(edge);
+        result_cuts.push_back(edge);
     }
 }
 
@@ -68,23 +74,31 @@ void GraphPrinter::MLP_result() {
     fill_contracts();
     cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
+    int * node_cell = new int[cell_nodes.size()]();
     unsigned int index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (auto map_iter : id_map[*nit]) {
+                node_cell[*map_iter] = index;
                 result_nodes[index].push_back(map_iter);
             }
         }
     }
 
+    result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
-        vector<unsigned int> edge = {sid, tid};
-        result_edges.push_back(edge);
+        if (node_cell[sid] == node_cell[tid]){
+            vector<unsigned int> edge = {sid, tid};
+            result_edges.push_back(edge);
+            continue;
+        }
+        vector<unsigned int> cut = {sid, tid};
+        result_cuts.push_back(cut);
     }
 //    filter_edges();
 }
@@ -96,13 +110,13 @@ void GraphPrinter::filter_edges() {
             edge_map[*nit] = 1;
         }
     }
-    result_edges.reserve(cell_edges.size());
+    result_cuts.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
         if (edge_map[sid] && edge_map[tid]) {
             vector<unsigned int> edge = {sid, tid};
-            result_edges.push_back(edge);
+            result_cuts.push_back(edge);
         }
     }
 }

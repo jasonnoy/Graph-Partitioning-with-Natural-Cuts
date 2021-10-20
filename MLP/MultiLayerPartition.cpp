@@ -6,8 +6,6 @@
 #include <ctime>
 
 void MultiLayerPartition::MLP() {
-//    const string realNodePath = outPath + "real_nodes.txt";
-//    const string realGraphPath = outPath + "real_edges.txt";
     string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
     infile.open(paraPath);
@@ -83,7 +81,7 @@ void MultiLayerPartition::MLP() {
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
-        cout<<"input node: "<<in_node_path<<" input edge: "<<in_edge_path<<endl;
+        cout<<"input node: "<<in_node_path<<endl;
         if (phantom) {
             in_node_path = outPath + "layer0_nodes.txt";
             in_edge_path = outPath + "layer0_edges.txt";
@@ -167,14 +165,14 @@ void MultiLayerPartition::MLP() {
             cout<<cell_iter->size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
-            Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
+            Assembly assembly(U, FI, M, false, anodes, aedges, outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
-//            PostProgress postProgress(filter.get_anodes(), filter.get_aedges(), cell_iter->size(), U);
+//            PostProgress postProgress(anodes, aedges, cell_iter->size(), U);
 //            postProgress.runPostProgress();
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath);
             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
             cellCount += graphPrinter.nodes_result_size();
-            edgeCount += graphPrinter.edges_result_size();
+            edgeCount += graphPrinter.cuts_result_size();
         }
 
         // option: 改写为不读取size
@@ -219,25 +217,25 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
 
-    cout<<"Dealing with layer 0...\n";
-    Preprocess preprocess(nodePath, edgePath, outPath);
-    preprocess.runPreprocess();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Preprocess run time: "<<time<<"s.\n";
+//    cout<<"Dealing with layer 0...\n";
+//    Preprocess preprocess(nodePath, edgePath, outPath);
+//    preprocess.runPreprocess();
+//    end = clock();
+//    int time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"Preprocess run time: "<<time<<"s.\n";
+//
+//
+//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+//    mlp.generateMLP();
 
 
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-    mlp.generateMLP();
-
-
-//    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
-    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
+//    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
     adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
-    end = clock();
-    time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"MLP run time: "<<time<<"s.\n";
+//    end = clock();
+//    time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"MLP run time: "<<time<<"s.\n";
 }
