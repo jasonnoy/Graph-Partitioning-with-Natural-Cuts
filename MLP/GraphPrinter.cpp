@@ -70,18 +70,18 @@ void GraphPrinter::phantom_result() {
     }
 }
 
-void GraphPrinter::contract_tiny_cells() {
-    unsigned int* num_cell = new unsigned int[cell_nodes.size()]();
+void GraphPrinter::contract_tiny_cells(const int u) {
+    int* num_cell = new int[cell_nodes.size()]();
     int cell_id = 0;
     vector<vector<unsigned int>> node_edges;
     node_edges.resize(cell_nodes.size());
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            num_cell[nid] = cell_id;
+            num_cell[*nid] = cell_id;
         }
     }
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100)
+        if (cell_iter->size() > u/10 || cell_iter->size() > 100)
             continue;
         int* cell_count = new int[cell_iter->size()]();
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
@@ -96,7 +96,7 @@ void GraphPrinter::contract_tiny_cells() {
             }
         }
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            num_cell[nid] = max_cell;
+            num_cell[*nid] = max_cell;
         }
         result_nodes[max_cell].insert(result_nodes[max_cell].end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
