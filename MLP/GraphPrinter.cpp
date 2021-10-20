@@ -81,7 +81,7 @@ void GraphPrinter::MLP_result() {
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (auto map_iter : id_map[*nit]) {
-                node_cell[*map_iter] = index;
+                node_cell[map_iter] = index;
                 result_nodes[index].push_back(map_iter);
             }
         }
