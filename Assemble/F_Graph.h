@@ -13,7 +13,7 @@
 using namespace std;
 
 #include "A_Node.h"
-#include "../share/Utility.h"
+#include "../Common/Utility.h"
 #include "Logic_Edge.h"
 
 class F_Graph{

@@ -7,7 +7,7 @@
 void Filter::read_in_graph(){
     //read in graph
     cout<<"Reading input file...\n";
-    gGraph.read_graph(NodePath, GraphPath);
+    gGraph.read_graph(nodes, edges, real_map);
     cout<<"Done!\n";
 }
 
@@ -20,7 +20,7 @@ void Filter::contract_tiny_cuts(){
     //make a dfs tree on the graph
     cout<<"get DFS tree...\n";
     vector<bool> edge_in_fi( gGraph.get_edge_list().size(), true );
-    gGraph.dfs_tree( 10000, edge_in_fi, 0);
+    gGraph.dfs_tree( 0, edge_in_fi, 0);
 
     size_t ten = 0;
     for( int i = 0; i < edge_in_fi.size(); i++ ){
@@ -46,7 +46,8 @@ void Filter::contract_tiny_cuts(){
     /* of them are contained in the same contracted node, and they are thus ingored. */
 
     //edge_equl_cls[0] is the class of 1-cut
-    cout<<"contract one cuts...";
+    cout<<"contract one cuts...\n";
+    cout<<"size of 1-cut: "<<edge_equl_cls[0].size()<<endl;
     gGraph.cnt_one_cuts( edge_equl_cls[0], U );
     printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
@@ -91,7 +92,7 @@ void Filter::contract_natural_cuts(){
 void Filter::convert_and_output(){
 
     cout<<"convert to assemble gGraph and output...\n";
-    gGraph.convert_n_output( OutPath );
+    gGraph.convert_n_output( anodes, aedges );
     cout<<"done!\n";
 
 }

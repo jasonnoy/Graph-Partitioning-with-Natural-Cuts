@@ -1,80 +1,97 @@
 #include "A_Graph.h"
 
-void A_Graph::read_graph_n_idmap( vector< vector<NodeID> >& id_map, string co_path, string gr_path){
+void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<vector<NodeID>>& anodes, const vector<vector<NodeID>>& aedges){
 
 //		FILE *co_f, *gr_f;
 //		fopen_s( &co_f, co_path.c_str(), "r");
 //		check_file( co_f, co_path.c_str() );
 //		fopen_s( &gr_f, gr_path.c_str(), "r");
 //		check_file( gr_f, gr_path.c_str() );
-        cout<<"Reading files...\n";
+//        cout<<"Reading files...\n";
         cout<<"Reading in node...\n";
-        cout<<"co_path: "<<co_path<<endl;
-        ifstream infile;
-        infile.open(co_path);
-        if (!infile.is_open()) {
-            cout<<"Error! Read file failed.\n";
-        }
-		//read in node
-		NodeID node_count;
-		infile>>node_count;
-        cout<<node_count<<" lines in node file.\n";
-		this->node_list.reserve( node_count );
-		id_map.resize( node_count );
+//        cout<<"co_path: "<<co_path<<endl;
+//        ifstream infile;
+//        infile.open(co_path);
+//        if (!infile.is_open()) {
+//            cout<<"Error! Read file failed.\n";
+//        }
+//		//read in node
+//		NodeID node_count;
+//		infile>>node_count;
+//        cout<<node_count<<" lines in node file.\n";
+		this->node_list.reserve( anodes.size() );
+		id_map.resize( anodes.size() );
 
 		NodeID tid = 0;
 		NodeSize sz = 0;
 
-		for (int j = 0; j < node_count; j++){
-            char gap;
-            infile>>tid>>sz>>gap;
-//			fscanf_s( co_f, "%u %u:", &tid, &sz );
-			//G_Node tnode(tid-1, tlt, tlg);
-			A_Node tnode( tid, sz );
-			this->node_list.push_back( tnode );
-            cout<<tid*100/node_count<<"%\r";
-			vector<NodeID> contain_id;
-			for( int i = 0; i < sz; i++ ){
-				NodeID map_id = 0;
-                infile>>map_id;
-//				fscanf_s( co_f, "%u ", &map_id );
-				contain_id.push_back( map_id );
-			}
-			id_map[tid] = contain_id;
-			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
-		}
-        cout<<"Read in node success!\n";
-        infile.close();
-        infile.clear(ios::goodbit);
+        for (int i = 0; i < anodes.size(); i++) {
+            NodeID to_node_id, node_size;
+            to_node_id = anodes[i][0];
+            node_size = anodes[i].size();
+            A_Node anode(to_node_id, node_size);
+            this->node_list.push_back(anode);
+            vector<NodeID> contain_id;
+            contain_id.reserve(node_size);
+            contain_id.insert(contain_id.end(), anodes[i].begin()+1, anodes[i].end());
+            id_map[to_node_id] = contain_id;
+        }
+//		for (int j = 0; j < node_count; j++){
+//            char gap;
+//            infile>>tid>>sz>>gap;
+////			fscanf_s( co_f, "%u %u:", &tid, &sz );
+//			//G_Node tnode(tid-1, tlt, tlg);
+//			A_Node tnode( tid, sz );
+//			this->node_list.push_back( tnode );
+//            cout<<tid*100/node_count<<"%\r";
+//			vector<NodeID> contain_id;
+//			for( int i = 0; i < sz; i++ ){
+//				NodeID map_id = 0;
+//                infile>>map_id;
+////				fscanf_s( co_f, "%u ", &map_id );
+//				contain_id.push_back( map_id );
+//			}
+//			id_map[tid] = contain_id;
+//			//id_map[tid].assign( contain_id.begin(), contain_id.end() );
+//		}
+//        cout<<"Read in node success!\n";
+//        infile.close();
+//        infile.clear(ios::goodbit);
 //		fclose( co_f );
 
 		//read in edge
         cout<<"Reading in edge...\n";
-        infile.open(gr_path);
-        if (!infile.is_open()) {
-            cout<<"gr_path open file error.\n";
+//        infile.open(gr_path);
+//        if (!infile.is_open()) {
+//            cout<<"gr_path open file error.\n";
+//        }
+//		NodeID edge_count = 0;
+//		if( !infile.eof() ){
+//			infile>>edge_count;
+//		}
+		this->edge_list.reserve( aedges.size() );
+        cout<<aedges.size()<<"edges in aedge\n";
+        for (int i = 0; i < aedges.size(); i++) {
+            NodeID sid = aedges[i][0];
+            A_Edge edge(sid, aedges[i][1], aedges[i][2], i);
+            edge_list.push_back(edge);
+            node_list[sid].get_adj_list().push_back(&edge_list.back());
         }
-		NodeID edge_count = 0;
-		if( !infile.eof() ){
-			infile>>edge_count;
-		}
-		this->edge_list.reserve( edge_count );
-        cout<<edge_count<<"lines in edge file\n";
-		NodeID ts = 0, tt = 0, tw = 0;
-		tid = 0;
-		for (int i = 0; i < edge_count; i++){
-
-//			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
-            infile>>ts>>tt>>tw;
-            cout<<tid*100/edge_count<<"%\r";
-			A_Edge e(ts, tt, tw, tid);
-			this->edge_list.push_back(e);
-			this->node_list[ts].get_adj_list().push_back(&edge_list.back());
-            tid++;
-		}
-        infile.close();
-//		fclose( co_f );
-        cout<<tid<<" edges\n";
+//		NodeID ts = 0, tt = 0, tw = 0;
+//		tid = 0;
+//		for (int i = 0; i < edge_count; i++){
+//
+////			fscanf_s( gr_f, "%u %u %u\n", &ts, &tt, &tw );
+//            infile>>ts>>tt>>tw;
+//            cout<<tid*100/edge_count<<"%\r";
+//			A_Edge e(ts, tt, tw, tid);
+//			this->edge_list.push_back(e);
+//			this->node_list[ts].get_adj_list().push_back(&edge_list.back());
+//            tid++;
+//		}
+//        infile.close();
+////		fclose( co_f );
+        cout<<edge_list.size()<<" edges\n";
         cout<<"Read in edge success!\n";
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
@@ -1478,6 +1495,8 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 		}
 		result.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
+        cout<<"Assembly result size: "<<result.size()<<endl;
+        cout<<"result[0][0]: "<<result[0][0]<<endl;
 		return;
 }
 

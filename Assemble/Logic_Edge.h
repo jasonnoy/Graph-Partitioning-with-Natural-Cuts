@@ -1,7 +1,7 @@
 #ifndef LOGIC_EDGE_H
 #define LOGIC_EDGE_H
 
-#include "../share/common.h"
+#include "../Common/common.h"
 
 struct Logic_Edge{
 

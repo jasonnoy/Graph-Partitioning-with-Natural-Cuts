@@ -1,7 +1,7 @@
 #ifndef POOL_ITEM
 #define POOL_ITEM
 
-#include "../share/common.h"
+#include "../Common/common.h"
 
 class Pool_Item{
 

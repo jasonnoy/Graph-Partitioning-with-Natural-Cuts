@@ -1,7 +1,7 @@
 #ifndef R_EDGE_H
 #define R_EDGE_H
 
-#include "../share/common.h"
+#include "../Common/common.h"
 
 class R_Edge{
 

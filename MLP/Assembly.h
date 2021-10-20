@@ -13,28 +13,30 @@ private:
     int FI = 16;
     int M = 1;
     bool COMBINE = false;
+    bool PHANTOM;
+    vector<vector<NodeID>>& anodes;
+    vector<vector<NodeID>>& aedges;
 
     vector<vector<NodeID>> result;
     vector<vector<NodeID>> id_map;
     R_Graph real_graph;
     A_Graph a_graph;
 
+
     void read_a_graph();
     void multistart_and_combination();
     void write_result();
 public:
     const int U;
-    const string nodePath;
-    const string graphPath;
-    const string aNodePath;
-    const string aGraphPath;
     const string outPath;
 
-    Assembly(int u, const string realNodePath, const string realGraphPath, const string aNPath, const string aGPath, const string oPath):
-        U(u), nodePath(realNodePath), graphPath(realGraphPath), aNodePath(aNPath), aGraphPath(aGPath), outPath(oPath){};
-    Assembly(int u, int fi, int m, bool combine, const string nPath, const string gPath, const string aNPath, const string aGPath, const string oPath):
-    U(u), FI(fi), M(m), COMBINE(combine), nodePath(nPath), graphPath(gPath), aNodePath(aNPath), aGraphPath(aGPath), outPath(oPath){};
+    Assembly(int u, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
+        U(u), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
+    Assembly(int u, int fi, int m, bool combine, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
+    U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
     void runAssembly();
+    vector<vector<NodeID>>& get_result(){return result;}
+    vector<vector<NodeID>>& get_id_map(){return id_map;}
 };
 
 

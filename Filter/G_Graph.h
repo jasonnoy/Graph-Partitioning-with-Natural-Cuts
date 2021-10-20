@@ -14,8 +14,8 @@
 
 using namespace std;
 
-#include "../share/Utility.h"
-#include "../share/sw_basetypes.h"
+#include "../Common/Utility.h"
+#include "../Common/sw_basetypes.h"
 #include "../Assemble/A_Graph.h"
 
 #include "G_Node.h"
@@ -88,7 +88,7 @@ public:
 
 	/////////////////////////////main methods////////////////////////////
 
-	void read_graph(string co_path, string gr_path);
+	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map );
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
 
@@ -109,7 +109,7 @@ public:
 	void cnt_natural_cuts( bool natural_cuts[] );
 
 	//void convert( A_Graph* ag, vector< vector<NodeID> >& id_map );
-	void convert_n_output( string r_path );
+	void convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<NodeID>>& aedges );
 
 	void cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim );
 

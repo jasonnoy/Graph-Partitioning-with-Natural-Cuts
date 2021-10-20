@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#include "../share/common.h"
+#include "../Common/common.h"
 #include "A_Edge.h"
 
 class A_Node{

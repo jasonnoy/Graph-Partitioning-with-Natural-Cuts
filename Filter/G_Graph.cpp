@@ -2,85 +2,124 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph(string co_path, string gr_path){
+void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map){
 
     // read in node
     cout<<"read in nodes...\n";
-    std::vector<node_info_t> nodes;
-    std::ifstream fs;
-    fs.open(co_path, std::ios::binary);
-    if (!fs.is_open()) {
-        cout<<"co_file open failed!\n";
-        exit(1);
+    node_list.reserve(nodes.size());
+    // use relative node id for punch, map real nid for output
+    unsigned int id = 0;
+    map<unsigned int, unsigned int> real_to_nid;
+    real_map.reserve(nodes.size());
+    for (NodeID nid : nodes) {
+        G_Node node(id);
+        node_list.push_back(node);
+        real_map.push_back(nid);
+        real_to_nid[nid] = id;
+        id++;
     }
+//    this->node_list.insert(node_list.end(), nodes.begin(), nodes.end());
 
-    uint32_t count;
-    fs.read((char *)&count, sizeof(uint32_t));
-    nodes.resize(count);
-    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
-    unsigned int counter = 0;
-    auto node_iter = nodes.begin();
-    for (; node_iter != nodes.end(); node_iter++) {
-        if (counter % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\r";
-        }
-        G_Node node(counter);
-        this->node_list.push_back(node);
-        counter++;
-    }
-    fs.close();
-    fs.clear(ios::goodbit);
-    nodes.clear();
+
+//    std::vector<node_info_t> nodes;
+//    std::ifstream fs;
+//    fs.open(co_path, std::ios::binary);
+//    if (!fs.is_open()) {
+//        cout<<"co_file open failed!\n";
+//        exit(1);
+//    }
+//
+//    uint32_t count;
+//    fs.read((char *)&count, sizeof(uint32_t));
+//    nodes.resize(count);
+//    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
+//    unsigned int counter = 0;
+//    auto node_iter = nodes.begin();
+//    for (; node_iter != nodes.end(); node_iter++) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        G_Node node(counter);
+//        this->node_list.push_back(node);
+//        counter++;
+//    }
+//    fs.close();
+//    fs.clear(ios::goodbit);
+//    nodes.clear();
     cout<<"read nodes done\n";
     cout<<"there are "<<node_list.size()<<" nodes\n";
 
     // read in edges
     cout<<"read edges...\n";
-    std::vector<link_info_t> links;
-    fs.open(gr_path, std::ios::binary);
-    if (!fs.is_open()) {
-        cout<<"gr_file open failed!\n";
-        exit(1);
+    edge_list.reserve(edges.size());
+    NodeID counter = 0;
+    for (vector<NodeID>edge : edges) {
+        G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], counter++);
+        edge_list.push_back(gEdge);
+        node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
-    fs.read((char *)&count, sizeof(uint32_t));
-    links.resize(count);
-    this->edge_list.reserve(2 * count + 1);
-    fs.read((char *)&links[0], sizeof(link_info_t) * count);
-    counter = 0;
-    auto edge_iter = links.begin();
-    for (; edge_iter != links.end(); edge_iter++) {
-        if (counter % (count / 10) == 0) {
-            cout<<counter * 100 / count<<"%\r";
-        }
-        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
-        this->edge_list.push_back(edge);
-        this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
-        counter++;
-    }
-    links.clear();
-    fs.close();
+//    sym_id.resize(edge_list.size());
+//    for (int i = 1; i < edge_list.size(); i++) {
+//        sym_id[i] = edge_list[i - 1].get_id();
+//        sym_id[i - 1] = edge_list[i].get_id();
+//    }
+//    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
+
+
+
+//    std::vector<link_info_t> links;
+//    fs.open(gr_path, std::ios::binary);
+//    if (!fs.is_open()) {
+//        cout<<"gr_file open failed!\n";
+//        exit(1);
+//    }
+//    fs.read((char *)&count, sizeof(uint32_t));
+//    links.resize(count);
+//    this->edge_list.reserve(2 * count + 1);
+//    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+//    counter = 0;
+//    auto edge_iter = links.begin();
+//    for (; edge_iter != links.end(); edge_iter++) {
+//        if (counter % (count / 10) == 0) {
+//            cout<<counter * 100 / count<<"%\r";
+//        }
+//        G_Edge edge(edge_iter->start_node_id, edge_iter->end_node_id, counter);
+//        this->edge_list.push_back(edge);
+//        this->node_list[edge.get_source()].get_adj_list().push_back(&edge_list.back());
+//        counter++;
+//    }
+//    links.clear();
+//    fs.close();
     cout<<"read edges done\n";
     cout<<"there are "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size() * 2, 0);
-    size_t eid = counter;
-    cout<<"counter: "<<counter<<endl;
-    for (int i = 0; i < counter; i++) {
-        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
-        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
-            if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
-                this->sym_id[i] = (*sym_edge_iter)->get_id();
-                break;
-            }
-        }
-        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
-        edge_list.push_back(newEdge);
-        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
-        sym_id[i] = eid;
-        sym_id[eid] = i;
-        eid++;
+    this->sym_id.resize( this->edge_list.size(), 0);
+
+    for (int i = 1; i < edge_list.size(); i++) {
+        sym_id[i-1] = i;
+        sym_id[i] = i - 1;
+        i++;
     }
+
+//    edge_list.reserve(this->edge_list.size() * 2);
+//    cout<<"counter: "<<counter<<endl;
+//    size_t eid = counter;
+//    for (int i = 0; i < counter; i++) {
+//        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
+//        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
+//            if (this->edge_list[i].get_source() == (*sym_edge_iter)->get_target()) {
+//                this->sym_id[i] = (*sym_edge_iter)->get_id();
+//                break;
+//            }
+//        }
+//        G_Edge newEdge(edge_list[i].get_target(), edge_list[i].get_source(), eid);
+//        edge_list.push_back(newEdge);
+//        node_list[newEdge.get_source()].get_adj_list().push_back(&edge_list.back());
+//        sym_id[i] = eid;
+//        sym_id[eid] = i;
+//        eid++;
+//    }
     cout<<"fill symmetric edge done\n";
 
     //initial contraction
@@ -1340,7 +1379,7 @@ void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 		return;
 }
 
-void G_Graph::convert_n_output( string r_path ){
+void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<NodeID>>& aedges ){
 		
 		A_Graph * ag;
 		ag = new A_Graph;
@@ -1444,50 +1483,63 @@ void G_Graph::convert_n_output( string r_path ){
 			ag->contract_node_list[i].push_back( i );
 
 		//convert done, start writing
-		string node_n = "anode.txt";
-		string edge_n = "aedge.txt";
-
-		node_n.insert( node_n.begin(), r_path.begin(), r_path.end() );
-		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
+//		string node_n = "anode.txt";
+//		string edge_n = "aedge.txt";
+//
+//		node_n.insert( node_n.begin(), r_path.begin(), r_path.end() );
+//		edge_n.insert( edge_n.begin(), r_path.begin(), r_path.end() );
 
 		//write node and id map
-        ofstream outfile;
-		outfile.open(node_n);
-        if (!outfile.is_open()) {
-            cout<<"open node outfile failed!\n";
-            exit(1);
+//        ofstream outfile;
+//		outfile.open(node_n);
+//        if (!outfile.is_open()) {
+//            cout<<"open node outfile failed!\n";
+//            exit(1);
+//        }
+//
+//        outfile<<ag->node_list.size()<<endl;
+
+        anodes.resize(ag->node_list.size());
+        for (int i = 0; i < ag->node_list.size(); i++) {
+            NodeID nid = ag->node_list[i].get_id();
+            anodes[i].reserve(id_map[nid].size() + 1);
+            anodes[i].push_back(nid);
+            anodes[i].insert(anodes[i].end(), id_map[nid].begin(), id_map[nid].end());
         }
-
-        outfile<<ag->node_list.size()<<endl;
-
-		vector<A_Node>::const_iterator anit = ag->node_list.begin();
-		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
-		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
-            outfile<<anit->get_id()<<" "<<anit->get_size()<<":";
-
-			vector<NodeID>::const_iterator idmnit = idmit->begin();
-			for(; idmnit != idmit->end(); idmnit++){
-                outfile<<" "<<this->node_list[*idmnit].get_id();
-			}
-            outfile<<"\n";
-		}
-        outfile.close();
-        outfile.clear(ios::goodbit);
+//		vector<A_Node>::const_iterator anit = ag->node_list.begin();
+//		vector< vector<NodeID> >::const_iterator idmit = id_map.begin();
+//		for(; anit != ag->node_list.end() && idmit != id_map.end(); anit++, idmit++){
+//            outfile<<anit->get_id()<<" "<<anit->get_size()<<":";
+//
+//			vector<NodeID>::const_iterator idmnit = idmit->begin();
+//			for(; idmnit != idmit->end(); idmnit++){
+//                outfile<<" "<<this->node_list[*idmnit].get_id();
+//			}
+//            outfile<<"\n";
+//		}
+//        outfile.close();
+//        outfile.clear(ios::goodbit);
 
 		//write edge
-        outfile.open(edge_n);
-        if (!outfile.is_open()) {
-            cout<<"open edge outfile failed!\n";
-            exit(1);
+//        outfile.open(edge_n);
+//        if (!outfile.is_open()) {
+//            cout<<"open edge outfile failed!\n";
+//            exit(1);
+//        }
+
+        aedges.resize(ag->edge_list.size());
+        for (int i = 0; i < ag->edge_list.size(); i++) {
+            aedges[i].push_back(ag->edge_list[i].get_source());
+            aedges[i].push_back(ag->edge_list[i].get_target());
+            aedges[i].push_back(ag->edge_list[i].get_weight());
         }
-
-        outfile<<ag->edge_list.size()<<endl;
-
-		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
-		for(; aeit != ag->edge_list.end(); aeit++){
-            outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
-		}
-        outfile.close();
+//        outfile<<ag->edge_list.size()<<endl;
+//
+//		vector<A_Edge>::const_iterator aeit = ag->edge_list.begin();
+//		for(; aeit != ag->edge_list.end(); aeit++){
+//            outfile<<aeit->get_source()<<" "<<aeit->get_target()<<" "<<aeit->get_weight()<<endl;
+//		}
+//        outfile.close();
 
 		delete ag;
 		return;
@@ -1499,19 +1551,28 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 		size_t root_pos;
 		//build component tree T
+        cout<<"building comp tree...\n";
 		root_pos = this->build_component_tree( one_cut_edges, component_tree );
 
 		//fill subtree size
-		this->fill_subtree_size( component_tree, root_pos );
+        if (component_tree.empty()) {
+            cout<<"Component tree empty, skipping..\n";
+        } else {
+            cout<<"filling subtree size...\n";
+            this->fill_subtree_size( component_tree, root_pos );
+        }
 
 		//contract those components on the condition of first pass
-		this->cnt_proper_tree_components( component_tree, root_pos, sz_lim );
-		
+        cout<<"cnt_proper_tree_components...\n";
+        if (!component_tree.empty())
+		    this->cnt_proper_tree_components( component_tree, root_pos, sz_lim );
+		cout<<"Done.\n";
 		return;
 }
 
 size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
 	vector<edge_cncted_comp>& component_tree ){
+        cout<<"1570\n";
 
 		set<NodeID> comp_start_node; //the node id is the contracted node id
 		vector<EdgeID>::const_iterator cutit = one_cut_edges.begin();
@@ -1524,7 +1585,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			comp_start_node.insert( this->contract_to[this->edge_list[*cutit].get_source()] );
 			comp_start_node.insert( this->contract_to[this->edge_list[*cutit].get_target()] );
 		}
-
+        cout<<"1583\n";
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
 		bool * node_visited = NULL;
@@ -1536,6 +1597,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		size_t i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
+    cout<<"1595\n";
 		for(; stnit != comp_start_node.end(); stnit++, i++){
 
 			NodeID start = *stnit;
@@ -1578,7 +1640,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 					}//for all edges
 				}//for all contained nodes
 			}//while the component is expanding
-
 			if( component.empty() )
 				continue;
 
@@ -1596,7 +1657,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			component_tree.push_back( tree_node );
 
 		}
-
+        cout<<"1656: component_tree.size: "<<component_tree.size()<<endl;
 		//now we have all the tree nodes and their sizes, then we build the tree
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
@@ -1605,10 +1666,10 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			for(; cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
-
 		//recursively link the tree
-		this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
-
+        if (component_tree.size())
+		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
+        cout<<"1673\n";
 		return max_comp_pos;
 }
 
@@ -1630,6 +1691,9 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 	NodeSize sz_lim ){
 
 		//just in case
+        if (component_tree.empty()) {
+            return;
+        }
 		if( !component_tree[root_p].subtree_size ) //component_tree[root_p].subtree_size is 0
 			return;
 
