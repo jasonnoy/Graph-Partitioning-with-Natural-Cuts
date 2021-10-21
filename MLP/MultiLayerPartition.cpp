@@ -65,7 +65,6 @@ void MultiLayerPartition::MLP() {
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         vector<NodeID> void_nodes;
-        int U, C, FI, M, PS;
         U = parameters[l][0];
         C = parameters[l][1];
         FI = parameters[l][2];
