@@ -32,6 +32,7 @@ private:
     void MLP_result();
     void phantom_result();
     void contract_tiny_cells();
+    void GraphPrinter::contract_iso_cells();
 
 public:
     GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& cellNodes, const vector<vector<NodeID>>& cellEdges, const string& o_path, const int u):

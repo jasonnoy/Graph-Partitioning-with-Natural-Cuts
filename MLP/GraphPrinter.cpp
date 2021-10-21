@@ -71,6 +71,7 @@ void GraphPrinter::phantom_result() {
 }
 
 void GraphPrinter::contract_tiny_cells() {
+    cout<<"contract tiny cells..\n";
     int* num_cell = new int[cell_nodes.size()]();
     int cell_id = 0;
     vector<vector<unsigned int>> node_edges;
@@ -80,9 +81,11 @@ void GraphPrinter::contract_tiny_cells() {
             num_cell[*nid] = cell_id;
         }
     }
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100)
+    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_id++) {
+        if (cell_iter->size() > U/10 || cell_iter->size() > 100){
+            cell_iter++
             continue;
+        }
         int* cell_count = new int[cell_iter->size()]();
         for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
             for (unsigned int tid : node_edges[*nid]) {
@@ -104,25 +107,46 @@ void GraphPrinter::contract_tiny_cells() {
         result_nodes[max_cell].insert(result_nodes[max_cell].end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
     }
+    cout<<"Done\n";
 }
+
+void GraphPrinter::contract_iso_cells() {
+    auto cell_iter = result_nodes.begin();
+    while(cell_iter != result_nodes.end()) {
+        if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
+            cell_iter++
+            continue;
+        }
+        result_nodes.insert(result_nodes.begin()->end(), cell_iter->begin(), cell_iter->end());
+        cell_iter = result_nodes.erase(cell_iter);
+    }
+}
+
 void GraphPrinter::MLP_result() {
     fill_contracts();
     cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
-    int * node_cell = new int[cell_nodes.size()]();
     unsigned int index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (NodeID contain_nid : id_map[*nit]) {
-                node_cell[contain_nid] = index;
                 result_nodes[index].push_back(contain_nid);
             }
         }
     }
 
     contract_tiny_cells();
+    contract_iso_cells();
+
+    int * node_cell = new int[cell_nodes.size()]();
+    index = 0;
+    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, index++) {
+        for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
+            node_cell[*node_iter] = index;
+        }
+    }
 
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
