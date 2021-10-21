@@ -117,7 +117,7 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
-        cout<<"vid: "
+        cout<<"vid: ";
         for (NodeID vid : *cell_iter) {
             cout<<vid<<" ";
             void_nodes.push_back(vid);
