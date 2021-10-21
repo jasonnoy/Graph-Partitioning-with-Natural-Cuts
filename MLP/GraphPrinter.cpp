@@ -112,21 +112,20 @@ void GraphPrinter::contract_tiny_cells() {
 
 void GraphPrinter::contract_iso_cells() {
     auto cell_iter = result_nodes.begin();
+    int contracted_cell_count = 0;
     while(cell_iter != result_nodes.end()) {
         if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
             cell_iter++;
             continue;
         }
-        cout<<"vid: ";
         for (NodeID vid : *cell_iter) {
-            cout<<vid<<" ";
             void_nodes.push_back(vid);
         }
-        cout<<endl;
 //        void_nodes.insert(void_nodes.end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
+        contracted_cell_count++;
     }
-    cout<<"contracted "<<void_nodes.size()<<" nodes\n";
+    cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
 }
 
 void GraphPrinter::MLP_result() {
