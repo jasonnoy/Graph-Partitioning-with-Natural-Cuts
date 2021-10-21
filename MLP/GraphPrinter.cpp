@@ -11,7 +11,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 //        MLP_result();
 //    }
     MLP_result();
-    contract_tiny_cells();
+
     string out_node_path = out_path + "layer" + layer + "_nodes.txt";
     string out_edge_path = out_path + "layer" + layer + "_edges.txt";
     string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
@@ -121,6 +121,8 @@ void GraphPrinter::MLP_result() {
             }
         }
     }
+
+    contract_tiny_cells();
 
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
