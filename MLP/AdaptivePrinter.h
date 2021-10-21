@@ -18,7 +18,7 @@ private:
     vector<int> cell_nums;
     const int layer;
     const unsigned int node_num;
-    vector<vector<unsigned int>> node_parti;
+    vector<vector<int>> node_parti;
 
 public:
     AdaptivePrinter(const string o_path, const int l, const unsigned int n_num): out_path(o_path), layer(l), node_num(n_num){cell_nums.resize(l);}

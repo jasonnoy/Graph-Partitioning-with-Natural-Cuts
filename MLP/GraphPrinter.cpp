@@ -117,7 +117,7 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
-        result_nodes[0].insert(result_nodes[0].end(), cell_iter->begin(), cell_iter->end());
+        void_nodes.insert(void_nodes.end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
     }
 }
@@ -148,11 +148,17 @@ void GraphPrinter::MLP_result() {
         }
     }
 
+    for (unsigned int void_id : void_nodes) {
+        node_cell[void_id] = -1;
+    }
+
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
+        if (node_cell[sid] == -1 && node_cell[tid] == -1)
+            continue;
         if (node_cell[sid] == node_cell[tid]){
             vector<unsigned int> edge = {sid, tid};
             result_edges.push_back(edge);

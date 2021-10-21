@@ -26,6 +26,7 @@ private:
     vector<vector<NodeID>> result_cuts;
     const string out_path;
     vector<NodeID> contract_to;
+    vector<NodeID> &void_nodes;
 
     void fill_contracts();
     void filter_edges();
@@ -35,8 +36,8 @@ private:
     void contract_iso_cells();
 
 public:
-    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& cellNodes, const vector<vector<NodeID>>& cellEdges, const string& o_path, const int u):
-        a_result(in_result), id_map(in_id_map), cell_nodes(cellNodes), cell_edges(cellEdges), out_path(o_path), U(u){}
+    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& cellNodes, const vector<vector<NodeID>>& cellEdges, const string& o_path, const int u, vector<NodeID>& v_nodes):
+        a_result(in_result), id_map(in_id_map), cell_nodes(cellNodes), cell_edges(cellEdges), out_path(o_path), U(u), void_nodes(v_nodes){}
     void write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom);
     unsigned int nodes_result_size(){return result_nodes.size();}
     unsigned int cuts_result_size(){return result_cuts.size();}
