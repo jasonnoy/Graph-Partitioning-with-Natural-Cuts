@@ -30,7 +30,7 @@ private:
 
     void fill_contracts();
     void filter_edges();
-    void MLP_result(vector<NodeID> &void_nodes);
+    void MLP_result();
     void phantom_result();
     void contract_tiny_cells();
     void contract_iso_cells();
