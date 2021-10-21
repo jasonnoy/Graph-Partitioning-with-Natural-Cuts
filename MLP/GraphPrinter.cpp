@@ -83,7 +83,7 @@ void GraphPrinter::contract_tiny_cells() {
     }
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_id++) {
         if (cell_iter->size() > U/10 || cell_iter->size() > 100){
-            cell_iter++
+            cell_iter++;
             continue;
         }
         int* cell_count = new int[cell_iter->size()]();
