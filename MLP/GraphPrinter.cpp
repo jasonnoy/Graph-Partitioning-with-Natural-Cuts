@@ -117,7 +117,7 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
-        result_nodes.insert(result_nodes[0].end(), cell_iter->begin(), cell_iter->end());
+        result_nodes[0].insert(result_nodes[0].end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
     }
 }
