@@ -117,12 +117,16 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
+        cout<<"vid: "
         for (NodeID vid : *cell_iter) {
+            cout<<vid<<" ";
             void_nodes.push_back(vid);
         }
+        cout<<endl;
 //        void_nodes.insert(void_nodes.end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
     }
+    cout<<"contracted "<<void_nodes.size()<<" nodes\n";
 }
 
 void GraphPrinter::MLP_result() {
