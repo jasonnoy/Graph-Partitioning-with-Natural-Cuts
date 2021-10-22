@@ -1572,7 +1572,6 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
 	vector<edge_cncted_comp>& component_tree ){
-        cout<<"1570\n";
 
 		set<NodeID> comp_start_node; //the node id is the contracted node id
 		vector<EdgeID>::const_iterator cutit = one_cut_edges.begin();
@@ -1585,7 +1584,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			comp_start_node.insert( this->contract_to[this->edge_list[*cutit].get_source()] );
 			comp_start_node.insert( this->contract_to[this->edge_list[*cutit].get_target()] );
 		}
-        cout<<"1583\n";
+
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
 		bool * node_visited = NULL;
@@ -1597,7 +1596,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		size_t i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
-    cout<<"1595\n";
+
 		for(; stnit != comp_start_node.end(); stnit++, i++){
 
 			NodeID start = *stnit;
@@ -1657,19 +1656,17 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			component_tree.push_back( tree_node );
 
 		}
-        cout<<"1656: component_tree.size: "<<component_tree.size()<<endl;
+
 		//now we have all the tree nodes and their sizes, then we build the tree
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
-
-			list<NodeID>::const_iterator cnit = component_tree[i].component.begin();
-			for(; cnit != component_tree[i].component.end(); cnit++)
+			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
 		//recursively link the tree
         if (component_tree.size())
 		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
-        cout<<"1673\n";
+
 		return max_comp_pos;
 }
 
@@ -1742,7 +1739,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 
 		if( parent_pos != -1u )
 			component_tree[search_pos].parent = parent_pos;
-
+        cout<<"1742/n";
 		vector<size_t> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
@@ -1754,6 +1751,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
+    cout<<"1754/n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
