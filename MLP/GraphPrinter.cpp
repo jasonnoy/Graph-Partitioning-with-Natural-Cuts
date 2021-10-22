@@ -28,8 +28,6 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100)
-            continue;
         outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
             outfile<<" "<<real_map[*nid_i];
