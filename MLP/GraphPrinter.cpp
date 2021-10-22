@@ -152,7 +152,8 @@ void GraphPrinter::MLP_result() {
     }
 
 //    contract_tiny_cells();
-    contract_iso_cells();
+    if (contract_tiny)
+        contract_iso_cells();
 
     int * node_cell = new int[cell_nodes.size()]();
     index = 0;

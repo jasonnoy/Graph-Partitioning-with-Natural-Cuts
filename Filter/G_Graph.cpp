@@ -1619,7 +1619,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				for(; cnit != this->contract_node_list[cnid].end(); cnit++){
 
 					NodeID nid = *cnit;
-					vector<G_Edge*>::const_iterator eit = 
+					vector<G_Edge*>::const_iterator eit =
 						this->node_list[nid].get_adj_list().begin();
 					for(; eit != this->node_list[nid].get_adj_list().end(); eit++){
 
