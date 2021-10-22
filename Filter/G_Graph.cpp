@@ -1737,9 +1737,11 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
 	comp_cnodes_to_pos, size_t search_pos, size_t parent_pos ){
 
+        if (search_pos >= component_tree.size())
+            cout<<"search pos: "<<search_pos<<endl;
+
 		if( parent_pos != -1u )
 			component_tree[search_pos].parent = parent_pos;
-        cout<<"1742/n";
 		vector<size_t> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
@@ -1751,7 +1753,6 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
-    cout<<"1754/n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
