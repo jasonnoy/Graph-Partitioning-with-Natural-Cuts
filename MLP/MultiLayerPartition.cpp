@@ -114,7 +114,6 @@ void MultiLayerPartition::MLP() {
         vector<vector<unsigned int>> cells;
         cells.reserve(count);
 //        outfile.open(out_node_path, ios::app);
-        unsigned int real_cell_count = 0;
         for (int i = 0; i < count; i++) {
             unsigned int cellSize;
             infile>>cellSize;
@@ -126,7 +125,6 @@ void MultiLayerPartition::MLP() {
                 cell_nodes.push_back(nid);
             }
             cells.push_back(cell_nodes);
-            real_cell_count++;
 //            if (cellSize < 32) {
 //                cellCount++;
 //                outfile<<cellSize;
@@ -154,11 +152,13 @@ void MultiLayerPartition::MLP() {
         infile.clear(ios::goodbit);
 
         cout<<"Nodes and edges read in succeed!\n";
-        cout<<"Valid cells for next step: "<<real_cell_count<<endl;
+        cout<<"Valid cells for next step: "<<count<<endl;
 
         int cell_count = 0;
-        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
-            cout<<"cell No."<<cell_count++<<endl;
+        cout<<"cell size: "<<cells.size()<<endl;
+        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++, cell_count++) {
+            cout<<"159\n";
+            cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             cout<<"nodeNum: "<<nodeNum<<endl;
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
