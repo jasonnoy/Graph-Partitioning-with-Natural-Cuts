@@ -163,9 +163,9 @@ void GraphPrinter::MLP_result() {
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
-        if(node_cell[sid] * node_cell[tid] < 0)
-            cout<<"node cell different\n";
-        if (node_cell[sid] == -1 && node_cell[tid] == -1)
+//        if(node_cell[sid] * node_cell[tid] < 0)
+//            cout<<"node cell different\n";
+        if (node_cell[sid] == -1 || node_cell[tid] == -1)
             continue;
         if (node_cell[sid] == node_cell[tid]){
             vector<unsigned int> edge = {sid, tid};
