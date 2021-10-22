@@ -1587,10 +1587,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
-		bool * node_visited = NULL;
-		node_visited = new bool[this->contract_node_list.size()];
-		check_new( node_visited , "build component tree: node visited");
-		memset( node_visited, false, this->contract_node_list.size() );
+		bool * node_visited = new bool[this->contract_node_list.size()]();
 
 		size_t max_comp_pos = 0;
 		size_t i = 0;
@@ -1644,7 +1641,8 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
-			NodeSize comp_size = this->cal_comp_size( component );
+            NodeSize comp_size = component.size();
+//			NodeSize comp_size = this->cal_comp_size( component ); // !!! 重复计算了？
 			if( comp_size > max_comp_size ){
 				max_comp_pos = i;
 				max_comp_size = comp_size;
