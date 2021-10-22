@@ -123,7 +123,7 @@ void GraphPrinter::contract_iso_cells() {
     auto cell_iter = result_nodes.begin();
     while( cell_iter != result_nodes.end() ) {
         if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
-            cell_iter++
+            cell_iter++;
             continue;
         }
         for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
