@@ -156,6 +156,9 @@ void GraphPrinter::MLP_result() {
     }
     cout<<"157\n";
     for (unsigned int void_id : void_nodes) {
+        if (void_id >= cell_nodes.size()) {
+            cout<<"outsize void_id: "<<void_id<<endl;
+        }
         node_cell[void_id] = -1;
     }
     cout<<"161\n";
