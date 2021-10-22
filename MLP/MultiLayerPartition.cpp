@@ -156,7 +156,7 @@ void MultiLayerPartition::MLP() {
 
         int cell_count = 0;
         cout<<"cell size: "<<cells.size()<<endl;
-        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++) {
+        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
             cout<<"159\n";
             cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
@@ -189,7 +189,6 @@ void MultiLayerPartition::MLP() {
             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.cuts_result_size();
-            cell_iter++;
             cout<<"cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
         }
         cout<<"194\n";

@@ -144,7 +144,7 @@ void GraphPrinter::MLP_result() {
     }
 
 //    contract_tiny_cells();
-    contract_iso_cells();
+//    contract_iso_cells();
 
     int * node_cell = new int[cell_nodes.size()]();
     index = 0;
@@ -165,13 +165,13 @@ void GraphPrinter::MLP_result() {
         unsigned int tid = cell_edges[i][1];
 //        if(node_cell[sid] * node_cell[tid] < 0)
 //            cout<<"node cell different\n";
-        if (node_cell[sid] == -1 || node_cell[tid] == -1)
-            continue;
         if (node_cell[sid] == node_cell[tid]){
             vector<unsigned int> edge = {sid, tid};
             result_edges.push_back(edge);
             continue;
         }
+        if (node_cell[sid] == -1 || node_cell[tid] == -1)
+            continue;
         vector<unsigned int> cut = {sid, tid};
         result_cuts.push_back(cut);
     }
