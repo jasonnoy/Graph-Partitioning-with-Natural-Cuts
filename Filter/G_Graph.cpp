@@ -1738,7 +1738,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 	comp_cnodes_to_pos, size_t search_pos, size_t parent_pos ){
 
         if (search_pos >= component_tree.size()){
-            cout<<"search pos: "<<search_pos<<endl;
+            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
             return;
         }
 
