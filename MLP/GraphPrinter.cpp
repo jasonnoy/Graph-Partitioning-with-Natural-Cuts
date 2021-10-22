@@ -23,6 +23,8 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
+        if (cell_iter->size() > U/10 || cell_iter->size() > 100)
+            continue;
         outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
             outfile<<" "<<real_map[*nid_i];
@@ -122,7 +124,6 @@ void GraphPrinter::contract_iso_cells() {
             void_nodes.push_back(vid);
         }
 //        void_nodes.insert(void_nodes.end(), cell_iter->begin(), cell_iter->end());
-        cell_iter = result_nodes.erase(cell_iter);
         contracted_cell_count++;
     }
     cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
@@ -144,7 +145,7 @@ void GraphPrinter::MLP_result() {
     }
 
 //    contract_tiny_cells();
-//    contract_iso_cells();
+    contract_iso_cells();
 
     int * node_cell = new int[cell_nodes.size()]();
     index = 0;
