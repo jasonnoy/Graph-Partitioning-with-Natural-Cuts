@@ -113,11 +113,10 @@ void GraphPrinter::contract_tiny_cells() {
 }
 
 void GraphPrinter::contract_iso_cells() {
-    auto cell_iter = result_nodes.begin();
+
     int contracted_cell_count = 0;
-    while(cell_iter != result_nodes.end()) {
+    for(auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
-            cell_iter++;
             continue;
         }
         for (NodeID vid : *cell_iter) {
