@@ -148,16 +148,17 @@ void GraphPrinter::MLP_result() {
 
     int * node_cell = new int[cell_nodes.size()]();
     index = 0;
+    cout<<"151\n";
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, index++) {
         for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
             node_cell[*node_iter] = index;
         }
     }
-
+    cout<<"157\n";
     for (unsigned int void_id : void_nodes) {
         node_cell[void_id] = -1;
     }
-
+    cout<<"161\n";
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
@@ -175,6 +176,7 @@ void GraphPrinter::MLP_result() {
         vector<unsigned int> cut = {sid, tid};
         result_cuts.push_back(cut);
     }
+    cout<<"179\n";
 //    filter_edges();
 }
 
