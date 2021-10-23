@@ -116,15 +116,16 @@ void MultiLayerPartition::MLP() {
 //        outfile.open(out_node_path, ios::app);
         for (int i = 0; i < count; i++) {
             unsigned int cellSize;
-            infile>>cellSize;
+            infile >> cellSize;
             vector<unsigned int> cell_nodes;
             cell_nodes.reserve(cellSize);
             for (int j = 0; j < cellSize; j++) {
                 unsigned int nid;
-                infile>>nid;
+                infile >> nid;
                 cell_nodes.push_back(nid);
             }
             cells.push_back(cell_nodes);
+        }
         infile.close();
         infile.clear(ios::goodbit);
 
