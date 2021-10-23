@@ -7,7 +7,6 @@
 
 #include "../Filter/G_Graph.h"
 #include "../Assemble/A_Graph.h"
-#include "../Assemble/R_Graph.h"
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
