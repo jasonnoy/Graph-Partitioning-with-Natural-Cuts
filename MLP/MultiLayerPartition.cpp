@@ -125,29 +125,6 @@ void MultiLayerPartition::MLP() {
                 cell_nodes.push_back(nid);
             }
             cells.push_back(cell_nodes);
-//            if (cellSize < 32) {
-//                cellCount++;
-//                outfile<<cellSize;
-//                for (int j = 0; j < cellSize; j++) {
-//                    unsigned int nid;
-//                    infile>>nid;
-//                    outfile<<" "<<nid;
-//                }
-//                outfile<<"\n";
-//            } else {
-//                vector<unsigned int> cell_nodes;
-//                cell_nodes.reserve(cellSize);
-//                for (int j = 0; j < cellSize; j++) {
-//                    unsigned int nid;
-//                    infile>>nid;
-//                    cell_nodes.push_back(nid);
-//                }
-//                cells.push_back(cell_nodes);
-//                real_cell_count++;
-//            }
-        }
-//        outfile.close();
-//        outfile.clear(ios::goodbit);
         infile.close();
         infile.clear(ios::goodbit);
 
@@ -159,7 +136,6 @@ void MultiLayerPartition::MLP() {
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
             if(cell_iter->size() < 32)
                 continue;
-            cout<<"159\n";
             cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             cout<<"nodeNum: "<<nodeNum<<endl;

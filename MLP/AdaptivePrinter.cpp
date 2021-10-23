@@ -103,13 +103,6 @@ void AdaptivePrinter::print_final_result() {
         }
         outfile<<"\n";
         filtered_nodes.push_back(nid);
-//        if (node_parti[nid][0] || node_parti[nid][1] || node_parti[nid][2]) {
-//            for (int l = 0; l < layer; l++) {
-//                outfile<<node_parti[nid][l] - 1<<" ";
-//            }
-//            outfile<<"\n";
-//            filtered_nodes.push_back(nid);
-//        }
     }
     outfile2<<filtered_nodes.size()<<"\n";
     for (auto node_iter = filtered_nodes.begin(); node_iter != filtered_nodes.end(); node_iter++) {
