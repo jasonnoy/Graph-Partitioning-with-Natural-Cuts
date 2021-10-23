@@ -138,7 +138,6 @@ void GraphPrinter::contract_iso_cells() {
 
 void GraphPrinter::MLP_result() {
     fill_contracts();
-    cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
@@ -157,20 +156,17 @@ void GraphPrinter::MLP_result() {
 
     int * node_cell = new int[cell_nodes.size()]();
     index = 0;
-    cout<<"151\n";
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, index++) {
         for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
             node_cell[*node_iter] = index;
         }
     }
-    cout<<"157\n";
     for (unsigned int void_id : cell_void_nodes) {
         if (void_id >= cell_nodes.size()) {
             cout<<"outsize void_id: "<<void_id<<endl;
         }
         node_cell[void_id] = -1;
     }
-    cout<<"161\n";
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
@@ -188,7 +184,6 @@ void GraphPrinter::MLP_result() {
         vector<unsigned int> cut = {sid, tid};
         result_cuts.push_back(cut);
     }
-    cout<<"179\n";
 //    filter_edges();
 }
 
