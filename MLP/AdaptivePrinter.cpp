@@ -8,9 +8,18 @@ void AdaptivePrinter::filter_result() {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
         ifstream infile;
         infile.open(layer_node_path);
+        int void_size;
+        infile>>void_size;
+        vector<unsigned int> void_nodes;
+        void_nodes.reserve(void_size);
+        for (int i = 0; i < void_size; i++) {
+            unsigned int vid;
+            infile>>vid;
+            void_nodes.push_back(vid);
+        }
         infile>>cell_nums[l-1];
-        vector<unsigned int> temp(layer);
-        node_parti.resize(node_num, temp);
+        vector<int> temp(layer);
+        node_parti.resize(node_num + void_size, temp);
         cout<<"layer "<<to_string(l)<<" has "<<cell_nums[l-1]<<" cells.\n";
         for (int cell_count = 0; cell_count < cell_nums[l-1]; cell_count++) {
             int node_size;
@@ -20,6 +29,9 @@ void AdaptivePrinter::filter_result() {
                 infile>>nid;
                 node_parti[nid][l-1] = cell_count;
             }
+        }
+        for (unsigned int vid : void_nodes) {
+            node_parti[vid][l-1] = -1;
         }
     }
     // filter edges.
@@ -47,7 +59,12 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         ofstream outfile;
         outfile.open(result_nodes);
 
-        int cell_num;
+        int cell_num, void_num;
+        infile>>void_num;
+        for (int i = 0; i < void_num; i++) {
+            unsigned int vid;
+            infile>>vid;
+        }
         infile>>cell_num;
         for (int i = 0; i < cell_num; i++) {
             int node_size;
@@ -81,13 +98,11 @@ void AdaptivePrinter::print_final_result() {
 
     vector<unsigned int> filtered_nodes;
     for (unsigned int nid = 0; nid < node_num; nid++) {
-        if (node_parti[nid][0] || node_parti[nid][1] || node_parti[nid][2]) {
-            for (int l = 0; l < layer; l++) {
-                outfile<<node_parti[nid][l] - 1<<" ";
-            }
-            outfile<<"\n";
-            filtered_nodes.push_back(nid);
+        for (int l = 0; l < layer; l++) {
+            outfile<<node_parti[nid][l]<<" ";
         }
+        outfile<<"\n";
+        filtered_nodes.push_back(nid);
     }
     outfile2<<filtered_nodes.size()<<"\n";
     for (auto node_iter = filtered_nodes.begin(); node_iter != filtered_nodes.end(); node_iter++) {

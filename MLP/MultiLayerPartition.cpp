@@ -6,8 +6,6 @@
 #include <ctime>
 
 void MultiLayerPartition::MLP() {
-//    const string realNodePath = outPath + "real_nodes.txt";
-//    const string realGraphPath = outPath + "real_edges.txt";
     string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
     infile.open(paraPath);
@@ -66,7 +64,7 @@ void MultiLayerPartition::MLP() {
         string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
-        int U, C, FI, M, PS;
+        vector<NodeID> void_nodes;
         U = parameters[l][0];
         C = parameters[l][1];
         FI = parameters[l][2];
@@ -83,7 +81,7 @@ void MultiLayerPartition::MLP() {
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
-        cout<<"input node: "<<in_node_path<<" input edge: "<<in_edge_path<<endl;
+        cout<<"input node: "<<in_node_path<<endl;
         if (phantom) {
             in_node_path = outPath + "layer0_nodes.txt";
             in_edge_path = outPath + "layer0_edges.txt";
@@ -103,48 +101,43 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
 
-        unsigned int cellCount = 0, edgeCount = 0;
+        unsigned int voidSize = 0, cellCount = 0, edgeCount = 0;
+        infile>>voidSize;
+        cout<<"current layer has "<<voidSize<<" void nodes.\n";
+        for (int i = 0; i < voidSize; i++) {
+            NodeID vid;
+            infile>>vid;
+            void_nodes.push_back(vid);
+        }
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
         vector<vector<unsigned int>> cells;
         cells.reserve(count);
-        outfile.open(out_node_path, ios::app);
-        unsigned int real_cell_count = 0;
+//        outfile.open(out_node_path, ios::app);
         for (int i = 0; i < count; i++) {
             unsigned int cellSize;
-            infile>>cellSize;
-            if (cellSize < 32) {
-                cellCount++;
-                outfile<<cellSize;
-                for (int j = 0; j < cellSize; j++) {
-                    unsigned int nid;
-                    infile>>nid;
-                    outfile<<" "<<nid;
-                }
-                outfile<<"\n";
-            } else {
-                vector<unsigned int> cell_nodes;
-                cell_nodes.reserve(cellSize);
-                for (int j = 0; j < cellSize; j++) {
-                    unsigned int nid;
-                    infile>>nid;
-                    cell_nodes.push_back(nid);
-                }
-                cells.push_back(cell_nodes);
-                real_cell_count++;
+            infile >> cellSize;
+            vector<unsigned int> cell_nodes;
+            cell_nodes.reserve(cellSize);
+            for (int j = 0; j < cellSize; j++) {
+                unsigned int nid;
+                infile >> nid;
+                cell_nodes.push_back(nid);
             }
+            cells.push_back(cell_nodes);
         }
-        outfile.close();
-        outfile.clear(ios::goodbit);
         infile.close();
         infile.clear(ios::goodbit);
 
         cout<<"Nodes and edges read in succeed!\n";
-        cout<<"Valid cells for next step: "<<real_cell_count<<endl;
+        cout<<"Valid cells for next step: "<<count<<endl;
 
         int cell_count = 0;
-        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_iter++) {
-            cout<<"cell No."<<cell_count++<<endl;
+        cout<<"cell size: "<<cells.size()<<endl;
+        for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
+            if(cell_iter->size() < 32)
+                continue;
+            cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             cout<<"nodeNum: "<<nodeNum<<endl;
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
@@ -167,16 +160,18 @@ void MultiLayerPartition::MLP() {
             cout<<cell_iter->size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
             filter.runFilter();
-            Assembly assembly(U, FI, M, false, filter.get_anodes(), filter.get_aedges(), outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
+            Assembly assembly(U, FI, M, false, anodes, aedges, outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
             assembly.runAssembly();
-//            PostProgress postProgress(filter.get_anodes(), filter.get_aedges(), cell_iter->size(), U);
+//            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
 //            postProgress.runPostProgress();
-            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath);
+            bool need_contract = l == getL() - 1;
+            GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, U, need_contract);
             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
+            void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
             cellCount += graphPrinter.nodes_result_size();
-            edgeCount += graphPrinter.edges_result_size();
+            edgeCount += graphPrinter.cuts_result_size();
+            cout<<"cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
         }
-
         // option: 改写为不读取size
 
 
@@ -187,7 +182,11 @@ void MultiLayerPartition::MLP() {
         infile.clear(ios::goodbit);
 
         outfile.open(out_node_path);
-        outfile<<cellCount<<"\n"<<buffer;
+        outfile<<void_nodes.size()<<" ";
+        for (NodeID vid : void_nodes) {
+            outfile<<vid<<" ";
+        }
+        outfile<<"\n"<<cellCount<<"\n"<<buffer;
         outfile.close();
         outfile.clear(ios::goodbit);
 
