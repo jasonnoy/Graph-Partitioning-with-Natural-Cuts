@@ -18,7 +18,6 @@ private:
 
     vector<vector<NodeID>> result;
     vector<vector<NodeID>> id_map;
-    R_Graph real_graph;
     A_Graph a_graph;
 
 
