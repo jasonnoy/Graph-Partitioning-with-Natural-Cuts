@@ -7,7 +7,7 @@
 using namespace std;
 
 #include "G_Edge.h"
-#include "../../Common/../sw_basetypes.h"
+#include "../../Common/sw_basetypes.h"
 
 class G_Node{
 
