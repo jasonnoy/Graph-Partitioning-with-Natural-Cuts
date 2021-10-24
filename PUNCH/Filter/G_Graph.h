@@ -16,7 +16,7 @@ using namespace std;
 
 #include "../../Common/Utility.h"
 #include "../../Common/sw_basetypes.h"
-#include "../PUNCH/Assemble/A_Graph.h"
+#include "../Assemble/A_Graph.h"
 
 #include "G_Node.h"
 #include "Edge_sort.h"
