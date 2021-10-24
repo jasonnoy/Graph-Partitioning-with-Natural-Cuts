@@ -30,6 +30,7 @@ private:
     const string outPath;
     const unsigned int nodeNum;
     bool phantom;
+    void phantom();
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
