@@ -10,7 +10,7 @@ else
   mkdir logs
 fi
 
-if [ -d ./log/"$date_str" ]
+if [ -d ./logs/"$date_str" ]
 then
   echo "dir ./logs/$date_str exists"
 else
