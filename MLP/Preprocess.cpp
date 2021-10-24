@@ -9,7 +9,7 @@
 void Preprocess::preprocess() {
     ifstream infile;
     ofstream outfile;
-    string out_node_path = out_path + "layer-1_nodes.txt";
+    string out_node_path = out_path + "layer-1_nodes.txt"; // layer 0 as phantom for now
     string out_edge_path = out_path + "layer-1_edges.txt";
 
     infile.open(sw_node_path, std::ios::binary);
@@ -24,6 +24,7 @@ void Preprocess::preprocess() {
         exit(1);
     }
 
+    outfile<<"0\n"; // empty void nodes
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
