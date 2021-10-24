@@ -5,7 +5,7 @@
 #ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_FILTER_H
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_FILTER_H
 
-#include "../Filter/G_Graph.h"
+#include "../PUNCH/Filter/G_Graph.h"
 #include <ctime>
 #include <stdlib.h>
 
