@@ -1755,7 +1755,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 
-			size_t new_search_pos = comp_cnodes_to_pos[*chlit];
+			size_t new_search_pos = comp_cnodes_to_pos[(*chlit)];
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
 		return;
