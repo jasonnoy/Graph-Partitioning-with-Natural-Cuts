@@ -137,7 +137,7 @@ void MultiLayerPartition::MLP() {
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
             if(cell_iter->size() < 32)
                 continue;
-            cout<<"=============================\n"
+            cout<<"=============================\n";
             cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
