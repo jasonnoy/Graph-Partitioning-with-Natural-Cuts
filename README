@@ -24,3 +24,14 @@ Raw data is needed in ./data/, 3 files required:
 
 * Details about input files can be found under ./data/
 * Default output path is ./result/
+
+Origin Copyright Statement
+/*****************************************
+* Graph Partition Program
+*
+* This software implements the graph partition algorithm in
+* "Graph Partitioning with Natural Cuts, Daniel Delling etc., IEEE International Parallel & Distributed Processing Symposium, 2011".
+*
+* Author: Yu Sun, Nanyang Technological University
+* Last update date: 18th Jan. 2013
+******************************************/
