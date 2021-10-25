@@ -1746,9 +1746,10 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
 			else{
-				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
+				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] ); // link child id to tree id
 			}
 		}
+        component_tree[search_pos].children.clear();
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
