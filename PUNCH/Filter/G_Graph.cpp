@@ -5,7 +5,6 @@
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map){
 
     // read in node
-    cout<<"read in nodes...\n";
     node_list.reserve(nodes.size());
     // use relative node id for punch, map real nid for output
     unsigned int id = 0;
@@ -46,11 +45,9 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //    fs.close();
 //    fs.clear(ios::goodbit);
 //    nodes.clear();
-    cout<<"read nodes done\n";
-    cout<<"there are "<<node_list.size()<<" nodes\n";
+    cout<<"Done. Read in "<<node_list.size()<<" nodes\n";
 
     // read in edges
-    cout<<"read edges...\n";
     edge_list.reserve(edges.size());
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
@@ -90,8 +87,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //    }
 //    links.clear();
 //    fs.close();
-    cout<<"read edges done\n";
-    cout<<"there are "<<edge_list.size()<<" edges\n";
+    cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size(), 0);

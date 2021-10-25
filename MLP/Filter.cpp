@@ -6,9 +6,8 @@
 
 void Filter::read_in_graph(){
     //read in graph
-    cout<<"Reading input file...\n";
+    cout<<"Reading last layer data...\n";
     gGraph.read_graph(nodes, edges, real_map);
-    cout<<"Done!\n";
 }
 
 
@@ -27,17 +26,16 @@ void Filter::contract_tiny_cuts(){
         if( !edge_in_fi[i] )
             ten++;
     }
-    printf("done!\nthere are %zu edge (%.1f%%) in tree.\n", ten, ten*100.0/edge_in_fi.size());
+    printf("done! There are %zu edge (%.1f%%) in tree.\n", ten, ten*100.0/edge_in_fi.size());
 
     cout<<"find edge classes...\n";
     vector< vector<EdgeID> > edge_equl_cls;
     gGraph.two_cuts_edge_class( edge_in_fi, edge_equl_cls ); //edge_equl_cls[0] is the class of 1-cut
-    cout<<"Done!\n";
 
-    cout<<"contract two cuts...\n";
+    cout<<"Done. Contract two cuts...\n";
     //handle each class, cut gGraph to components and contract small ones
     gGraph.cnt_two_cuts( edge_equl_cls, U );
-    printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
+    printf("Done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
 
     /* we assume that 1-cut has nothing to do with 2-cut, so the first can be added
@@ -49,13 +47,13 @@ void Filter::contract_tiny_cuts(){
     cout<<"contract one cuts...\n";
     cout<<"size of 1-cut: "<<edge_equl_cls[0].size()<<endl;
     gGraph.cnt_one_cuts( edge_equl_cls[0], U );
-    printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
+    printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
 
     cout<<"contract two-degree-node paths...\n";
     //second pass: contract 2-degree-node paths
     gGraph.cnt_two_degree_path( U );
-    printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
+    printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
 
     return;
@@ -76,12 +74,12 @@ void Filter::contract_natural_cuts(){
         if( natural_cuts[i])
             ten++;
     }
-    printf("done!\nthere are %zu edges (%.1f%%) are natural cuts.\n",
+    printf("done! There are %zu edges (%.1f%%) are natural cuts.\n",
            ten, ten*100.0/gGraph.get_edge_list().size());
 
     cout<<"contract natural cuts...\n";
     gGraph.cnt_natural_cuts( natural_cuts );
-    printf("done!\ncontract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
+    printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
 
     delete[] natural_cuts;
@@ -91,9 +89,9 @@ void Filter::contract_natural_cuts(){
 
 void Filter::convert_and_output(){
 
-    cout<<"convert to assemble gGraph and output...\n";
+    cout<<"Convert to assemble gGraph and output...\n";
     gGraph.convert_n_output( anodes, aedges );
-    cout<<"done!\n";
+    cout<<"Filter phase done!\n";
 
 }
 

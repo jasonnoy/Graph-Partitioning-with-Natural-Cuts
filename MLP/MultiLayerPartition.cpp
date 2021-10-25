@@ -137,9 +137,9 @@ void MultiLayerPartition::MLP() {
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
             if(cell_iter->size() < 32)
                 continue;
+            cout<<"=============================\n"
             cout<<"cell No."<<cell_count<<endl;
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
-            cout<<"nodeNum: "<<nodeNum<<endl;
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
 //                cout<<"nid: "<<*nid<<endl;
                 node_map[*nid] = 1;
@@ -170,7 +170,7 @@ void MultiLayerPartition::MLP() {
             void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.cuts_result_size();
-            cout<<"cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
+            cout<<"Cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
         }
         // option: 改写为不读取size
 

@@ -70,7 +70,6 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 //			infile>>edge_count;
 //		}
 		this->edge_list.reserve( aedges.size() );
-        cout<<aedges.size()<<"edges in aedge\n";
         for (int i = 0; i < aedges.size(); i++) {
             NodeID sid = aedges[i][0];
             A_Edge edge(sid, aedges[i][1], aedges[i][2], i);
@@ -91,8 +90,7 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 //		}
 //        infile.close();
 ////		fclose( co_f );
-        cout<<edge_list.size()<<" edges\n";
-        cout<<"Read in edge success!\n";
+        cout<<"Read in "<<edge_list.size()<<" edges\n";
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
@@ -1441,7 +1439,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 							//vector< vector<NodeID> > node_clusters;
 							//EdgeWeight item_weight;
 			//this->greedy_algorithm( sz_lim );
-			VERBOSE(printf("first greedy algorithm...\n");)
+			VERBOSE(printf("first greedy algorithm...");)
 			this->greedy_algorithm_heap( sz_lim );
 			VERBOSE(printf("done!\n");)
 
@@ -1495,8 +1493,6 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 		}
 		result.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
-        cout<<"Assembly result size: "<<result.size()<<endl;
-        cout<<"result[0][0]: "<<result[0][0]<<endl;
 		return;
 }
 

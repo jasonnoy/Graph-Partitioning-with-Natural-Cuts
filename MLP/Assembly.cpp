@@ -3,7 +3,6 @@
 //
 
 #include "Assembly.h"
-#include <ctime>
 
 void Assembly::read_a_graph(){
     cout<<"read in assemble graph...\n";
@@ -14,8 +13,7 @@ void Assembly::read_a_graph(){
 void Assembly::multistart_and_combination(){
     cout<<"multi-start and combination (it may take a long time)...\n";
     a_graph.multistart_and_combination( result, U );
-    cout<<"assemble result size: "<<result.size()<<endl;
-    cout<<"Done!\n";
+    cout<<"Done. Assemble result size: "<<result.size()<<endl;
 }
 
 void Assembly::write_result(){
