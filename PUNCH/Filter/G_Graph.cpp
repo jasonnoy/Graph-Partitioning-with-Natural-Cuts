@@ -1654,10 +1654,11 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 		//now we have all the tree nodes and their sizes, then we build the tree
         // !!没有计算child id to tree id
+        cout<<"1657\n";
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
-			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
-				comp_cnodes_to_pos[(*cnit)] = i;
+			for(NodeID c_nid:component_tree[i].component)
+				comp_cnodes_to_pos[c_nid] = i;
 		}
 		//recursively link the tree
         cout<<"1663\n";
