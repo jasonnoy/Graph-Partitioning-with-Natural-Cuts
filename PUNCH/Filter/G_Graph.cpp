@@ -1732,7 +1732,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 }
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
-	comp_cnodes_to_pos, size_t searchx_pos, size_t parent_pos ){
+	comp_cnodes_to_pos, size_t search_pos, size_t parent_pos ){
 
         if (search_pos >= component_tree.size()){
             cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
