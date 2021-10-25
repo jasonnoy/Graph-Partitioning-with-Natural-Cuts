@@ -5,8 +5,8 @@
 #ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ASSEMBLY_H
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ASSEMBLY_H
 
-#include "../Assemble/A_Graph.h"
-#include "../Assemble/R_Graph.h"
+#include "../PUNCH/Assemble/A_Graph.h"
+#include "../PUNCH/Assemble/R_Graph.h"
 
 class Assembly {
 private:
