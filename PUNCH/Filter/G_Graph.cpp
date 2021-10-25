@@ -1569,7 +1569,6 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
 	vector<edge_cncted_comp>& component_tree ){
-        cout<<"1672\n";
 		set<NodeID> comp_start_node; //the node id is the contracted node id
 		vector<EdgeID>::const_iterator cutit = one_cut_edges.begin();
 		for(; cutit != one_cut_edges.end(); cutit++){
@@ -1590,7 +1589,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		size_t i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
-        cout<<"1593\n";
 		for(; stnit != comp_start_node.end(); stnit++, i++){
 
 			NodeID start = *stnit;
@@ -1635,7 +1633,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			}//while the component is expanding
 			if( component.empty() )
 				continue;
-            cout<<"1638\n";
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
             NodeSize comp_size = component.size();
@@ -1653,15 +1650,13 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		}
 
 		//now we have all the tree nodes and their sizes, then we build the tree
-        // !!没有计算child id to tree id
-        cout<<"1657\n";
+        // !!needs double check
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
 			for(NodeID c_nid:component_tree[i].component)
 				comp_cnodes_to_pos[c_nid] = i;
 		}
 		//recursively link the tree
-        cout<<"1663\n";
         if (component_tree.size())
 		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
         else
@@ -1754,16 +1749,14 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
-        cout<<"1754\n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 
-			size_t new_search_pos = comp_cnodes_to_pos[(*chlit)];
+			size_t new_search_pos = *chlit;
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
-        cout<<"1763\n";
 		return;
 }
 

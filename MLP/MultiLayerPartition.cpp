@@ -55,10 +55,7 @@ void MultiLayerPartition::MLP() {
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
         cout<<"===========\n";
-        if (phantom)
-            cout<<"LAYER Phantom\n";
-        else
-            cout<<"LAYER "<<l+1<<endl;
+        cout<<"LAYER "<<l+1<<endl;
         cout<<"===========\n";
         int prefix = l == getL() - 1 ? -1 : l + 2;
         if (prefix == -1 && !phantom) {
