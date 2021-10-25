@@ -1657,12 +1657,13 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		map<NodeID, size_t> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
-				comp_cnodes_to_pos[*cnit] = i;
+				comp_cnodes_to_pos[(*cnit)] = i;
 		}
 		//recursively link the tree
         if (component_tree.size())
 		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
-
+        else
+            cout<<"comp tree empty\n";
 		return max_comp_pos;
 }
 
