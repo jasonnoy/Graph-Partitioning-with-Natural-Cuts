@@ -5,9 +5,8 @@
 #ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_MULTILAYERPARTITION_H
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_MULTILAYERPARTITION_H
 
-#include "../Filter/G_Graph.h"
-#include "../Assemble/A_Graph.h"
-#include "../Assemble/R_Graph.h"
+#include "../PUNCH/Filter/G_Graph.h"
+#include "../PUNCH/Assemble/A_Graph.h"
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
