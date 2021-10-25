@@ -1569,7 +1569,7 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
 	vector<edge_cncted_comp>& component_tree ){
-
+        cout<<"1672\n";
 		set<NodeID> comp_start_node; //the node id is the contracted node id
 		vector<EdgeID>::const_iterator cutit = one_cut_edges.begin();
 		for(; cutit != one_cut_edges.end(); cutit++){
@@ -1590,7 +1590,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		size_t i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
-
+        cout<<"1593\n";
 		for(; stnit != comp_start_node.end(); stnit++, i++){
 
 			NodeID start = *stnit;
@@ -1635,7 +1635,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			}//while the component is expanding
 			if( component.empty() )
 				continue;
-
+            cout<<"1638\n";
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
             NodeSize comp_size = component.size();
