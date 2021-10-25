@@ -1657,8 +1657,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		for( i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
-            for (auto child_iter = component_tree[i].children.begin(); child_iter != component_tree[i].children.end(); child_iter++)
-                comp_cnodes_to_pos[*child_iter] = i;
 		}
 		//recursively link the tree
         if (component_tree.size())
@@ -1757,7 +1755,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 
-			size_t new_search_pos = *chlit;
+			size_t new_search_pos = comp_cnodes_to_pos[*chlit];
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
 		return;
