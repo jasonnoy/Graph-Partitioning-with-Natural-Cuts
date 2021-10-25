@@ -1549,6 +1549,7 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 		//build component tree T
         cout<<"building comp tree...\n";
 		root_pos = this->build_component_tree( one_cut_edges, component_tree );
+        cout<<"Done\n";
 
 		//fill subtree size
         if (component_tree.empty()) {
@@ -1750,6 +1751,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
+        cout<<"1754\n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
@@ -1758,6 +1760,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 			size_t new_search_pos = comp_cnodes_to_pos[(*chlit)];
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
+        cout<<"1763\n";
 		return;
 }
 
