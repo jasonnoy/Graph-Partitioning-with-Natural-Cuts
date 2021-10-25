@@ -1660,6 +1660,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				comp_cnodes_to_pos[(*cnit)] = i;
 		}
 		//recursively link the tree
+        cout<<"1663\n";
         if (component_tree.size())
 		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
         else
