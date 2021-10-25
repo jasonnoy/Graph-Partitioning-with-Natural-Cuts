@@ -4,7 +4,10 @@
 * This software implements the MLP model using PUNCH algorithm in
 * "Customizable Route Planning in Road Networks, Daniel Delling etc., Microsoft, 2013".
 *
-* Author: Junhui Ji, University of Sydney, Huolala Ltd intern.
+* Forked & Modified from https://github.com/aldrichsun/Graph-Partitioning-with-Natural-Cuts
+*
+* Author: Junhui Ji, University of Sydney, Huolala Ltd. intern.
+*
 * Last update date: 10.12.2021
 ******************************************/
 
@@ -12,15 +15,12 @@ MLP abstracted origin fractional filter and assembly phases into classes, making
 New MLP class is added as the front api for process control.
 Under ./Bin/ directory, run the project as following:
 
-./MLP <path of the parameter file for mlp> <path of the sw node file> <path of the sw link file> <output path>
-e.g.  ./MLP ../Data/paras.txt ../Data/nodes_all ../Data/links ../result/
+sh build_run_MLP.sh
 
-Parameters: takes in a txt file, the formats of parameters are as following:
-The first line is the number of layer n, the following n lines defines other parameters as following:
-U, C, FI, M, Size of Pool
-such as:
-3
-1024 1 1 1 16
-4096 4 8 16 32
-4096 8 16 32 64
+Raw data is needed in ./Data/, 3 files required:
+1. paras.txt - parameters of MLP
+2. nodes_all - sw node file
+3. links - sw link file
 
+* Details about input files can be found under ./Data/
+* Default output path is ./result/

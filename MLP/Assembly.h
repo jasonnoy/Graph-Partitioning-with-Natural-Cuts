@@ -6,7 +6,6 @@
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ASSEMBLY_H
 
 #include "../PUNCH/Assemble/A_Graph.h"
-#include "../PUNCH/Assemble/R_Graph.h"
 
 class Assembly {
 private:
@@ -19,7 +18,6 @@ private:
 
     vector<vector<NodeID>> result;
     vector<vector<NodeID>> id_map;
-    R_Graph real_graph;
     A_Graph a_graph;
 
 

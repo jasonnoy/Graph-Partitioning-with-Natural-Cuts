@@ -7,7 +7,6 @@
 
 #include "../PUNCH/Filter/G_Graph.h"
 #include "../PUNCH/Assemble/A_Graph.h"
-#include "../PUNCH/Assemble/R_Graph.h"
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"

@@ -122,9 +122,9 @@ int main( int argc, char** argv){
 
 	if( argc != 5 && argc != 7 ){
 		printf("usage:\n<arg1> U node size limit\n");
-		printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
-		printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
-		printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
+		printf("<arg2> node file path, e.g. C:/GraphPatition/Data/node.txt\n");
+		printf("<arg3> edge file path, e.g. C:/GraphPatition/Data/edge.txt\n");
+		printf("<arg4> result file directory, e.g. C:/GraphPatition/Data/result/\n");
 		printf("<arg5> (optional) C detect natural cuts times, default 1\n");
 		printf("<arg6> (optional) f sets the core size relative to the ring, default 10\n");
 		exit(0);
