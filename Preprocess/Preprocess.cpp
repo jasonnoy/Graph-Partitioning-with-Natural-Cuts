@@ -83,8 +83,8 @@ int main(int argc, char** argv){
     clock_t start, end;
     start = clock();
     if( argc != 4 ){
-        printf("usage:\n<arg1> origin nodes file path, e.g. C:/GraphPatition/Data/node.txt\n");
-        printf("<arg2> origin edge file path, e.g. C:/GraphPatition/Data/edge.txt\n");
+        printf("usage:\n<arg1> origin nodes file path, e.g. C:/GraphPatition/data/node.txt\n");
+        printf("<arg2> origin edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg3> output path, e.g. ../result/\n");
         exit(0);
     }

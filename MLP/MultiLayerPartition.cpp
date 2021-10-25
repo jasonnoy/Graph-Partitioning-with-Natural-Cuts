@@ -209,10 +209,10 @@ void MultiLayerPartition::MLP() {
 
 int main(int argc, char** argv) {
     if (argc != 5) {
-        printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/Data/paras.txt\n");
-        printf("<arg2> node file path, e.g. C:/GraphPatition/Data/node.txt\n");
-        printf("<arg3> edge file path, e.g. C:/GraphPatition/Data/edge.txt\n");
-        printf("<arg4> result file directory, e.g. C:/GraphPatition/Data/result/\n");
+        printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
+        printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
+        printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
+        printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
         exit(0);
     }
     clock_t start, end;

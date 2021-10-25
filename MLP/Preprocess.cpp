@@ -71,8 +71,8 @@ void Preprocess::preprocess() {
 
 //int main(int argc, char* argv[]) {
 //    if (argc != 4) {
-//        printf("usage:\n<arg1> sw_node file path, e.g. ../Data/node.txt\n");
-//        printf("<arg2> sw_link file path, e.g. e.g. ../Data/link.txt\n");
+//        printf("usage:\n<arg1> sw_node file path, e.g. ../data/node.txt\n");
+//        printf("<arg2> sw_link file path, e.g. e.g. ../data/link.txt\n");
 //        printf("<arg3> output path, e.g. ../result/\n");
 //        exit(0);
 //    }

@@ -37,5 +37,5 @@ fi
 
 g++ ./MLP/MultiLayerPartition.cpp ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
-./bin/MLP ./Data/paras.txt ./Data/nodes_all ./Data/links ./result/ >> ./logs/"$date_str"/"$time_str".log 2>&1
+./bin/MLP ./data/paras.txt ./data/nodes_all ./data/links ./result/ >> ./logs/"$date_str"/"$time_str".log 2>&1
 echo "Finished"

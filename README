@@ -17,10 +17,10 @@ Under ./Bin/ directory, run the project as following:
 
 sh build_run_MLP.sh
 
-Raw data is needed in ./Data/, 3 files required:
+Raw data is needed in ./data/, 3 files required:
 1. paras.txt - parameters of MLP
 2. nodes_all - sw node file
 3. links - sw link file
 
-* Details about input files can be found under ./Data/
+* Details about input files can be found under ./data/
 * Default output path is ./result/

@@ -13,7 +13,7 @@ New MLP class is added as the front api for process control.
 Under ./Bin/ directory, run the project as following:
 
 ./MLP <path of the parameter file for mlp> <path of the sw node file> <path of the sw link file> <output path>
-e.g.  ./MLP ../Data/paras.txt ../Data/nodes_all ../Data/links ../result/
+e.g.  ./MLP ../data/paras.txt ../data/nodes_all ../data/links ../result/
 
 Parameters: takes in a txt file, the formats of parameters are as following:
 The first line is the number of layer n, the following n lines defines other parameters as following:
