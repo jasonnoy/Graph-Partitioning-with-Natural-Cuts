@@ -54,8 +54,9 @@ void MultiLayerPartition::MLP() {
 
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
-        cout<<"=============================\n";
-        cout<<"LAYER "<<l+1<<endl;
+        cout<<"==============\n";
+        cout<<"||LAYER "<<l+1<<"||"<<endl;
+        cout<<"==============\n";
         int prefix = l == getL() - 1 ? -1 : l + 2;
         if (prefix == -1 && !phantom) {
 //            phantom = true;
@@ -139,8 +140,9 @@ void MultiLayerPartition::MLP() {
         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
             if(cell_iter->size() < 32)
                 continue;
-            cout<<"-----------------------------\n";
-            cout<<"CELL No."<<cell_count<<endl;
+            cout<<"--------------\n";
+            cout<<"|CELL No."<<cell_count<<"|"<<endl;
+            cout<<"--------------\n";
             bool* node_map = new bool[nodeNum](); // for finding edges in cell
             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
 //                cout<<"nid: "<<*nid<<endl;
