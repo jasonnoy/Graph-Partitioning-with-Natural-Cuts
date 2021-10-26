@@ -1623,7 +1623,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 							continue;
 						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.insert( target );
-                            stack.push_back( target );
 							continue;
 						}
 						if( node_visited[target] )
@@ -1656,6 +1655,8 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		for( i = 0; i < component_tree.size(); i++ ){
 			for(NodeID c_nid:component_tree[i].component)
 				comp_cnodes_to_pos[c_nid] = i;
+            for(NodeID ch_nid:component_tree[i].component)
+                comp_cnodes_to_pos[ch_nid] = i;
 		}
 		//recursively link the tree
         if (component_tree.size())
