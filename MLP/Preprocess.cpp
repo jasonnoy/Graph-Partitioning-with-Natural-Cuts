@@ -9,8 +9,8 @@
 void Preprocess::preprocess() {
     ifstream infile;
     ofstream outfile;
-    string out_node_path = out_path + "layer-1_nodes.txt"; // layer 0 as phantom for now
-    string out_edge_path = out_path + "layer-1_edges.txt";
+    string out_node_path = out_path + "layer0_nodes.txt"; // layer 0 as phantom for now
+    string out_edge_path = out_path + "layer0_edges.txt";
 
     infile.open(sw_node_path, std::ios::binary);
     vector<node_info_t> nodes;
@@ -24,12 +24,12 @@ void Preprocess::preprocess() {
         exit(1);
     }
 
-    outfile<<"0\n"; // empty void nodes
+//    outfile<<"0\n"; // empty void nodes
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<"1\n"<<count<<" ";
+    outfile<<count<<" ";
     for (int i = 0; i < count; i++) {
         outfile<<i<<" ";
     }
