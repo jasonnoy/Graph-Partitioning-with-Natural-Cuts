@@ -67,6 +67,7 @@ void MultiLayerPartition::MLP() {
         string out_node_path = outPath + "layer-1_nodes.txt";
         string in_node_path = outPath + "layer0_nodes.txt";
         string in_edge_path = outPath + "layer0_edges.txt";
+        ifstream infile;
         infile.open(in_node_path);
         if (!infile.is_open()) {
             cout<<"layer node file open failed!\n";
@@ -111,7 +112,7 @@ void MultiLayerPartition::MLP() {
     unsigned int count;
     vector<vector<unsigned int>> graph_edges;
     infile.open(in_edge_path);
-    infile<<count;
+    infile>>count;
     graph_edges.resize(count);
     for (unsigned int i = 0; i < count; i++){
         unsigned int sid, tid;
