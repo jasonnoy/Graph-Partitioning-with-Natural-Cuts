@@ -223,7 +223,7 @@ void MultiLayerPartition::MLP() {
 //            postProgress.runPostProgress();
             bool need_contract = l == getL() - 1;
             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, U, need_contract);
-            graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), phantom);
+            graphPrinter.write_MLP_result(cur_layer, filter.get_real_map());
             void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.cuts_result_size();
