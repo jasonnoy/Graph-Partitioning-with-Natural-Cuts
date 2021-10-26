@@ -22,6 +22,7 @@ private:
     const vector<vector<NodeID>>& cell_edges;
     const vector<vector<NodeID>>& id_map;
     const vector<vector<NodeID>>& a_result;
+    vector<vector<NodeID>> phantom_nodes;
     vector<vector<NodeID>> result_nodes;
     vector<vector<NodeID>> result_edges;
     vector<vector<NodeID>> result_cuts;

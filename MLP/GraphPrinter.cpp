@@ -5,11 +5,6 @@
 #include "GraphPrinter.h"
 
 void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom) {
-//    if (isPhantom) {
-//        phantom_result();
-//    } else {
-//        MLP_result();
-//    }
     MLP_result();
 
     // convert relative vid to real nid
@@ -58,20 +53,26 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 
 void GraphPrinter::phantom_result() {
     fill_contracts();
-    cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
+    unsigned int node_map = new unsigned int[cell_nodes.size()]();
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
-        result_nodes[index].reserve( cit->size() );
-        result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
+        result_nodes[index].push_back(index);
+        for (NodeID nid : cit) {
+            node_map[nid] = index;
+        }
     }
 
-    result_cuts.reserve(cell_edges.size());
+    result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
-        vector<unsigned int> edge = {sid, tid};
-        result_cuts.push_back(edge);
+        unsigned int phantom_sid = node_map[sid];
+        unsigned int phantom_tid = node_map[tid];
+        if (phantom_sid != phantom_tid) {
+            vector<unsigned int> edge = {phantom_sid, phantom_tid};
+            result_edges.push_back(edge);
+        }
     }
 }
 
