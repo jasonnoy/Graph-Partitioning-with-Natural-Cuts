@@ -109,10 +109,9 @@ void GraphPrinter::phantom_result() {
     phantom_nodes.resize(a_result.size());
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         result_nodes[index].push_back(index);
-        for (NodeID nid : cit) {
+        for (NodeID nid : *cit) {
             node_map[nid] = index;
-            for (NodeID cid:id_map[nid])
-                phantom_nodes[index].insert(phantom_nodes[index].end(), id_map[nid].begin(), id_map[nid].end());
+            phantom_nodes[index].insert(phantom_nodes[index].end(), id_map[nid].begin(), id_map[nid].end());
         }
     }
 
