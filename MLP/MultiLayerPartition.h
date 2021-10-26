@@ -30,6 +30,7 @@ private:
     const unsigned int nodeNum;
     bool phantom;
     void read_Graph(vector<vector<unsigned int>>& graph_edges, bool isPhantom);
+    void deal_phantom();
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
