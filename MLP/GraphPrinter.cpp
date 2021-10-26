@@ -105,7 +105,7 @@ void GraphPrinter::phantom_result() {
     fill_contracts();
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
-    unsigned int node_map = new unsigned int[cell_nodes.size()]();
+    unsigned int* node_map = new unsigned int[cell_nodes.size()]();
     phantom_nodes.resize(a_result.size());
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         result_nodes[index].push_back(index);
