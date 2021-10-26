@@ -78,7 +78,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
             for (int j = 0; j < node_size; j++) {
                 unsigned int nid;
                 infile>>nid;
-                for (unsigned int real_id:phantom_nodes)
+                for (unsigned int real_id:phantom_nodes[nid])
                     outfile<<nodes[real_id].geo_point.latitude<<","<<nodes[real_id].geo_point.longitude<<";";
             }
             outfile<<"\n";
