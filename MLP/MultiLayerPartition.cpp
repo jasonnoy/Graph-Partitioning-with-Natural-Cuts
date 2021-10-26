@@ -15,6 +15,7 @@ void MultiLayerPartition::read_Graph(vector<vector<unsigned int>>& graph_edges, 
         cout<<"graph edge file open failed!\n";
         exit(1);
     }
+    unsigned int count;
     infile>>count;
     cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
