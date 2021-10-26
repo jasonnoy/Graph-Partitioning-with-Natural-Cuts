@@ -1570,8 +1570,7 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
 	vector<edge_cncted_comp>& component_tree ){
 		set<NodeID> comp_start_node; //the node id is the contracted node id
-		vector<EdgeID>::const_iterator cutit = one_cut_edges.begin();
-		for(; cutit != one_cut_edges.end(); cutit++){
+		for(auto cutit = one_cut_edges.begin(); cutit != one_cut_edges.end(); cutit++){
 
 			if( this->contract_to[this->edge_list[*cutit].get_source()] ==
 				this->contract_to[this->edge_list[*cutit].get_target()] )
@@ -1588,11 +1587,9 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		size_t max_comp_pos = 0;
 		size_t i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
-		set<NodeID>::const_iterator stnit = comp_start_node.begin();
-		for(; stnit != comp_start_node.end(); stnit++, i++){
 
+		for(auto stnit = comp_start_node.begin(); stnit != comp_start_node.end(); stnit++, i++){
 			NodeID start = *stnit;
-
 			vector<NodeID> stack;
 			list<NodeID> component;
 			set<NodeID> children;
@@ -1610,14 +1607,12 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				component.push_back( n );
 
 				NodeID cnid = n;
-				vector<NodeID>::const_iterator cnit = this->contract_node_list[cnid].begin();
-				for(; cnit != this->contract_node_list[cnid].end(); cnit++){
+
+				for(auto cnit = this->contract_node_list[cnid].begin(); cnit != this->contract_node_list[cnid].end(); cnit++){
 
 					NodeID nid = *cnit;
-					vector<G_Edge*>::const_iterator eit =
-						this->node_list[nid].get_adj_list().begin();
-					for(; eit != this->node_list[nid].get_adj_list().end(); eit++){
 
+					for(auto eit = this->node_list[nid].get_adj_list().begin(); eit != this->node_list[nid].get_adj_list().end(); eit++){
 						NodeID target = this->contract_to[(*eit)->get_target()];
 						if( target == cnid )
 							continue;
@@ -1632,7 +1627,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				}//for all contained nodes
 			}//while the component is expanding
 			if( component.empty() )
-                i--;
+                i--; // match the tree size
 				continue;
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
@@ -1672,8 +1667,7 @@ NodeSize G_Graph::fill_subtree_size( vector<edge_cncted_comp>& component_tree, s
 		if( component_tree[root_p].children.empty() )
 			return component_tree[root_p].subtree_size; //leaf node size
 
-		list<NodeID>::const_iterator chlit = component_tree[root_p].children.begin();
-		for(; chlit != component_tree[root_p].children.end(); chlit++){
+		for(auto chlit = component_tree[root_p].children.begin(); chlit != component_tree[root_p].children.end(); chlit++){
 
 			component_tree[root_p].subtree_size += 
 				this->fill_subtree_size( component_tree, *chlit );
@@ -1721,14 +1715,12 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 			return;
 		}
 
-		list<NodeID>::const_iterator chlit = component_tree[root_p].children.begin();
-		while( chlit != component_tree[root_p].children.end() ){
-
-			NodeID next_chl = *chlit;
-			chlit++;	//to deal with iterator being invalidated
-			this->cnt_proper_tree_components( component_tree, next_chl, sz_lim );
-		}
-		return;
+        for( auto chlit = component_tree[root_p].children.begin(); chlit != component_tree[root_p].children.end(); chlit++){
+            //to deal with iterator being invalidated
+            NodeID next_chl = *chlit;
+            this->cnt_proper_tree_components( component_tree, next_chl, sz_lim );
+        }
+        return;
 }
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
@@ -1742,7 +1734,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		if( parent_pos != -1u )
 			component_tree[search_pos].parent = parent_pos;
 		vector<size_t> children_pos;
-		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
+		auto chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 
 			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
@@ -1776,9 +1768,7 @@ void G_Graph::find_all_comp( vector<edge_cncted_comp>& component_tree, size_t ro
 		all_comp.insert( all_comp.end(), component_tree[root_pos].component.begin(),
 			component_tree[root_pos].component.end() );
 
-		list<NodeID>::const_iterator chlit = component_tree[root_pos].children.begin();
-		for(; chlit != component_tree[root_pos].children.end(); chlit++){
-
+		for(auto chlit = component_tree[root_pos].children.begin(); chlit != component_tree[root_pos].children.end(); chlit++){
 			size_t new_root_pos = *chlit;
 			this->find_all_comp( component_tree, new_root_pos, all_comp );
 		}
@@ -1789,11 +1779,9 @@ void G_Graph::find_all_comp( vector<edge_cncted_comp>& component_tree, size_t ro
 NodeID G_Graph::contract_child_to_parent( NodeID child, NodeID parent ){
 		
 		NodeID new_node_id = parent;
-
 		NodeID cid = child;
-		vector<NodeID>::const_iterator cnit = this->contract_node_list[cid].begin();
-		for(; cnit != this->contract_node_list[cid].end(); cnit++ ){
 
+		for(auto cnit = this->contract_node_list[cid].begin(); cnit != this->contract_node_list[cid].end(); cnit++ ){
 			contract_to[*cnit] = new_node_id;
 			this->contract_node_list[new_node_id].push_back( *cnit );
 		}
@@ -1803,5 +1791,4 @@ NodeID G_Graph::contract_child_to_parent( NodeID child, NodeID parent ){
 		del_cnt_node.push_back( cid );
 
 		return new_node_id;
-
 }

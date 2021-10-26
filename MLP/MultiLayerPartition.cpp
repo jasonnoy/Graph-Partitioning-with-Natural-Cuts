@@ -67,6 +67,7 @@ void MultiLayerPartition::MLP() {
         string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
+        string out_edge_path = outPath + "layer" + cur_layer + "_edges.txt";
         vector<NodeID> void_nodes;
         U = parameters[l][0];
         C = parameters[l][1];
@@ -101,6 +102,9 @@ void MultiLayerPartition::MLP() {
         outfile.close();
         outfile.clear(ios::goodbit);
         outfile.open(out_cut_path);
+        outfile.close();
+        outfile.clear(ios::goodbit);
+        outfile.open(out_edge_path);
         outfile.close();
         outfile.clear(ios::goodbit);
 
