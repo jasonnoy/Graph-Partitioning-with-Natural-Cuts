@@ -15,7 +15,7 @@ void MultiLayerPartition::read_Graph(vector<vector<unsigned int>>& graph_edges, 
         cout<<"graph edge file open failed!\n";
         exit(1);
     }
-    int count;
+    unsigned int count;
     infile>>count;
     cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
@@ -92,6 +92,8 @@ void MultiLayerPartition::MLP() {
             edges[i].push_back(sid);
             edges[i].push_back(tid);
         }
+        infile.close();
+        infile.clear(ios::goodbit);
         cout<<"Phantom layer read in "<<node_size<<" nodes and "<<edge_size<<" edges.\n";
         vector<vector<unsigned int>> anodes;
         vector<vector<unsigned int>> aedges;
@@ -106,7 +108,7 @@ void MultiLayerPartition::MLP() {
     }
 
     // top-down MLP
-    int count;
+    unsigned int count;
     vector<vector<unsigned int>> graph_edges;
     infile.open(in_edge_path);
     infile<<count;
