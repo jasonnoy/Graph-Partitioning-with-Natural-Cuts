@@ -1632,6 +1632,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				}//for all contained nodes
 			}//while the component is expanding
 			if( component.empty() )
+                i--;
 				continue;
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
@@ -1751,7 +1752,6 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] ); // link child id to tree id
 			}
 		}
-        component_tree[search_pos].children.clear();
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();
