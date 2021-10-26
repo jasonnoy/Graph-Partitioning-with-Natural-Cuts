@@ -4,6 +4,8 @@
 
 #include "AdaptivePrinter.h"
 void AdaptivePrinter::filter_result() {
+    read_phantom_nodes();
+
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
         ifstream infile;
@@ -27,11 +29,15 @@ void AdaptivePrinter::filter_result() {
             for (int i = 0; i < node_size; i++) {
                 unsigned int nid;
                 infile>>nid;
-                node_parti[nid][l-1] = cell_count;
+                for (unsigned int real_id:phantom_nodes[nid])
+                    node_parti[real_id][l-1] = cell_count;
+//                node_parti[nid][l-1] = cell_count;
             }
         }
         for (unsigned int vid : void_nodes) {
-            node_parti[vid][l-1] = -1;
+            for (unsigned int real_vid:phantom_nodes[vid])
+                node_parti[real_vid][l-1] = -1;
+//            node_parti[vid][l-1] = -1;
         }
     }
     // filter edges.
@@ -69,10 +75,11 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         for (int i = 0; i < cell_num; i++) {
             int node_size;
             infile>>node_size;
-            for (int j = 0; j<node_size; j++) {
+            for (int j = 0; j < node_size; j++) {
                 unsigned int nid;
                 infile>>nid;
-                outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<";";
+                for (unsigned int real_id:phantom_nodes)
+                    outfile<<nodes[real_id].geo_point.latitude<<","<<nodes[real_id].geo_point.longitude<<";";
             }
             outfile<<"\n";
         }
@@ -82,6 +89,27 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         outfile.clear(ios::goodbit);
     }
 }
+
+void AdaptivePrinter::read_phantom_nodes() {
+    string phantom_path = out_path + "phantom_nodes.txt";
+    ifstream infile;
+    infile.open(phantom_path);
+    unsigned int phantom_size;
+    infile>>phantom_size;
+    phantom_nodes.resize(phantom_size);
+    for (unsigned int i = 0; i < phantom_size; i++) {
+        unsigned int node_size;
+        infile>>node_size;
+        phantom_nodes[i].reserve(node_size);
+        for (unsigned int j = 0; j < node_size; j++) {
+            unsigned int nid;
+            infile>>nid;
+            phantom_nodes[i].push_back(nid);
+        }
+    }
+    cout<<"Read phantom nodes done\n";
+}
+
 void AdaptivePrinter::print_final_result() {
     string filtered_nodes_path = out_path + "result_nodes.txt";
     string result_path = out_path + "node_partitions.txt";

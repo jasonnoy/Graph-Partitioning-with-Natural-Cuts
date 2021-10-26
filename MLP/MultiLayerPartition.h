@@ -29,6 +29,7 @@ private:
     const string outPath;
     const unsigned int nodeNum;
     bool phantom;
+    void read_Graph(vector<vector<unsigned int>>& graph_edges, bool isPhantom);
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;

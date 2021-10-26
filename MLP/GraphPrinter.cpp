@@ -4,7 +4,57 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom) {
+void GraphPrinter::write_phantom_result() {
+    phantom_result();
+    string out_node_path = out_path + "-1_nodes.txt";
+    string out_edge_path = out_path + "-1_edges.txt";
+    string out_phantom_path = out_path + "phantom_nodes.txt";
+    ofstream outfile;
+    outfile.open(out_node_path);
+    if (!outfile.is_open()) {
+        cout<<"Graph printer open file failed!\n";
+        exit(1);
+    }
+    cout<<"Printing nodes of phantom layer\n";
+    outfile<<result_nodes.size()<<"\n";
+    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
+        outfile<<cell_iter->size();
+        for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
+            outfile<<" "<<*nid_i;
+        }
+    }
+    outfile<<"\n";
+    outfile.close();
+    outfile.clear(ios::goodbit);
+
+    outfile.open(out_edge_path);
+    cout<<"Printing edges of phantom layer\n";
+    outfile<<result_edges.size()<<"\n";
+    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
+        outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
+    }
+    outfile.close();
+    outfile.clear(ios::goodbit);
+
+    outfile.open(out_phantom_path);
+    if (!outfile.is_open()) {
+        cout<<"Graph printer open file failed!\n";
+        exit(1);
+    }
+    cout<<"Printing phantom layer node map\n";
+    outfile<<phantom_nodes.size()<<"\n";
+    for (auto cell_iter:phantom_nodes){
+        outfile<<cell_iter.size();
+        for (NodeID nid:cell_iter){
+            outfile<<" "<<nid;
+        }
+        outfile<<"\n";
+    }
+    cout<<"Done\n";
+    outfile.close();
+}
+
+void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map) {
     MLP_result();
 
     // convert relative vid to real nid
@@ -56,10 +106,13 @@ void GraphPrinter::phantom_result() {
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
     unsigned int node_map = new unsigned int[cell_nodes.size()]();
+    phantom_nodes.resize(a_result.size());
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         result_nodes[index].push_back(index);
         for (NodeID nid : cit) {
             node_map[nid] = index;
+            for (NodeID cid:id_map[nid])
+                phantom_nodes[index].insert(phantom_nodes[index].end(), id_map[nid].begin(), id_map[nid].end());
         }
     }
 
