@@ -361,7 +361,7 @@ double A_Graph::cal_edge_score( Logic_Edge& le ){
 		double r = 0.0;
 		unsigned int random_a = (unsigned int)( rand() % 100 ); //rand [0,100)
 		unsigned int random_b = 0;
-		if( random_a <= 2 ){     // !!应该是>2!!
+		if( random_a <= 4 ){     // !!应该是>2!!
 
 			random_b = 60 + (unsigned int)( rand() % 41 ); //rand [60,100]
 		}
