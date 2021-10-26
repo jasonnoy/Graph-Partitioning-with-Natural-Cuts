@@ -29,7 +29,7 @@ public:
 
 	bool operator < ( const Logic_Edge &le ){
 
-		return this->score < le.score; // 改为最小堆
+		return this->score > le.score; // 改为最小堆
 	}
 
 	NodeID source; //only contracted node ID
