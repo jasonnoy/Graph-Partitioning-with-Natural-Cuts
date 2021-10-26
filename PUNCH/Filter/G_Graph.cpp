@@ -1623,6 +1623,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 							continue;
 						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.insert( target );
+                            component.push_back( target );
 							continue;
 						}
 						if( node_visited[target] )
