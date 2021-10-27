@@ -18,12 +18,12 @@ void MultiLayerPartition::deal_phantom() {
     read_Origin(graph_edges, graph_nodes);
     vector<vector<unsigned int>> anodes;
     vector<vector<unsigned int>> aedges;
-    Filter filter(U, C, nodes, edges, anodes, aedges);
+    Filter filter(U, C, graph_nodes, graph_edges, anodes, aedges);
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
     assembly.runAssembly();
 
-    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), nodes, edges, outPath, U, false);
+    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), graph_nodes, graph_edges, outPath, U, false);
     graphPrinter.write_phantom_result();
     cout<<"Phantom layer output finished\n";
     end = clock();
