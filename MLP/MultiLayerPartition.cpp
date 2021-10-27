@@ -113,6 +113,8 @@ void MultiLayerPartition::MLP() {
         graph_edges[i].push_back(sid);
         graph_edges[i].push_back(tid);
     }
+    infile.close();
+    infile.clear(ios::goodbit);
     cout<<"Read in "<<count<<" edges from phantom layer\n";
 
     for (--l; l >= 0; l--) {
