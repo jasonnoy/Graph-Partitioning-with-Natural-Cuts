@@ -9,43 +9,13 @@ void MultiLayerPartition::deal_phantom() {
     clock_t start, end;
     start = clock();
     vector<vector<unsigned int>> graph_edges;
-    read_Graph(graph_edges, true);
+    vector<unsigned int> graph_nodes;
     cout<<"==============\n";
     cout<<"PHANTOM LAYER"<<endl;
     cout<<"==============\n";
-    U = 4096, C = 1, FI = 1, M = 1, PS = 1;
+    U = 32, C = 1, FI = 1, M = 1, PS = 1;
     cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-    string in_node_path = outPath + "layer0_nodes.txt";
-    string in_edge_path = outPath + "layer0_edges.txt";
-    ifstream infile;
-    infile.open(in_node_path);
-    if (!infile.is_open()) {
-        cout<<"layer node file open failed!\n";
-        exit(1);
-    }
-    vector<unsigned int> nodes;
-    unsigned int node_size;
-    infile>>node_size;
-    nodes.reserve(node_size);
-    for (unsigned int i = 0; i < node_size; i++){
-        nodes.push_back(i);
-    }
-    infile.close();
-    infile.clear(ios::goodbit);
-    vector<vector<unsigned int>> edges;
-    infile.open(in_edge_path);
-    unsigned int edge_size;
-    infile>>edge_size;
-    edges.resize(edge_size);
-    for (unsigned int i = 0; i < edge_size; i++){
-        unsigned int sid, tid;
-        infile>>sid>>tid;
-        edges[i].push_back(sid);
-        edges[i].push_back(tid);
-    }
-    infile.close();
-    infile.clear(ios::goodbit);
-    cout<<"Phantom layer read in "<<node_size<<" nodes and "<<edge_size<<" edges.\n";
+    read_Origin(graph_edges, graph_nodes);
     vector<vector<unsigned int>> anodes;
     vector<vector<unsigned int>> aedges;
     Filter filter(U, C, nodes, edges, anodes, aedges);
@@ -61,21 +31,33 @@ void MultiLayerPartition::deal_phantom() {
     cout<<"Phantom run time: "<<time<<"s.\n";
 }
 
-void MultiLayerPartition::read_Graph(vector<vector<unsigned int>>& graph_edges, bool isPhantom) {
-    string in_edge_path = outPath + "layer-1_edges.txt";
-    if (isPhantom)
-        in_edge_path = outPath + "layer0_edges.txt";
+void MultiLayerPartition::read_Origin(vector<vector<unsigned int>>& graph_edges, vector<unsigned int>& graph_nodes) {
+    string in_edge_path = outPath + "layer0_edges.txt";
+    string in_node_path = outPath + "layer0_nodes.txt";
     ifstream infile;
+    infile.open(in_node_path);
+    if (!infile.is_open()) {
+        cout<<"layer node file open failed!\n";
+        exit(1);
+    }
+    unsigned int node_size;
+    infile>>node_size;
+    graph_nodes.reserve(node_size);
+    for (unsigned int i = 0; i < node_size; i++){
+        graph_nodes.push_back(i);
+    }
+    infile.close();
+    infile.clear(ios::goodbit);
+
     infile.open(in_edge_path);
     if (!infile.is_open()) {
         cout<<"graph edge file open failed!\n";
         exit(1);
     }
-    unsigned int count;
-    infile>>count;
-    cout<<"Input graph has "<<count<<" edges\n";
-    graph_edges.resize(count);
-    for (int i = 0; i < count; i++) {
+    unsigned int edge_size;
+    infile>>edge_size;
+    graph_edges.resize(edge_size);
+    for (int i = 0; i < edge_size; i++) {
         unsigned int sid, tid;
         infile>>sid>>tid;
         graph_edges[i].push_back(sid);
@@ -84,6 +66,7 @@ void MultiLayerPartition::read_Graph(vector<vector<unsigned int>>& graph_edges, 
     }
     infile.close();
     infile.clear(ios::goodbit);
+    cout<<"Phantom layer read in "<<node_size<<" nodes and "<<edge_size<<" edges.\n";
 }
 
 void MultiLayerPartition::MLP() {
@@ -111,7 +94,13 @@ void MultiLayerPartition::MLP() {
     infile.close();
     infile.clear(ios::goodbit);
     // deal phantom
-    deal_phantom();
+    if (!phantom){
+        cout<<"Run phantom layer...might take a long time.\n";
+        deal_phantom();
+    } else {
+        cout<<"Already has a phantom layer, skipping...\n";
+    }
+
     // top-down MLP
     unsigned int count;
     vector<vector<unsigned int>> graph_edges;
@@ -265,11 +254,12 @@ void MultiLayerPartition::MLP() {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 5) {
+    if (argc != 6) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
         printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
+        printf("<arg5> has phantom layer or not, 1/0\n");
         exit(0);
     }
     clock_t start, end;
@@ -278,6 +268,7 @@ int main(int argc, char** argv) {
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
+    bool hasPhantom(atoi(argv[5]));
 
     cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
@@ -287,7 +278,7 @@ int main(int argc, char** argv) {
     cout<<"Preprocess run time: "<<time<<"s.\n";
 
 
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), hasPhantom);
     mlp.generateMLP();
 
 

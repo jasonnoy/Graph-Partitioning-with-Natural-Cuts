@@ -29,7 +29,7 @@ private:
     const string outPath;
     const unsigned int nodeNum;
     bool phantom;
-    void read_Graph(vector<vector<unsigned int>>& graph_edges, bool isPhantom);
+    void read_Origin(vector<vector<unsigned int>>& graph_edges,vector<unsigned int>& graph_nodes);
     void deal_phantom();
 public:
     const int ParaNum = 5;
