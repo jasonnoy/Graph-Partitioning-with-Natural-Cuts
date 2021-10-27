@@ -716,9 +716,10 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 				NodeID cid = this->contract_to[n];
 
-				total_size += this->contract_node_list[cid].size(); // !!those visited shouldn't be counted.
+				total_size ++; // contracted nodes shouldn't be counted
 //                for (NodeID nid : contract_node_list[cid]) {
-//                    total_size += node_visited[nid];
+//                    if (!node_visited[nid])
+//                    total_size += contract_node_list[nid].size();
 //                }
 				if( total_size > sz_lim ){
 
