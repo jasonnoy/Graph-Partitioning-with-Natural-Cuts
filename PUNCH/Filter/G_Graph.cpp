@@ -669,11 +669,9 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 	NodeSize core_lim = sz_lim/DNCF;
-    cout<<"762\n";
 	
 	//dectect natural cuts C times
 	for( int t = 0; t < DNCC; t++ ){
-        cout<<"676\n";
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
@@ -683,9 +681,9 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		memset( node_in_core, false, this->node_list.size() );
 
 		NodeID nc = 0;
-
+        NodeID count = 0;
 		while( true ){
-            cout<<"687\n";
+            cout<<count++<<endl;
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
