@@ -684,7 +684,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		NodeID nc = 0;
 
 		while( true ){
-
+            cout<<"687\n";
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
