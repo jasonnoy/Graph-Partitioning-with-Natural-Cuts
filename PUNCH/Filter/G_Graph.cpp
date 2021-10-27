@@ -681,9 +681,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		memset( node_in_core, false, this->node_list.size() );
 
 		NodeID nc = 0;
-        NodeID count = 0;
 		while( true ){
-            cout<<count++;
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
@@ -778,7 +776,7 @@ NodeID G_Graph::next_center( bool node_in_core[] ){
 			if( !node_in_core[i] )
 				remain_id.push_back(i);
 		}
-        cout<<" Remain id size: "<<remain_id.size()<<"\n";
+        cout<<"Natural cut progress: "<<remain_id.size() * 100 / node_list.size()<<"%\r";
 		if( remain_id.empty() )
 			return -1u;
 
