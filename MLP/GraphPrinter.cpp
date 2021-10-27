@@ -16,6 +16,7 @@ void GraphPrinter::write_phantom_result() {
         exit(1);
     }
     cout<<"Printing nodes of phantom layer\n";
+    outfile<<"0\n1\n";
     outfile<<result_nodes.size()<<"\n";
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         outfile<<cell_iter->size();
