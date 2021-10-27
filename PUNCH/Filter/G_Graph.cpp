@@ -776,7 +776,10 @@ NodeID G_Graph::next_center( bool node_in_core[] ){
 			if( !node_in_core[i] )
 				remain_id.push_back(i);
 		}
-        cout<<"Natural cut progress: "<<100 - remain_id.size() * 100 / node_list.size()<<"%\r";
+        if (remain_id.size() * 100 / node_list.size())
+            cout<<"Natural cut progress: "<<100 - remain_id.size() * 100 / node_list.size()<<"%\r";
+        else
+            cout<<"Remaining ids: "<<remain_id.size()<<"\r";
 		if( remain_id.empty() )
 			return -1u;
 
