@@ -13,7 +13,7 @@ void MultiLayerPartition::deal_phantom() {
     cout<<"==============\n";
     cout<<"PHANTOM LAYER"<<endl;
     cout<<"==============\n";
-    U = 32, C = 1, FI = 1, M = 1, PS = 1;
+    U = 32, C = 1, FI = 10, M = 1, PS = 1;
     cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
     read_Origin(graph_edges, graph_nodes);
     vector<vector<unsigned int>> anodes;
