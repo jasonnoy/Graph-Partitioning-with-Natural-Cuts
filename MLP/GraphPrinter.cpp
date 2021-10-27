@@ -6,8 +6,8 @@
 
 void GraphPrinter::write_phantom_result() {
     phantom_result();
-    string out_node_path = out_path + "-1_nodes.txt";
-    string out_edge_path = out_path + "-1_edges.txt";
+    string out_node_path = out_path + "layer-1_nodes.txt";
+    string out_edge_path = out_path + "layer-1_edges.txt";
     string out_phantom_path = out_path + "phantom_nodes.txt";
     ofstream outfile;
     outfile.open(out_node_path);
