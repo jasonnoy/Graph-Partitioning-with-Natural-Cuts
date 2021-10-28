@@ -18,7 +18,7 @@ void MultiLayerPartition::deal_phantom() {
     read_Origin(graph_edges, graph_nodes);
     vector<vector<unsigned int>> anodes;
     vector<vector<unsigned int>> aedges;
-    Filter filter(U, C, graph_nodes, graph_edges, anodes, aedges);
+    Filter filter(U, C, FI, graph_nodes, graph_edges, anodes, aedges);
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
     assembly.runAssembly();

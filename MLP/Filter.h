@@ -16,7 +16,7 @@ private:
     G_Graph gGraph;
     const int U;
     const int C;
-    int F = 10;
+    const int F;
     const vector<unsigned int>& nodes;
     const vector<vector<unsigned int>>& edges;
     vector<vector<unsigned int>>& anodes;
@@ -30,9 +30,11 @@ private:
 public:
     Filter(int u, int c, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
     U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+        gGraph = new G_Graph(c, 10);
     };
     Filter(int u, int c, int f, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
             U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+        gGraph = new G_Graph(c, f);
     };
     ~Filter() = default;
     void runFilter();

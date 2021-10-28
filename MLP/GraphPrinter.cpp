@@ -17,9 +17,8 @@ void GraphPrinter::write_phantom_result() {
     }
     cout<<"Printing nodes of phantom layer\n";
     outfile<<"0\n1\n";
-    outfile<<result_nodes.size()<<"\n";
+    outfile<<result_nodes.size();
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
             outfile<<" "<<*nid_i;
         }
@@ -74,7 +73,6 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
     }
     cout<<"Printing nodes of layer "<<layer<<endl;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        outfile<<cell_iter->size();
         for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
             outfile<<" "<<real_map[*nid_i];
         }
