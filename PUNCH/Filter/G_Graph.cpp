@@ -1632,8 +1632,10 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 					}//for all edges
 				}//for all contained nodes
 			}//while the component is expanding
-			if( component.empty() )
-				continue;
+			if( component.empty() ){
+                i--; // match the tree size
+                continue;
+            }
 
 			edge_cncted_comp tree_node;
 			tree_node.component = component;
