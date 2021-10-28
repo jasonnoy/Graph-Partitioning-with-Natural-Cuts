@@ -125,6 +125,7 @@ void GraphPrinter::phantom_result() {
             result_edges.push_back(edge);
         }
     }
+    delete []node_map;
 }
 
 void GraphPrinter::contract_tiny_cells() {
@@ -164,6 +165,7 @@ void GraphPrinter::contract_tiny_cells() {
         result_nodes[max_cell].insert(result_nodes[max_cell].end(), cell_iter->begin(), cell_iter->end());
         cell_iter = result_nodes.erase(cell_iter);
     }
+    delete[] num_cell;
     cout<<"Done\n";
 }
 
@@ -237,6 +239,7 @@ void GraphPrinter::MLP_result() {
         result_cuts.push_back(cut);
     }
 //    filter_edges();
+delete[] node_cell;
 }
 
 void GraphPrinter::filter_edges() {
@@ -255,6 +258,7 @@ void GraphPrinter::filter_edges() {
             result_cuts.push_back(edge);
         }
     }
+    delete[] edge_map;
 }
 
 void GraphPrinter::fill_contracts() {

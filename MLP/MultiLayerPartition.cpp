@@ -223,6 +223,7 @@ void MultiLayerPartition::MLP() {
             cellCount += graphPrinter.nodes_result_size();
             edgeCount += graphPrinter.cuts_result_size();
             cout<<"Cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
+            delete[] node_map;
         }
         // option: 改写为不读取size
 
