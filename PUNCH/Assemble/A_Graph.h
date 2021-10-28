@@ -37,9 +37,7 @@ class A_Graph{
 
 public:
 	
-	A_Graph(){
-		FI = 16;
-		M = 1;
+	A_Graph(unsigned int fi, unsigned int m):FI(fi), M(m){
 		use_combine = false;
 	}
 
