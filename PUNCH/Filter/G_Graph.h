@@ -41,7 +41,7 @@ public:
     G_Graph() {
         DNCC = 1;
         DNCF = 10;
-    };
+    }
 
 	~G_Graph(){
 	}
