@@ -734,10 +734,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
-		bool * node_in_core = NULL;
-		node_in_core = new bool[this->node_list.size()];
-		check_new( node_in_core, "find natural cuts: node in core");
-		memset( node_in_core, false, this->node_list.size() );
+		bool * node_in_core = new bool[this->node_list.size()]();
+        bool * node_visited = new bool[this->node_list.size()]();
 
 		NodeID nc = 0;
         NodeID count = 0;
@@ -746,11 +744,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
-
-			bool * node_visited = NULL;
-			node_visited = new bool[this->node_list.size()];
-			check_new( node_visited, "find natural cuts: node visited");
-			memset( node_visited, false, this->node_list.size() );
 
 			deque<NodeID> core; //core and between_nodes all contain the contracted id
 			vector<NodeID> between_nodes;
@@ -824,9 +817,9 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 			}//end while
 
-			delete[] node_visited;
-		}
 
+		}
+        delete[] node_visited;
 		delete[] node_in_core;
 
 	}
@@ -1717,6 +1710,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			component_tree.push_back( tree_node );
 
 		}
+        delete [] node_visited;
 
 		//now we have all the tree nodes and their sizes, then we build the tree
 		map<NodeID, size_t> comp_cnodes_to_pos;
