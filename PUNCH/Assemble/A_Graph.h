@@ -41,6 +41,10 @@ public:
 		use_combine = false;
 	}
 
+    A_Graph(){
+        FI = 10;
+        M = 1;
+    }
 	~A_Graph(){
 	}
 
