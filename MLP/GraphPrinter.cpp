@@ -18,11 +18,13 @@ void GraphPrinter::write_phantom_result() {
     cout<<"Printing nodes of phantom layer\n";
     outfile<<"0\n1\n";
     outfile<<result_nodes.size();
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
-            outfile<<" "<<*nid_i;
-        }
-    }
+    for (NodeID nid = 0; nid < result_nodes.size(); nid++)
+        outfile<<" "<<nid;
+//    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
+//        for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
+//            outfile<<" "<<*nid_i;
+//        }
+//    }
     outfile<<"\n";
     outfile.close();
     outfile.clear(ios::goodbit);
