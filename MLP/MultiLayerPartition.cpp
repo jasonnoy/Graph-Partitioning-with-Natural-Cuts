@@ -7,6 +7,9 @@
 
 void MultiLayerPartition::MLP() {
     string in_edge_path = outPath + "layer-1_edges.txt";
+//    string out_perform_path = outPath + "performance.txt";
+//    ofstream perform_file;
+//    perform_file.open(out_perform_path);
     ifstream infile;
     infile.open(paraPath);
     if (!infile.is_open()) {
@@ -74,6 +77,7 @@ void MultiLayerPartition::MLP() {
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
         cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        perform_file<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
 //        if (phantom) {
 //            U = 32, C = 4, FI = 4, M = 4;
 //            l++;
