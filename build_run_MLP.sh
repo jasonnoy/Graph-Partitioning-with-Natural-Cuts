@@ -37,7 +37,7 @@ fi
 
 g++ ./MLP/MultiLayerPartition.cpp ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
-#{ ./bin/MLP ./data/paras1_1.txt ./data/nodes_all ./data/links ./result/1_1/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
+{ ./bin/MLP ./data/paras1_1.txt ./data/nodes_all ./data/links ./result/1_1/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 { ./bin/MLP ./data/paras1_2.txt ./data/nodes_all ./data/links ./result/1_2/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 { ./bin/MLP ./data/paras1_3.txt ./data/nodes_all ./data/links ./result/1_3/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 { ./bin/MLP ./data/paras1_4.txt ./data/nodes_all ./data/links ./result/1_4/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
@@ -45,4 +45,5 @@ g++ ./MLP/MultiLayerPartition.cpp ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/Adap
 { ./bin/MLP ./data/paras2_2.txt ./data/nodes_all ./data/links ./result/2_2/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 { ./bin/MLP ./data/paras2_3.txt ./data/nodes_all ./data/links ./result/2_3/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 { ./bin/MLP ./data/paras2_4.txt ./data/nodes_all ./data/links ./result/2_4/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
+{ ./bin/MLP ./data/paras0_0.txt ./data/nodes_all ./data/links ./result/0_0/ >> ./logs/"$date_str"/"$time_str".log 2>&1;}
 echo "Finished"
