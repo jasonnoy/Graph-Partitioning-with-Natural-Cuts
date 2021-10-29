@@ -676,10 +676,10 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
 		bool * node_in_core = new bool[this->node_list.size()]();
-        bool * node_visited = new bool[this->node_list.size()]();
 
 		NodeID nc = 0;
 		while( true ){
+            bool * node_visited = new bool[this->node_list.size()]();
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
@@ -755,10 +755,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 				}//end for all original nodes in the contracted node
 
 			}//end while
-
-
+            delete[] node_visited;
 		}
-        delete[] node_visited;
 		delete[] node_in_core;
 
 	}
