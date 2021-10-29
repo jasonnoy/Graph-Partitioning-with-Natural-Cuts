@@ -110,6 +110,8 @@ void GraphPrinter::phantom_result() {
         result_nodes[index].push_back(index);
         for (NodeID nid : *cit) {
             node_map[nid] = index;
+            for (NodeID c_nid : id_map[nid])
+                node_map[c_nid] = index;
             phantom_nodes[index].insert(phantom_nodes[index].end(), id_map[nid].begin(), id_map[nid].end());
         }
     }
