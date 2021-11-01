@@ -8,6 +8,50 @@
 // Parallel global variables.
 condition_variable condition;
 mutex m_lock;
+const unsigned int hardware_threads = thread::hardware_concurrency();
+const int thread_limit = hardware_threads / 2;
+
+// Parallel function
+void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const int U) {
+    cout<<"Parallel dealing CELL No."<<cellCount<<endl;
+    if (process_count > thread_limit) {
+        unique_lock<mutex> lock(m_lock);
+        while (process_count > thread_limit)
+            condition.wait(lock);
+    }
+    process_count++;
+
+    bool* node_map = new bool[nodeNum](); // for finding edges in cell
+    for (NodeID nid : cell) {
+        node_map[nid] = 1;
+    }
+//    cout<<"bit map finished\n";
+    vector<vector<unsigned int>> cell_edges;
+    vector<vector<unsigned int>> anodes;
+    vector<vector<unsigned int>> aedges;
+
+    vector<vector<unsigned int>> output_edges; // for ram storage
+
+    //filter inner edges inside cell.
+    for (vector<unsigned int> edge : graph_edges) {
+        if (node_map[edge[0]] && node_map[edge[1]]) {
+            cell_edges.push_back(edge);
+        }
+    }
+//    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
+    Filter filter(U, C, cell, cell_edges, anodes, aedges);
+    filter.runFilter();
+    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+    assembly.runAssembly();
+//            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
+//            postProgress.runPostProgress();
+    bool need_contract = l == L - 1;
+    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), cell, cell_edges, outPath, U, need_contract);
+    graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), false);
+    void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
+    cellCount += graphPrinter.nodes_result_size();
+    edgeCount += graphPrinter.cuts_result_size();
+}
 
 void MultiLayerPartition::MLP() {
     string in_edge_path = outPath + "layer-1_edges.txt";
@@ -142,13 +186,10 @@ void MultiLayerPartition::MLP() {
         cout<<"cell size: "<<cells.size()<<endl;
 
         // Parallel
-        const unsigned int hardware_threads = thread::hardware_concurrency();
-        thread_limit = hardware_threads / 2;
         atomic<int> process_count(0);
         thread* ths = new thread[cells.size()]();
         for (int i = 0; i < cells.size(); i++) {
-
-            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count));
+            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, U);
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
@@ -184,47 +225,6 @@ void MultiLayerPartition::MLP() {
         outfile.clear(ios::goodbit);
 
     }
-}
-
-void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count) {
-    cout<<"Parallel dealing CELL No."<<cellCount<<endl;
-    if (process_count > thread_limit) {
-        unique_lock<mutex> lock(m_lock);
-        while (process_count > thread_limit)
-            condition.wait(lock);
-    }
-    process_count++;
-
-    bool* node_map = new bool[nodeNum](); // for finding edges in cell
-    for (NodeID nid : cell) {
-        node_map[nid] = 1;
-    }
-//    cout<<"bit map finished\n";
-    vector<vector<unsigned int>> cell_edges;
-    vector<vector<unsigned int>> anodes;
-    vector<vector<unsigned int>> aedges;
-
-    vector<vector<unsigned int>> output_edges; // for ram storage
-
-    //filter inner edges inside cell.
-    for (vector<unsigned int> edge : graph_edges) {
-        if (node_map[edge[0]] && node_map[edge[1]]) {
-            cell_edges.push_back(edge);
-        }
-    }
-//    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
-    Filter filter(U, C, cell, cell_edges, anodes, aedges);
-    filter.runFilter();
-    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
-    assembly.runAssembly();
-//            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
-//            postProgress.runPostProgress();
-    bool need_contract = l == L - 1;
-    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), cell, cell_edges, outPath, U, need_contract);
-    graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), false);
-    void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
-    cellCount += graphPrinter.nodes_result_size();
-    edgeCount += graphPrinter.cuts_result_size();
 }
 
 int main(int argc, char** argv) {
