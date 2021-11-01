@@ -104,7 +104,8 @@ void MultiLayerPartition::MLP() {
         outfile.clear(ios::goodbit);
 
         int voidSize = 0;
-        atomic_int cellCount = 0, edgeCount = 0;
+        atomic<int> cellCount(0)
+        atomic<int> edgeCount(0);
         infile>>voidSize;
         cout<<"current layer has "<<voidSize<<" void nodes.\n";
         for (int i = 0; i < voidSize; i++) {
@@ -139,7 +140,7 @@ void MultiLayerPartition::MLP() {
         // Parallel
         const unsigned int hardware_threads = thread::hardware_concurrency();
         thread_limit = hardware_threads / 2;
-        atomic_int process_count = 0;
+        atomic<int> process_count(0);
         thread* ths = new thread[cells.size()]();
         condition_variable condition;
         mutex m_lock;
@@ -183,7 +184,7 @@ void MultiLayerPartition::MLP() {
     }
 }
 
-void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic_int &cellCount, atomic_int &edgeCount, vector <NodeID> &void_nodes, atomic_int& process_count, condition_variable& condition, mutex& m_lock) {
+void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, condition_variable& condition, mutex& m_lock) {
     cout<<"Parallel dealing CELL No."<<cell_count<<endl;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
