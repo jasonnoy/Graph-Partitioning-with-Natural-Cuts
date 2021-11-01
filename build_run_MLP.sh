@@ -4,10 +4,18 @@ time_str=$(date +%H%M%S)
 
 if [ -d bin ]
 then
-  echo "output dir ./bin"
+  echo "bin file output dir ./bin"
 else
-  echo "creating dir bin, output dir ./bin"
+  echo "creating dir bin, bin file output dir ./bin"
   mkdir bin
+fi
+
+if [ -d result ]
+then
+  echo "result output dir ./result"
+else
+  echo "creating dir result, result output dir ./result"
+  mkdir result
 fi
 
 if [ -d logs ]
