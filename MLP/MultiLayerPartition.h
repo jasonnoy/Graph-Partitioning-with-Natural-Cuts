@@ -18,6 +18,9 @@
 #include <ctime>
 #include <vector>
 #include <streambuf>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 using namespace std;
 
@@ -28,6 +31,9 @@ private:
     const string paraPath;
     const string outPath;
     const unsigned int nodeNum;
+    int thread_limit;
+    vector<vector<unsigned int>> graph_edges;
+    void dealCell(int l, string cur_layer, vector<unsigned int>& cell, atomic_int& cell_count, atomic_int &edge_count, vector<NodeID>& void_nodes, atomic_int& process_count, condition_variable& condition, mutex& m_lock);
     bool phantom;
 public:
     const int ParaNum = 5;
