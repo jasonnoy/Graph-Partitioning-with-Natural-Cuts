@@ -148,7 +148,7 @@ void MultiLayerPartition::MLP() {
         thread* ths = new thread[cells.size()]();
         for (int i = 0; i < cells.size(); i++) {
 
-            ths[i] = thread(dealCell(l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count)));
+            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count));
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
@@ -187,7 +187,7 @@ void MultiLayerPartition::MLP() {
 }
 
 void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count) {
-    cout<<"Parallel dealing CELL No."<<cell_count<<endl;
+    cout<<"Parallel dealing CELL No."<<cellCount<<endl;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
         while (process_count > thread_limit)
