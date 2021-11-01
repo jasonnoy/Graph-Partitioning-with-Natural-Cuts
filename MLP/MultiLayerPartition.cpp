@@ -12,7 +12,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 const int thread_limit = hardware_threads / 2;
 
 // Parallel function
-void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const int U) {
+void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const int U, const int C, const int FI, const int M, const int L) {
     cout<<"Parallel dealing CELL No."<<cellCount<<endl;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
@@ -189,7 +189,7 @@ void MultiLayerPartition::MLP() {
         atomic<int> process_count(0);
         thread* ths = new thread[cells.size()]();
         for (int i = 0; i < cells.size(); i++) {
-            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, U);
+            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, U, C, FI, M, L);
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
