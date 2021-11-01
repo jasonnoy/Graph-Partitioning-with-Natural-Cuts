@@ -12,15 +12,14 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 const int thread_limit = hardware_threads / 2;
 
 // Parallel function
-void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
-    cout<<"Parallel dealing CELL No."<<cellCount<<endl;
+void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
         while (process_count > thread_limit)
             condition.wait(lock);
     }
+    cout<<"Parallel dealing CELL No."<<processId<<endl;
     process_count++;
-
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
         node_map[nid] = 1;
@@ -38,7 +37,7 @@ void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &
             cell_edges.push_back(edge);
         }
     }
-//    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
+    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
     Filter filter(U, C, cell, cell_edges, anodes, aedges);
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
@@ -189,7 +188,7 @@ void MultiLayerPartition::MLP() {
         atomic<int> process_count(0);
         thread* ths = new thread[cells.size()]();
         for (int i = 0; i < cells.size(); i++) {
-            ths[i] = thread(dealCell, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L);
+            ths[i] = thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L);
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
