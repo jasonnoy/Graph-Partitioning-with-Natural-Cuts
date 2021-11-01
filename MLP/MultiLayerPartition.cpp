@@ -104,7 +104,7 @@ void MultiLayerPartition::MLP() {
         outfile.clear(ios::goodbit);
 
         int voidSize = 0;
-        atomic<int> cellCount(0)
+        atomic<int> cellCount(0);
         atomic<int> edgeCount(0);
         infile>>voidSize;
         cout<<"current layer has "<<voidSize<<" void nodes.\n";
