@@ -33,7 +33,7 @@ private:
     const unsigned int nodeNum;
     int thread_limit;
     vector<vector<unsigned int>> graph_edges;
-    void dealCell(int l, string cur_layer, vector<unsigned int>& cell, atomic<int>& cell_count, atomic<int> &edge_count, vector<NodeID>& void_nodes, atomic<int>& process_count, condition_variable& condition, mutex& m_lock);
+    void dealCell(int l, string cur_layer, vector<unsigned int>& cell, atomic<int>& cell_count, atomic<int> &edge_count, vector<NodeID>& void_nodes, atomic<int>& process_count);
     bool phantom;
 public:
     const int ParaNum = 5;

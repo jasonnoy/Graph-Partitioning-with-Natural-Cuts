@@ -5,6 +5,10 @@
 #include "MultiLayerPartition.h"
 #include <ctime>
 
+// Parallel global variables.
+condition_variable condition;
+mutex m_lock;
+
 void MultiLayerPartition::MLP() {
     string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
@@ -142,11 +146,9 @@ void MultiLayerPartition::MLP() {
         thread_limit = hardware_threads / 2;
         atomic<int> process_count(0);
         thread* ths = new thread[cells.size()]();
-        condition_variable condition;
-        mutex m_lock;
         for (int i = 0; i < cells.size(); i++) {
 
-            ths[i] = thread(dealCell(l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(condition), ref(m_lock)));
+            ths[i] = thread(dealCell(l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count)));
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
@@ -184,7 +186,7 @@ void MultiLayerPartition::MLP() {
     }
 }
 
-void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, condition_variable& condition, mutex& m_lock) {
+void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count) {
     cout<<"Parallel dealing CELL No."<<cell_count<<endl;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
