@@ -12,7 +12,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 const int thread_limit = hardware_threads / 2;
 
 // Parallel function
-void MultiLayerPartition::dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count) {
+void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count) {
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
         while (process_count > thread_limit)
