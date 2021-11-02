@@ -30,6 +30,7 @@ void Assembly::runAssembly() {
     a_graph.use_combine = this->COMBINE;
     read_a_graph();
     multistart_and_combination();
+    cout<<"Assembly phase done\n";
 //    write_result();
     end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;
