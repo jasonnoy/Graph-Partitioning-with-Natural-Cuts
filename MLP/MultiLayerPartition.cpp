@@ -32,6 +32,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     vector<vector<unsigned int>> output_edges; // for ram storage
 
     //filter inner edges inside cell.
+    cout<<"thread No."<<processId<<endl;
     for (vector<unsigned int> edge : graph_edges) {
         if (node_map[edge[0]] && node_map[edge[1]]) {
             cell_edges.push_back(edge);
@@ -189,9 +190,9 @@ void MultiLayerPartition::MLP() {
 
         // Parallel
         atomic<int> process_count(0);
-        thread* ths = new thread[cells.size()]();
+        vector<thread> ths;
         for (int i = 0; i < cells.size(); i++) {
-            ths[i] = thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L);
+            ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
