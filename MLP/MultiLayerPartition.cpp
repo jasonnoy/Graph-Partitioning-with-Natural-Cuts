@@ -8,19 +8,20 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
+atomic<int> process_count(0);
 const unsigned int hardware_threads = thread::hardware_concurrency();
 //const int thread_limit = hardware_threads / 2;
 const int thread_limit = 1;
 
 // Parallel function
-void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+    process_count++;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
         while (process_count > thread_limit)
             condition.wait(lock);
     }
     cout<<"Parallel dealing Thread ID: "<<processId<<endl;
-    process_count++;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
         node_map[nid] = 1;
@@ -190,7 +191,6 @@ void MultiLayerPartition::MLP() {
         cout<<"cell size: "<<cells.size()<<endl;
 
         // Parallel
-        atomic<int> process_count(0);
         vector<thread> ths;
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
