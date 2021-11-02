@@ -50,6 +50,8 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
     edgeCount += graphPrinter.cuts_result_size();
+    process_count--;
+    condition.notify_all();
 }
 
 void MultiLayerPartition::MLP() {
