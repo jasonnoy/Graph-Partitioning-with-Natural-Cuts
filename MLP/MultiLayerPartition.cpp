@@ -195,7 +195,7 @@ void MultiLayerPartition::MLP() {
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-            ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(process_count), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+            ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
