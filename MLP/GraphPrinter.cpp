@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& real_map, bool isPhantom) {
+void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
@@ -161,11 +161,11 @@ void GraphPrinter::MLP_result() {
     if (contract_tiny)
         contract_iso_cells();
 
-    int * node_cell = new int[cell_nodes.size()]();
+    map<NodeID, int> node_cell;
     index = 0;
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, index++) {
         for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
-            node_cell[*node_iter] = index;
+            node_cell[real_map[*node_iter]] = index;
         }
     }
     for (unsigned int void_id : cell_void_nodes) {
@@ -177,10 +177,9 @@ void GraphPrinter::MLP_result() {
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
+        // note: real ids
         unsigned int sid = cell_edges[i][0];
         unsigned int tid = cell_edges[i][1];
-        if (sid >= cell_nodes.size() || tid >= cell_nodes.size())
-            cout<<"sid: "<<sid<<", tid: "<<tid<<" i: "<<i<<endl;
 //        if(node_cell[sid] * node_cell[tid] < 0)
 //            cout<<"node cell different\n";
         if (node_cell[sid] == node_cell[tid]){
