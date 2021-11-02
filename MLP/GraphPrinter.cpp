@@ -50,8 +50,12 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 
     outfile.open(out_edge_path, ios::app);
     cout<<"Printing edges of layer "<<layer<<endl;
+    int i = 0;
+    cout<<"Edge size: "<<result_edges.size()<<endl;
     for (vector<NodeID> edge : result_edges) {
         outfile<<edge[0]<<" "<<edge[1]<<endl;
+        cout<<i*100/result_edges.size()<<"\r";
+        i++;
     }
     cout<<"Done, ";
     outfile.close();
