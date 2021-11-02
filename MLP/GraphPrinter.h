@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "../Common/common.h"
+#include <map>
 
 class GraphPrinter {
 private:
