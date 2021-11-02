@@ -50,10 +50,12 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 
     outfile.open(out_edge_path, ios::app);
     cout<<"Printing edges of layer "<<layer<<endl;
-    for (auto edge_iter = result_edges.begin(); edge_iter != result_edges.end(); edge_iter++) {
-        outfile<<edge_iter->at(0)<<" "<<edge_iter->at(1)<<endl;
+    for (vector<NodeID> edge : result_edges) {
+        outfile<<edge[0]<<" "<<edge[1]<<endl;
     }
+    cout<<"Done, ";
     outfile.close();
+    outfile.clear(ios::goodbit);
     cout<<"Done\n";
 }
 
