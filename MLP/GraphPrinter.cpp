@@ -177,8 +177,8 @@ void GraphPrinter::MLP_result() {
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
-        unsigned int sid = real_to_relative[cell_edges[i][0]];
-        unsigned int tid = real_to_relative[cell_edges[i][1]];
+        unsigned int sid = cell_edges[i][0];
+        unsigned int tid = cell_edges[i][1];
         if (sid >= cell_nodes.size() || tid >= cell_nodes.size())
             cout<<"sid: "<<sid<<", tid: "<<tid<<" i: "<<i<<endl;
 //        if(node_cell[sid] * node_cell[tid] < 0)
