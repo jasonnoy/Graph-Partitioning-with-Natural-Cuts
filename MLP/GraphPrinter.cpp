@@ -10,7 +10,7 @@ void GraphPrinter::write_MLP_result(const string layer, vector<unsigned int>& re
 //    } else {
 //        MLP_result();
 //    }
-    cout<<"line 13\n"
+    cout<<"line 13\n";
     MLP_result();
     cout<<"line 15\n";
     // convert relative vid to real nid
