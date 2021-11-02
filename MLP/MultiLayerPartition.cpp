@@ -52,10 +52,12 @@ void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer
     unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
     graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), false);
     fileLock.unlock();
+    cout<<"Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
     edgeCount += graphPrinter.cuts_result_size();
     process_count--;
+    cout<<"notifying...\n";
     condition.notify_all();
 }
 
