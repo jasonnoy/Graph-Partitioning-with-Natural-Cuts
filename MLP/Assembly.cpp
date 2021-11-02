@@ -34,7 +34,7 @@ void Assembly::runAssembly() {
         cout<<"result[0][0]: "<<result[0][0]<<endl;
     cout<<"Assembly phase done\n";
 //    write_result();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Assembly run time: "<<time<<"s\n";
+//    end = clock();
+//    int time = (end - start) / CLOCKS_PER_SEC;
+//    cout<<"Assembly run time: "<<time<<"s\n";
 }
