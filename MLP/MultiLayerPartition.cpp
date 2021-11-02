@@ -49,7 +49,6 @@ void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer
 //            postProgress.runPostProgress();
     bool need_contract = l == L - 1;
     GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), cell, cell_edges, outPath, U, need_contract);
-    unique_lock<mutex> fileLock(file_lock);
     graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), false);
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
