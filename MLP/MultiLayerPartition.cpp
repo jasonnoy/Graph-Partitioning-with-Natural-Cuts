@@ -6,8 +6,8 @@
 #include <ctime>
 
 // Parallel global variables.
-condition_variable condition;
-mutex m_lock;
+condition_variable condition, file_condition;
+mutex m_lock, file_lock;
 const unsigned int hardware_threads = thread::hardware_concurrency();
 const int thread_limit = hardware_threads / 2;
 
@@ -46,6 +46,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
 //            postProgress.runPostProgress();
     bool need_contract = l == L - 1;
     GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), cell, cell_edges, outPath, U, need_contract);
+    unique_lock<mutex> fileLock(file_lock);
     graphPrinter.write_MLP_result(cur_layer, filter.get_real_map(), false);
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();

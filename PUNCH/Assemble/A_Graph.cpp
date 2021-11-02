@@ -1461,6 +1461,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 				this->contract_to[i] = i;
 				this->contract_node_list[i].push_back( i );
 			}
+			cout<<"line 1464\n";
 
 
 			//pool item is ready
@@ -1492,6 +1493,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 				min_pos = piit;
 			}
 		}
+		cout<<"line 1495\n";
 		result.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
 		return;
 }
