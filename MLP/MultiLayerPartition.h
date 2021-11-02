@@ -35,6 +35,7 @@ private:
     vector<vector<unsigned int>> graph_edges;
 //    static void dealCell(int l, string cur_layer, vector<unsigned int>& cell, atomic<int>& cell_count, atomic<int> &edge_count, vector<NodeID>& void_nodes, atomic<int>& process_count);
     bool phantom;
+    void dealCell(int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count);
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
