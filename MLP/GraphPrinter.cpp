@@ -141,12 +141,14 @@ void GraphPrinter::MLP_result() {
     fill_contracts();
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
+    map<unsigned int, unsigned int> real_to_relative;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (NodeID contain_nid : id_map[*nit]) {
                 result_nodes[index].push_back(contain_nid);
+                real_to_relative[contain_nid] = index;
             }
         }
     }
@@ -171,8 +173,8 @@ void GraphPrinter::MLP_result() {
     result_cuts.reserve(cell_edges.size());
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
-        unsigned int sid = cell_edges[i][0];
-        unsigned int tid = cell_edges[i][1];
+        unsigned int sid = real_to_relative[cell_edges[i][0]];
+        unsigned int tid = real_to_relative[cell_edges[i][1]];
         if (sid >= cell_nodes.size() || tid >= cell_nodes.size())
             cout<<"sid: "<<sid<<", tid: "<<tid<<" i: "<<i<<endl;
 //        if(node_cell[sid] * node_cell[tid] < 0)
