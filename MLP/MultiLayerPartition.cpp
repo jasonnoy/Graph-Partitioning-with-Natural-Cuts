@@ -18,7 +18,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
         while (process_count > thread_limit)
             condition.wait(lock);
     }
-    cout<<"Parallel dealing Thread ID: "<<this_thread::get_id()<<endl;
+    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     process_count++;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
@@ -32,7 +32,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     vector<vector<unsigned int>> output_edges; // for ram storage
 
     //filter inner edges inside cell.
-    cout<<"thread No."<<this_thread::get_id()<<endl;
+    cout<<"thread No."<<processId<<endl;
     for (vector<unsigned int> edge : graph_edges) {
         if (node_map[edge[0]] && node_map[edge[1]]) {
             cell_edges.push_back(edge);
