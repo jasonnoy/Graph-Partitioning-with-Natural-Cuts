@@ -147,14 +147,12 @@ void GraphPrinter::MLP_result() {
     fill_contracts();
     result_nodes.resize(a_result.size());
     unsigned int index = 0;
-    map<unsigned int, unsigned int> real_to_relative;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (NodeID contain_nid : id_map[*nit]) {
                 result_nodes[index].push_back(contain_nid);
-                real_to_relative[contain_nid] = index;
             }
         }
     }
