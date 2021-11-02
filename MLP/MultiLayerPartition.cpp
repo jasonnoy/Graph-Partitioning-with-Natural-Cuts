@@ -9,7 +9,8 @@
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
 const unsigned int hardware_threads = thread::hardware_concurrency();
-const int thread_limit = hardware_threads / 2;
+//const int thread_limit = hardware_threads / 2;
+const int thread_limit = 1;
 
 // Parallel function
 void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
