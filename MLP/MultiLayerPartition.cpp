@@ -250,7 +250,7 @@ int main(int argc, char** argv) {
         printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
-        printf("<arg4> number of thread, must be an integer\n");
+        printf("<arg4> number of thread, must be an positive integer\n");
         exit(0);
     }
     time_t start, end;
@@ -260,6 +260,8 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
     thread_limit = stoi(argv[5]);
+    if (thread_limit <= 0)
+        thread_limit = 1;
     if (thread_limit > hardware_threads / 2) {
         cout<<"input thread setting surpass 1/2 of the max capacity, please enter an integer no bigger than "<<hardware_threads / 2<<endl;
     }
