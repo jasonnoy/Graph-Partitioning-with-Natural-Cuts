@@ -8,7 +8,7 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
-atomic<int>& process_count;
+atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
 //const int thread_limit = hardware_threads / 2;
@@ -200,7 +200,6 @@ void MultiLayerPartition::MLP() {
 
         // Parallel
         vector<thread> ths;
-        atomic<int> process_count(0);
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
