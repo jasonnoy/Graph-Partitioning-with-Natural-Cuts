@@ -15,12 +15,12 @@ const int thread_limit = 1;
 
 // Parallel function
 void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
-    process_count++;
     if (process_count > thread_limit) {
         unique_lock<mutex> lock(m_lock);
         while (process_count > thread_limit)
             condition.wait(lock);
     }
+    process_count++;
     cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
