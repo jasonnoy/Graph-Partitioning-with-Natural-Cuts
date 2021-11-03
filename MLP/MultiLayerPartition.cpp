@@ -39,6 +39,11 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
             cell_edges.push_back(edge);
         }
     }
+
+    // close log output
+    const int temp_log = 10;
+    dup2(STDOUT_FILENO, temp_log);
+
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
     Filter filter(U, C, cell, cell_edges, anodes, aedges);
     filter.runFilter();
@@ -50,6 +55,10 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
     unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
     graphPrinter.write_MLP_result(cur_layer, false);
+
+    // re-open log output
+    dup2(temp_log, STDOUT_FILENO);
+
     cout<<"Thread "<<processId<<" Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
@@ -201,13 +210,11 @@ void MultiLayerPartition::MLP() {
 
         // Parallel
         vector<thread> ths;
-        close(STDOUT_FILENO); // close log output
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
             ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
-        dup(STDOUT_FILENO); // re-open log output
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
             cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\n";
