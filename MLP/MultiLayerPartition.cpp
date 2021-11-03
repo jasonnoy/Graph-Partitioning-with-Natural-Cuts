@@ -3,7 +3,6 @@
 //
 
 #include "MultiLayerPartition.h"
-#include <ctime>
 
 // Parallel global variables.
 condition_variable condition, file_condition;
@@ -250,8 +249,8 @@ int main(int argc, char** argv) {
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
         exit(0);
     }
-    clock_t start, end;
-    start = clock();
+    time_t start, end;
+    start = time(&start);
     string paraPath(argv[1]);
     string nodePath(argv[2]);
     string edgePath(argv[3]);
@@ -261,8 +260,8 @@ int main(int argc, char** argv) {
     Preprocess preprocess(nodePath, edgePath, outPath);
     preprocess.runPreprocess();
     end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Preprocess run time: "<<time<<"s.\n";
+    long time_cost = end - start;
+    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
 
 
     MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
@@ -275,7 +274,7 @@ int main(int argc, char** argv) {
     adaptivePrinter.print_final_result();
     adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
-    end = clock();
-    time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"MLP run time: "<<time<<"s.\n";
+    end = time(&end);
+    time_cost = end - start;
+    cout<<"MLP run time: "<<time_cost<<"s.\n";
 }

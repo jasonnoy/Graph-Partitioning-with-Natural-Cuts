@@ -10,9 +10,7 @@ void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
 //    } else {
 //        MLP_result();
 //    }
-    cout<<"line 13\n";
     MLP_result();
-    cout<<"line 15\n";
     // convert relative vid to real nid
     for (int i = 0; i < cell_void_nodes.size(); i++) {
         cell_void_nodes[i] = real_map[cell_void_nodes[i]];
