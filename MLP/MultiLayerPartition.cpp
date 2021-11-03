@@ -12,7 +12,7 @@ atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
 //const int thread_limit = hardware_threads / 2;
-const int thread_limit = 16;
+const int thread_limit = 15;
 
 // Parallel function
 void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
@@ -124,11 +124,11 @@ void MultiLayerPartition::MLP() {
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
-//        if (cur_layer == "3") {
-//            ifstream check(out_node_path);
-//            if (check.good())
-//                continue;
-//        }
+        if (cur_layer == "3") {
+            ifstream check(out_node_path);
+            if (check.good())
+                continue;
+        }
         //for test only!
         vector<NodeID> void_nodes;
         U = parameters[l][0];
