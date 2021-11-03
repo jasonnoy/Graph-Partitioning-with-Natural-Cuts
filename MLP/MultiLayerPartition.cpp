@@ -15,6 +15,9 @@ const int thread_limit = 31;
 
 // Parallel function
 void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+    // close log output
+    close(STDOUT_FILENO);
+
     if (process_count > thread_limit) {
         unique_lock<mutex> lck(m_lock);
         while (process_count > thread_limit)
@@ -203,10 +206,10 @@ void MultiLayerPartition::MLP() {
 
         // Parallel
         vector<thread> ths;
-        // close log output
-        const int temp_log = 10;
-        dup2(STDOUT_FILENO, temp_log);
-        close(STDOUT_FILENO);
+//        // close log output
+//        const int temp_log = 10;
+//        dup2(STDOUT_FILENO, temp_log);
+//        close(STDOUT_FILENO);
 
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
@@ -214,9 +217,9 @@ void MultiLayerPartition::MLP() {
             ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
 
-        // re-open log output
-        fflush(stdout);
-        dup2(temp_log, STDOUT_FILENO);
+//        // re-open log output
+//        fflush(stdout);
+//        dup2(temp_log, STDOUT_FILENO);
 
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
