@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
-    thread_limit = argv[5];
+    thread_limit = stoi(argv[5]);
     if (thread_limit > hardware_threads / 2) {
         cout<<"input thread setting surpass 1/2 of the max capacity, please enter an integer no bigger than "<<hardware_threads / 2<<endl;
     }
