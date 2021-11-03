@@ -42,7 +42,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
 
     // close log output
     const int temp_log = 10;
-    dup2(STDOUT_FILENO, 10);
+    dup2(STDOUT_FILENO, temp_log);
     close(STDOUT_FILENO);
 
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
@@ -59,7 +59,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
 
     // re-open log output
     fflush(stdout);
-    dup2(temp_log, 1);
+    dup2(temp_log, STDOUT_FILENO);
 
 //    cout<<"Thread "<<processId<<" Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
