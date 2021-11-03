@@ -1,8 +1,6 @@
 //
 // Created by 骏辉 on 2021/10/14.
 //
-#define cout /##/
-#define printf /##/
 
 #include "GraphPrinter.h"
 

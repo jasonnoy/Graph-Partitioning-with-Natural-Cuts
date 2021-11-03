@@ -1,8 +1,6 @@
 //
 // Created by 骏辉 on 2021/10/19.
 //
-#define cout /##/
-#define printf /##/
 
 #include "AdaptivePrinter.h"
 void AdaptivePrinter::filter_result() {
