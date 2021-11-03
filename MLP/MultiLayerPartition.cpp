@@ -21,7 +21,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
             condition.wait(lck);
     }
     process_count++;
-    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
+//    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
         node_map[nid] = 1;
@@ -58,9 +58,10 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     graphPrinter.write_MLP_result(cur_layer, false);
 
     // re-open log output
-    dup2(temp_log, 10);
+    fflush(stdout);
+    dup2(temp_log, 1);
 
-    cout<<"Thread "<<processId<<" Print finished\n";
+//    cout<<"Thread "<<processId<<" Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
     edgeCount += graphPrinter.cuts_result_size();
@@ -218,7 +219,7 @@ void MultiLayerPartition::MLP() {
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
-            cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\n";
+            cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\r";
         }
 
         // option: 改写为不读取size

@@ -4,6 +4,7 @@
 
 #include "AdaptivePrinter.h"
 void AdaptivePrinter::filter_result() {
+    cout<<"\n";
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
         ifstream infile;
