@@ -125,11 +125,11 @@ void MultiLayerPartition::MLP() {
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
-        if (cur_layer == "3") {
-            ifstream check(out_node_path);
-            if (check.good())
-                continue;
-        }
+//        if (cur_layer == "3") {
+//            ifstream check(out_node_path);
+//            if (check.good())
+//                continue;
+//        }
         //for test only!
         vector<NodeID> void_nodes;
         U = parameters[l][0];
