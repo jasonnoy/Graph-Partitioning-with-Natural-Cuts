@@ -16,11 +16,11 @@ const int thread_limit = 1;
 
 // Parallel function
 void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
-//    if (process_count > thread_limit) {
-//        unique_lock<mutex> lck(m_lock);
-//        while (process_count > thread_limit)
-//            condition.wait(lck);
-//    }
+    if (process_count > thread_limit) {
+        unique_lock<mutex> lck(m_lock);
+        while (process_count > thread_limit)
+            condition.wait(lck);
+    }
     process_count++;
     cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
@@ -57,8 +57,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     edgeCount += graphPrinter.cuts_result_size();
     process_count--;
     cout<<"notifying...\n";
-//    m_lock.unlock();
-//    condition.notify_all();
+    condition.notify_all();
 }
 
 void MultiLayerPartition::MLP() {
