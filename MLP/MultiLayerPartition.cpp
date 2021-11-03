@@ -202,17 +202,11 @@ void MultiLayerPartition::MLP() {
         cout<<"Valid cells for next step: "<<count<<endl;
         cout<<"cell size: "<<cells.size()<<endl;
 
-        // Parallel
-        vector<thread> ths;
-        int temp = dup(STDOUT_FILENO);
-        close(STDOUT_FILENO);
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
             ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
-        fflush(stdout);
-        dup2(temp, STDOUT_FILENO);
 
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
