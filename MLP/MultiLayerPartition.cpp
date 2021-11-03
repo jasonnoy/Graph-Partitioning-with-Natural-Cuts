@@ -57,7 +57,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     graphPrinter.write_MLP_result(cur_layer, false);
 
     // re-open log output
-    dup2(temp_log, 10);
+//    dup2(temp_log, 10);
 
     cout<<"Thread "<<processId<<" Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
