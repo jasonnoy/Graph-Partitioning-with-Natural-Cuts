@@ -245,11 +245,12 @@ void MultiLayerPartition::MLP() {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 5) {
+    if (argc != 6) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
         printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
+        printf("<arg4> number of thread, must be an integer\n");
         exit(0);
     }
     time_t start, end;
@@ -258,6 +259,10 @@ int main(int argc, char** argv) {
     string nodePath(argv[2]);
     string edgePath(argv[3]);
     string outPath(argv[4]);
+    thread_limit = argv[5];
+    if (thread_limit > hardware_threads / 2) {
+        cout<<"input thread setting surpass 1/2 of the max capacity, please enter an integer no bigger than "<<hardware_threads / 2<<endl;
+    }
 
     cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
