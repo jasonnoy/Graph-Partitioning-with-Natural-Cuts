@@ -8,17 +8,18 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
+atomic<int>& process_count;
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
 //const int thread_limit = hardware_threads / 2;
 const int thread_limit = 1;
 
 // Parallel function
-void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
 //    if (process_count > thread_limit) {
-//        unique_lock<mutex> lock(m_lock);
+//        unique_lock<mutex> lck(m_lock);
 //        while (process_count > thread_limit)
-//            condition.wait(lock);
+//            condition.wait(lck);
 //    }
     process_count++;
     cout<<"Parallel dealing Thread ID: "<<processId<<endl;
@@ -121,6 +122,11 @@ void MultiLayerPartition::MLP() {
         string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
+        if (cur_layer == "3") {
+            ifstream check(out_node_path);
+            if (check.good())
+                continue;
+        }
         vector<NodeID> void_nodes;
         U = parameters[l][0];
         C = parameters[l][1];
@@ -198,7 +204,7 @@ void MultiLayerPartition::MLP() {
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-            ths.push_back(thread(dealCell, i, ref(process_count), l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+            ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
