@@ -11,12 +11,12 @@ atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
 //const int thread_limit = hardware_threads / 2;
-const int thread_limit = 0;
+const int thread_limit = 1;
 
 // Parallel function
 void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
 
-    if (process_count > thread_limit) {
+    if (process_count > thread_limit-1) {
         unique_lock<mutex> lck(m_lock);
         while (process_count > thread_limit)
             condition.wait(lck);
@@ -202,6 +202,8 @@ void MultiLayerPartition::MLP() {
         cout<<"Valid cells for next step: "<<count<<endl;
         cout<<"cell size: "<<cells.size()<<endl;
 
+        // Parallel
+        vector<thread> ths;
         for (int i = 0; i < cells.size(); i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
