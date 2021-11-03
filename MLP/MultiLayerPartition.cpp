@@ -15,11 +15,11 @@ const int thread_limit = 1;
 
 // Parallel function
 void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
-    if (process_count > thread_limit) {
-        unique_lock<mutex> lock(m_lock);
-        while (process_count > thread_limit)
-            condition.wait(lock);
-    }
+//    if (process_count > thread_limit) {
+//        unique_lock<mutex> lock(m_lock);
+//        while (process_count > thread_limit)
+//            condition.wait(lock);
+//    }
     process_count++;
     cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
@@ -34,7 +34,6 @@ void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer
     vector<vector<unsigned int>> output_edges; // for ram storage
 
     //filter inner edges inside cell.
-    cout<<"thread No."<<processId<<endl;
     for (vector<unsigned int> edge : graph_edges) {
         if (node_map[edge[0]] && node_map[edge[1]]) {
             cell_edges.push_back(edge);
@@ -49,17 +48,16 @@ void dealCell(int processId, atomic<int>& process_count, int l, string cur_layer
 //            postProgress.runPostProgress();
     bool need_contract = l == L - 1;
     GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
-//    unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
+    unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
     graphPrinter.write_MLP_result(cur_layer, false);
-//    file_lock.unlock();
     cout<<"Print finished\n";
     void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
     cellCount += graphPrinter.nodes_result_size();
     edgeCount += graphPrinter.cuts_result_size();
     process_count--;
     cout<<"notifying...\n";
-    m_lock.unlock();
-    condition.notify_all();
+//    m_lock.unlock();
+//    condition.notify_all();
 }
 
 void MultiLayerPartition::MLP() {
@@ -204,7 +202,7 @@ void MultiLayerPartition::MLP() {
         }
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
-            cout<<"thread No."<<i<<"/"<<cells.size()<<" finished\n";
+            cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\n";
         }
 
         // option: 改写为不读取size
