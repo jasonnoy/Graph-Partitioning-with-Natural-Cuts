@@ -22,7 +22,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
             condition.wait(lck);
     }
     process_count++;
-//    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
+    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
     bool* node_map = new bool[nodeNum](); // for finding edges in cell
     for (NodeID nid : cell) {
         node_map[nid] = 1;
@@ -43,8 +43,10 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
 
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
     Filter filter(U, C, cell, cell_edges, anodes, aedges);
+    cout<<"Running filter...";
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+    cout<<"Running assembly...\n";
     assembly.runAssembly();
 //            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
 //            postProgress.runPostProgress();
