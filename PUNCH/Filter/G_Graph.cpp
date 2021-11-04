@@ -2,13 +2,13 @@
 
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map){
+void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
 
     // read in node
     node_list.reserve(nodes.size());
     // use relative node id for punch, map real nid for output
-    unsigned int id = 0;
-    map<unsigned int, unsigned int> real_to_nid;
+    NodeID id = 0;
+    map<NodeID , NodeID> real_to_nid;
     real_map.reserve(nodes.size());
     for (NodeID nid : nodes) {
         G_Node node(id);
@@ -234,7 +234,7 @@ void G_Graph::two_cuts_edge_class( vector<bool>& edge_in_fi,
 	vector< vector<NodeID> >& edge_equl_cls ){
 
 	//fill b bits on each edge to classify them
-	unsigned int b = 0;
+	NodeID b = 0;
 	/*b = (unsigned int)ceil( ( log((double)graph.get_node_list().size())
 		+ 2.0*log((double)graph.get_edge_list().size()) ) / log(2.0) );*/
 	//for efficiency concern, we give up using vector<bool> or bitset,
@@ -371,10 +371,10 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 }
 
 void G_Graph::fill_b_bits( vector<bool>& edge_removed, 
-	vector< Bits >& b_bits, unsigned int b ){
+	vector< Bits >& b_bits, NodeID b ){
 
 		/*fill initial edges not in tree*/
-		unsigned int random = 0;
+		NodeID int random = 0;
 
 		vector<bool> edge_prsd( this->get_edge_list().size(), false );
 		vector<bool>::const_iterator eit = edge_removed.begin();
@@ -383,12 +383,12 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 
 			if( *eit && !edge_prsd[b_id] ){
 
-				random = (unsigned int)rand(); //rand (0, 2^15)
+				random = (NodeID)rand(); //rand (0, 2^15)
 				random &= 0x0000000f;          // 只保留后四位
 				b_bits[b_id] |= random;
 				for( size_t i = 0; i < 4 ; i++ ){
 
-					random = (unsigned int)rand(); //rand (0, 2^15)
+					random = (NodeID)rand(); //rand (0, 2^15)
 					b_bits[b_id] <<= 15;
 					b_bits[b_id] |= random;
 				}
@@ -687,7 +687,7 @@ void G_Graph::cnt_two_degree_path( NodeSize sz_lim ){
 
 unsigned int G_Graph::node_degree( NodeID n ){
 		
-		unsigned int degree = 0;
+		NodeID degree = 0;
 		NodeID cid = this->contract_to[n];
 		vector<NodeID>::const_iterator cnit = 
 			this->contract_node_list[cid].begin();

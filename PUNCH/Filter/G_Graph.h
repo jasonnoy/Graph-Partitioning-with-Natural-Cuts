@@ -90,7 +90,7 @@ public:
 
 	/////////////////////////////main methods////////////////////////////
 
-	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map );
+	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map );
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
 
@@ -140,7 +140,7 @@ private:
 	//void fill_b_bits( vector<bool>& edge_removed, 
 	//	vector< vector<bool> >& b_bit_list, unsigned int b );
 	void fill_b_bits( vector<bool>& edge_removed, 
-		vector< Bits >& b_bit_list, unsigned int b );
+		vector< Bits >& b_bit_list, NodeID b );
 
 	//void classify_edge( const vector< vector<bool> >& b_bit_list,
 	//	vector< vector<EdgeID> >& edge_classes );
