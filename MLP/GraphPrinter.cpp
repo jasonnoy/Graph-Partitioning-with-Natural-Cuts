@@ -81,42 +81,42 @@ void GraphPrinter::phantom_result() {
 }
 
 void GraphPrinter::contract_tiny_cells() {
-    cout<<"contract tiny cells..\n";
-    int* num_cell = new int[cell_nodes.size()]();
-    int cell_id = 0;
-    vector<vector<NodeId>> node_edges;
-    node_edges.resize(cell_nodes.size());
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
-        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            num_cell[*nid] = cell_id;
-        }
-    }
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_id++) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100){
-            cell_iter++;
-            continue;
-        }
-        int* cell_count = new int[cell_iter->size()]();
-        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            for (NodeId tid : node_edges[*nid]) {
-                cell_count[num_cell[tid]]++;
-            }
-//            cell_count[num_cell[node_edges[*nid]]]++;
-        }
-        int max_count = 0;
-        int max_cell = 0;
-        for (int i = 0; i < cell_iter->size(); i++) {
-            if (cell_count[i] > max_count){
-                max_count = cell_count[i];
-                max_cell = i;
-            }
-        }
-        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-            num_cell[*nid] = max_cell;
-        }
-        result_nodes[max_cell].insert(result_nodes[max_cell].end(), cell_iter->begin(), cell_iter->end());
-        cell_iter = result_nodes.erase(cell_iter);
-    }
+//    cout<<"contract tiny cells..\n";
+//    int* num_cell = new int[cell_nodes.size()]();
+//    int cell_id = 0;
+//    vector<vector<NodeId>> node_edges;
+//    node_edges.resize(cell_nodes.size());
+//    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
+//        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
+//            num_cell[*nid] = cell_id;
+//        }
+//    }
+//    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_id++) {
+//        if (cell_iter->size() > U/10 || cell_iter->size() > 100){
+//            cell_iter++;
+//            continue;
+//        }
+//        int* cell_count = new int[cell_iter->size()]();
+//        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
+//            for (NodeId tid : node_edges[*nid]) {
+//                cell_count[num_cell[tid]]++;
+//            }
+////            cell_count[num_cell[node_edges[*nid]]]++;
+//        }
+//        int max_count = 0;
+//        int max_cell = 0;
+//        for (int i = 0; i < cell_iter->size(); i++) {
+//            if (cell_count[i] > max_count){
+//                max_count = cell_count[i];
+//                max_cell = i;
+//            }
+//        }
+//        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
+//            num_cell[*nid] = max_cell;
+//        }
+//        result_nodes[max_cell].insert(result_nodes[max_cell].end(), cell_iter->begin(), cell_iter->end());
+//        cell_iter = result_nodes.erase(cell_iter);
+//    }
     cout<<"Done\n";
 }
 
