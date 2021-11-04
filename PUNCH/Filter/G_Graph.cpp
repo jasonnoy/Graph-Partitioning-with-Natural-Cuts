@@ -170,6 +170,8 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 // parallel variables
 mutex lck;
 void parallel_dfs_mark(vector<NodeID>& node_stack, vector<G_Node>& node_list, vector<bool>& node_visited, vector<bool>& edge_removed, vector<NodeID>& sym_id){
+    if (node_stack.empty())
+        this_thread::sleep_for(chrono::milliseconds(10));
     while( !node_stack.empty() ){
         unique_lock<mutex> mu_lock(lck);
 
@@ -211,11 +213,8 @@ void G_Graph::parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, int t
     // NodeSize total_sz = 0;
     ////////
 
-    for (int i = 0; i < thread_num; i++){
-        int rand_num = rand() % node_list.size();
-        node_stack.push_back(rand_num);
-        node_visited[rand_num] = true;
-    }
+    node_stack.push_back(start);
+    node_visited[start] = true;
 
     vector<thread> ths;
     for (int i = 0; i < thread_num; i++) {
