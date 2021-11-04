@@ -104,6 +104,8 @@ void Filter::convert_and_output(){
 }
 
 void Filter::runFilter(const int thread_occupied, const int thread_limit) {
+    this->thread_occupied = thread_occupied;
+    this->thread_limit = thread_limit;
     clock_t start, end;
     start = clock();
     read_in_graph();

@@ -37,7 +37,7 @@ public:
             U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
     };
     ~Filter() = default;
-    void runFilter(const int thread_occupied, const int thread_limit) {this->thread_occupied = thread_occupied; this->thread_limit = thread_limit;}
+    void runFilter(const int thread_occupied, const int thread_limit);
     int getF(){return F;}
     void setF(int f){F = f;}
     vector<vector<unsigned int>>& get_anodes(){return anodes;}
