@@ -221,8 +221,8 @@ void G_Graph::parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeS
     for (int i = 0; i < thread_num; i++) {
         ths.push_back(thread(parallel_dfs_mark, ref(node_stack), ref(this->node_list), ref(node_visited), ref(edge_removed), ref(this->sym_id)));
     }
-    for (thread th : ths)
-        th.join();
+    for (int i = 0; i < thread_num; i++)
+        ths[i].join();
 
     return;
 }

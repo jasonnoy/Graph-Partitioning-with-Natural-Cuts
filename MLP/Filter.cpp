@@ -27,7 +27,7 @@ void Filter::contract_tiny_cuts(){
     else
         gGraph.dfs_tree( 0, edge_in_fi, 0);
     time(&end);
-    cout<<"Time cost: "<<end-time<<"s\n";
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     size_t ten = 0;
     for( int i = 0; i < edge_in_fi.size(); i++ ){
@@ -103,7 +103,7 @@ void Filter::convert_and_output(){
 
 }
 
-void Filter::runFilter(const int thread_occupied = 1, const int thread_limit = 1) {
+void Filter::runFilter(const int thread_occupied, const int thread_limit) {
     clock_t start, end;
     start = clock();
     read_in_graph();
