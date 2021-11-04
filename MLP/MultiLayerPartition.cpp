@@ -44,7 +44,7 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
     Filter filter(U, C, cell, cell_edges, anodes, aedges);
     cout<<"Running filter...";
-    filter.runFilter();
+    filter.runFilter(current_occupied, thread_limit);
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
     cout<<"Running assembly...\n";
     assembly.runAssembly();
