@@ -138,6 +138,7 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 		////////
 
 		node_stack.push_back(start);
+        int node_count = 0;
 		node_visited[start] = true;
 
 		while( !node_stack.empty() ){
@@ -151,6 +152,9 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 				//NodeID t = it->second->get_target();
 				NodeID t = (*it)->get_target();
 				if( !node_visited[t] ){
+                    node_count++;
+                    if (node_count % 1000 == 0)
+                        cout<<"Scanning... "<<node_count*100000/node_list.size()<<"%\r";
 
 					//every two related edges should be updated at the same time
 					//EdgeID e2t = it->second->get_id();

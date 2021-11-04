@@ -45,20 +45,20 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
     Filter filter(U, C, cell, cell_edges, anodes, aedges);
     cout<<"Running filter...";
     filter.runFilter();
-//    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
-//    cout<<"Running assembly...\n";
-//    assembly.runAssembly();
-////            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
-////            postProgress.runPostProgress();
-//    bool need_contract = l == L - 1;
-//    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
-//    unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
-//    graphPrinter.write_MLP_result(cur_layer, false);
-//
-////    cout<<"Thread "<<processId<<" Print finished\n";
-//    void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
-//    cellCount += graphPrinter.nodes_result_size();
-//    edgeCount += graphPrinter.cuts_result_size();
+    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+    cout<<"Running assembly...\n";
+    assembly.runAssembly();
+//            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
+//            postProgress.runPostProgress();
+    bool need_contract = l == L - 1;
+    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
+    unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
+    graphPrinter.write_MLP_result(cur_layer, false);
+
+//    cout<<"Thread "<<processId<<" Print finished\n";
+    void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
+    cellCount += graphPrinter.nodes_result_size();
+    edgeCount += graphPrinter.cuts_result_size();
     process_count--;
     condition.notify_all();
 }
