@@ -94,7 +94,7 @@ public:
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
 
-    void parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim, const int thread_num );
+    void parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim, int thread_num );
 
 	void bfs_tree( NodeID start, vector<bool>& node_added, NodeSize size_lim ){
 		//////////////////////////
