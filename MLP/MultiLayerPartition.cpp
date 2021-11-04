@@ -14,7 +14,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<unsigned int>>& graph_edges, const string outPath, const unsigned int nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int C, const int FI, const int M, const int L) {
 
     if (process_count > thread_limit-1) {
         unique_lock<mutex> lck(m_lock);
@@ -28,14 +28,14 @@ void dealCell(int processId, int l, string cur_layer, vector<unsigned int> &cell
         node_map[nid] = 1;
     }
 //    cout<<"bit map finished\n";
-    vector<vector<unsigned int>> cell_edges;
-    vector<vector<unsigned int>> anodes;
-    vector<vector<unsigned int>> aedges;
+    vector<vector<NodeID>> cell_edges;
+    vector<vector<NodeID>> anodes;
+    vector<vector<NodeId>> aedges;
 
-    vector<vector<unsigned int>> output_edges; // for ram storage
+    vector<vector<NodeId>> output_edges; // for ram storage
 
     //filter inner edges inside cell.
-    for (vector<unsigned int> edge : graph_edges) {
+    for (vector<NodeId> edge : graph_edges) {
         if (node_map[edge[0]] && node_map[edge[1]]) {
             cell_edges.push_back(edge);
         }
@@ -90,7 +90,7 @@ void MultiLayerPartition::MLP() {
     infile.close();
     infile.clear(ios::goodbit);
 
-    unsigned int count;
+    NodeId count;
 
     // read edges
     infile.open(in_edge_path);
@@ -102,7 +102,7 @@ void MultiLayerPartition::MLP() {
     cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
     for (int i = 0; i < count; i++) {
-        unsigned int sid, tid;
+        NodeId sid, tid;
         infile>>sid>>tid;
         graph_edges[i].push_back(sid);
         graph_edges[i].push_back(tid);
@@ -182,16 +182,16 @@ void MultiLayerPartition::MLP() {
         }
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
-        vector<vector<unsigned int>> cells;
+        vector<vector<NodeId>> cells;
         cells.reserve(count);
 //        outfile.open(out_node_path, ios::app);
         for (int i = 0; i < count; i++) {
-            unsigned int cellSize;
+            NodeId cellSize;
             infile >> cellSize;
-            vector<unsigned int> cell_nodes;
+            vector<NodeId> cell_nodes;
             cell_nodes.reserve(cellSize);
             for (int j = 0; j < cellSize; j++) {
-                unsigned int nid;
+                NodeId nid;
                 infile >> nid;
                 cell_nodes.push_back(nid);
             }

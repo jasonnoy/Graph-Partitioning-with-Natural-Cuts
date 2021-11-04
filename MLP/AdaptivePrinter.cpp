@@ -11,10 +11,10 @@ void AdaptivePrinter::filter_result() {
         infile.open(layer_node_path);
         int void_size;
         infile>>void_size;
-        vector<unsigned int> void_nodes;
+        vector<NodeId> void_nodes;
         void_nodes.reserve(void_size);
         for (int i = 0; i < void_size; i++) {
-            unsigned int vid;
+            NodeId vid;
             infile>>vid;
             void_nodes.push_back(vid);
         }
@@ -26,12 +26,12 @@ void AdaptivePrinter::filter_result() {
             int node_size;
             infile>>node_size;
             for (int i = 0; i < node_size; i++) {
-                unsigned int nid;
+                NodeId nid;
                 infile>>nid;
                 node_parti[nid][l-1] = cell_count;
             }
         }
-        for (unsigned int vid : void_nodes) {
+        for (NodeId vid : void_nodes) {
             node_parti[vid][l-1] = -1;
         }
     }
@@ -43,7 +43,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
     infile.open(node_path, ios::binary);
 
     vector<node_info_t> nodes;
-    unsigned int count;
+    NodeId count;
     infile.read((char*)&count, sizeof(uint32_t));
     if (count != node_num) {
         cout<<"count != code_num\n";
@@ -63,7 +63,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         int cell_num, void_num;
         infile>>void_num;
         for (int i = 0; i < void_num; i++) {
-            unsigned int vid;
+            NodeId vid;
             infile>>vid;
         }
         infile>>cell_num;
@@ -71,7 +71,7 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
             int node_size;
             infile>>node_size;
             for (int j = 0; j<node_size; j++) {
-                unsigned int nid;
+                NodeId nid;
                 infile>>nid;
                 outfile<<nodes[nid].geo_point.latitude<<","<<nodes[nid].geo_point.longitude<<";";
             }
@@ -97,8 +97,8 @@ void AdaptivePrinter::print_final_result() {
     }
 
 
-    vector<unsigned int> filtered_nodes;
-    for (unsigned int nid = 0; nid < node_num; nid++) {
+    vector<NodeId> filtered_nodes;
+    for (NodeId nid = 0; nid < node_num; nid++) {
         for (int l = 0; l < layer; l++) {
             outfile<<node_parti[nid][l]<<" ";
         }
