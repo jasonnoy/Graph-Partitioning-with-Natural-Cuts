@@ -202,7 +202,7 @@ void parallel_dfs_mark(vector<NodeID>& node_stack, vector<G_Node>& node_list, ve
     }//endf while
 }
 
-void G_Graph::parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0, int thread_num ){
+void G_Graph::parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, int thread_num, NodeSize size_lim = 0 ){
 
     vector<bool> node_visited( this->node_list.size(), false );
     vector<NodeID> node_stack;
