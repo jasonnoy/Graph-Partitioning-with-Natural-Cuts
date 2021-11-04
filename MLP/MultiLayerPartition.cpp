@@ -30,12 +30,12 @@ void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atom
 //    cout<<"bit map finished\n";
     vector<vector<NodeID>> cell_edges;
     vector<vector<NodeID>> anodes;
-    vector<vector<NodeId>> aedges;
+    vector<vector<NodeID>> aedges;
 
-    vector<vector<NodeId>> output_edges; // for ram storage
+    vector<vector<NodeID>> output_edges; // for ram storage
 
     //filter inner edges inside cell.
-    for (vector<NodeId> edge : graph_edges) {
+    for (vector<NodeID> edge : graph_edges) {
         if (node_map[edge[0]] && node_map[edge[1]]) {
             cell_edges.push_back(edge);
         }
@@ -90,7 +90,7 @@ void MultiLayerPartition::MLP() {
     infile.close();
     infile.clear(ios::goodbit);
 
-    NodeId count;
+    NodeID count;
 
     // read edges
     infile.open(in_edge_path);
@@ -102,7 +102,7 @@ void MultiLayerPartition::MLP() {
     cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
     for (int i = 0; i < count; i++) {
-        NodeId sid, tid;
+        NodeID sid, tid;
         infile>>sid>>tid;
         graph_edges[i].push_back(sid);
         graph_edges[i].push_back(tid);
@@ -182,16 +182,16 @@ void MultiLayerPartition::MLP() {
         }
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
-        vector<vector<NodeId>> cells;
+        vector<vector<NodeID>> cells;
         cells.reserve(count);
 //        outfile.open(out_node_path, ios::app);
         for (int i = 0; i < count; i++) {
-            NodeId cellSize;
+            NodeID cellSize;
             infile >> cellSize;
-            vector<NodeId> cell_nodes;
+            vector<NodeID> cell_nodes;
             cell_nodes.reserve(cellSize);
             for (int j = 0; j < cellSize; j++) {
-                NodeId nid;
+                NodeID nid;
                 infile >> nid;
                 cell_nodes.push_back(nid);
             }

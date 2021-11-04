@@ -65,7 +65,7 @@ void GraphPrinter::phantom_result() {
     fill_contracts();
     cout<<"aresult size: "<<a_result.size()<<endl;
     result_nodes.resize(a_result.size());
-    NodeId index = 0;
+    NodeID index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         result_nodes[index].reserve( cit->size() );
         result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
@@ -73,9 +73,9 @@ void GraphPrinter::phantom_result() {
 
     result_cuts.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
-        NodeId sid = cell_edges[i][0];
-        NodeId tid = cell_edges[i][1];
-        vector<NodeId> edge = {sid, tid};
+        NodeID sid = cell_edges[i][0];
+        NodeID tid = cell_edges[i][1];
+        vector<NodeID> edge = {sid, tid};
         result_cuts.push_back(edge);
     }
 }
@@ -84,7 +84,7 @@ void GraphPrinter::contract_tiny_cells() {
 //    cout<<"contract tiny cells..\n";
 //    int* num_cell = new int[cell_nodes.size()]();
 //    int cell_id = 0;
-//    vector<vector<NodeId>> node_edges;
+//    vector<vector<NodeID>> node_edges;
 //    node_edges.resize(cell_nodes.size());
 //    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, cell_id++) {
 //        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
@@ -98,7 +98,7 @@ void GraphPrinter::contract_tiny_cells() {
 //        }
 //        int* cell_count = new int[cell_iter->size()]();
 //        for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
-//            for (NodeId tid : node_edges[*nid]) {
+//            for (NodeID tid : node_edges[*nid]) {
 //                cell_count[num_cell[tid]]++;
 //            }
 ////            cell_count[num_cell[node_edges[*nid]]]++;
@@ -144,7 +144,7 @@ void GraphPrinter::contract_iso_cells() {
 void GraphPrinter::MLP_result() {
     fill_contracts();
     result_nodes.resize(a_result.size());
-    NodeId index = 0;
+    NodeID index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
         auto nit = cit->begin();
         result_nodes[index].reserve( 10 * cit->size() );
@@ -166,7 +166,7 @@ void GraphPrinter::MLP_result() {
             node_cell[real_map[*node_iter]] = index;
         }
     }
-    for (NodeId void_id : cell_void_nodes) {
+    for (NodeID void_id : cell_void_nodes) {
         if (void_id >= cell_nodes.size()) {
             cout<<"outsize void_id: "<<void_id<<endl;
         }
@@ -176,18 +176,18 @@ void GraphPrinter::MLP_result() {
     result_edges.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         // note: real ids
-        NodeId sid = cell_edges[i][0];
-        NodeId tid = cell_edges[i][1];
+        NodeID sid = cell_edges[i][0];
+        NodeID tid = cell_edges[i][1];
 //        if(node_cell[sid] * node_cell[tid] < 0)
 //            cout<<"node cell different\n";
         if (node_cell[sid] == node_cell[tid]){
-            vector<NodeId> edge = {sid, tid};
+            vector<NodeID> edge = {sid, tid};
             result_edges.push_back(edge);
             continue;
         }
         if (node_cell[sid] == -1 || node_cell[tid] == -1)
             continue;
-        vector<NodeId> cut = {sid, tid};
+        vector<NodeID> cut = {sid, tid};
         result_cuts.push_back(cut);
     }
 //    filter_edges();
@@ -202,10 +202,10 @@ void GraphPrinter::filter_edges() {
     }
     result_cuts.reserve(cell_edges.size());
     for (int i = 0; i < cell_edges.size(); i++) {
-        NodeId sid = cell_edges[i][0];
-        NodeId tid = cell_edges[i][1];
+        NodeID sid = cell_edges[i][0];
+        NodeID tid = cell_edges[i][1];
         if (edge_map[sid] && edge_map[tid]) {
-            vector<NodeId> edge = {sid, tid};
+            vector<NodeID> edge = {sid, tid};
             result_cuts.push_back(edge);
         }
     }
