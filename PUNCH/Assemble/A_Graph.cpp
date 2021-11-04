@@ -1481,7 +1481,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 		}
 
-		EdgeWeight min_weight = numeric_limits<unsigned int>::max();
+		EdgeWeight min_weight = numeric_limits<EdgeWeight>::max();
 		deque<Pool_Item>::iterator min_pos;
 		deque<Pool_Item>::iterator piit = pool.begin();
 		for(; piit != pool.end(); piit++){

@@ -21,7 +21,7 @@ typedef uint32_t NodeSize;
 
 //edge
 typedef uint32_t EdgeID;
-typedef uint8_t EdgeWeight;
+typedef uint32_t EdgeWeight;
 //typedef size_t EdgeID;
 //typedef size_t EdgeWeight;
 typedef unsigned long long Bits;
