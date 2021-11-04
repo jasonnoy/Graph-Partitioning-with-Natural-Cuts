@@ -16,7 +16,7 @@ private:
     G_Graph gGraph;
     const int U;
     const int C;
-    int F = 10;
+    const int F;
     const vector<unsigned int>& nodes;
     const vector<vector<unsigned int>>& edges;
     vector<vector<unsigned int>>& anodes;
@@ -29,15 +29,13 @@ private:
     void convert_and_output();
 public:
     Filter(int u, int c, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
-    U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+    U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), F(10), gGraph(c, 10){
     };
     Filter(int u, int c, int f, const vector<unsigned int>& in_nodes, const vector<vector<unsigned int>>& in_edges, vector<vector<unsigned int>>& a_nodes, vector<vector<unsigned int>>& a_edges):
-            U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+            U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), gGraph(c, f){
     };
     ~Filter() = default;
     void runFilter();
-    int getF(){return F;}
-    void setF(int f){F = f;}
     vector<vector<unsigned int>>& get_anodes(){return anodes;}
     vector<vector<unsigned int>>& get_aedges(){return aedges;}
     vector<unsigned int>& get_real_map(){return real_map;}
