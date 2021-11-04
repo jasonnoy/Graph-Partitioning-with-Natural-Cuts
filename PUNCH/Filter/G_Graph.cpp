@@ -374,7 +374,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 	vector< Bits >& b_bits, NodeID b ){
 
 		/*fill initial edges not in tree*/
-		NodeID int random = 0;
+		NodeID random = 0;
 
 		vector<bool> edge_prsd( this->get_edge_list().size(), false );
 		vector<bool>::const_iterator eit = edge_removed.begin();
