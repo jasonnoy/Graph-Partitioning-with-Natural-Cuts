@@ -19,7 +19,15 @@ void Filter::contract_tiny_cuts(){
     //make a dfs tree on the graph
     cout<<"get DFS tree...\n";
     vector<bool> edge_in_fi( gGraph.get_edge_list().size(), true );
-    gGraph.dfs_tree( 0, edge_in_fi, 0);
+    int thread_capacity = (thread_limit-thread_occupied)/thread_occupied;
+    time_t start, end;
+    time(&start);
+    if (thread_capacity > 1)
+        gGraph.parallel_dfs_tree(0, edge_in_fi, 0, thread_capacity);
+    else
+        gGraph.dfs_tree( 0, edge_in_fi, 0);
+    time(&end);
+    cout<<"Time cost: "<<end-time<<"s\n";
 
     size_t ten = 0;
     for( int i = 0; i < edge_in_fi.size(); i++ ){
@@ -95,7 +103,7 @@ void Filter::convert_and_output(){
 
 }
 
-void Filter::runFilter() {
+void Filter::runFilter(const int thread_occupied = 1, const int thread_limit = 1) {
     clock_t start, end;
     start = clock();
     read_in_graph();

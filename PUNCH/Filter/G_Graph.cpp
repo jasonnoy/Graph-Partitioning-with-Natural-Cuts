@@ -167,6 +167,66 @@ void G_Graph::dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_
 		return;
 }
 
+// parallel variables
+mutex lck;
+void parallel_dfs_mark(vector<NodeID>& node_stack, vector<G_Node>& node_list, vector<bool>& node_visited, vector<bool>& edge_removed, vector<NodeID>& sym_id){
+    while( !node_stack.empty() ){
+        unique_lock<mutex> mu_lock(lck);
+
+        NodeID n = node_stack.back();
+        node_stack.pop_back();
+
+        mu_lock.unlock();
+
+        auto it = node_list[n].get_adj_list().begin();
+        int i = 0;
+        for(; it != node_list[n].get_adj_list().end(); it++){
+            //NodeID t = it->second->get_target();
+            NodeID t = (*it)->get_target();
+            if( !node_visited[t] ){
+
+                //every two related edges should be updated at the same time
+                //EdgeID e2t = it->second->get_id();
+                EdgeID e2t = (*it)->get_id();
+                edge_removed[e2t] = false;
+                EdgeID e2s = sym_id[e2t];
+                edge_removed[e2s] = false;
+
+                mu_lock.lock();
+                node_stack.push_back( t );
+                mu_lock.unlock();
+
+                node_visited[t] = true;
+            }
+        }//end for
+    }//endf while
+}
+
+void G_Graph::parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim = 0, const int thread_num ){
+
+    vector<bool> node_visited( this->node_list.size(), false );
+    vector<NodeID> node_stack;
+    node_stack.reserve( this->node_list.size() );
+    ////////
+    // NodeSize total_sz = 0;
+    ////////
+
+    for (int i = 0; i < thread_num; i++){
+        int rand_num = rand() % node_list.size();
+        node_stack.push_back(rand_num);
+        node_visited[rand_num] = true;
+    }
+
+    vector<thread> ths;
+    for (int i = 0; i < thread_num; i++) {
+        ths.push_back(thread(parallel_dfs_mark, ref(node_stack), ref(this->node_list), ref(node_visited), ref(edge_removed), ref(this->sym_id)));
+    }
+    for (thread th : ths)
+        th.join();
+
+    return;
+}
+
 void G_Graph::two_cuts_edge_class( vector<bool>& edge_in_fi,
 	vector< vector<NodeID> >& edge_equl_cls ){
 

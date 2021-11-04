@@ -11,6 +11,8 @@
 #include <deque>
 #include <fstream>
 #include <iostream>
+#include <thread>
+#include <mutex>
 
 using namespace std;
 
@@ -91,6 +93,8 @@ public:
 	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<unsigned int>& real_map );
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
+
+    void parallel_dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim, const int thread_num );
 
 	void bfs_tree( NodeID start, vector<bool>& node_added, NodeSize size_lim ){
 		//////////////////////////
