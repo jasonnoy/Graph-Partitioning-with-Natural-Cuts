@@ -100,7 +100,7 @@ void Filter::convert_and_output(){
 
 }
 
-void Filter::runFilter(const int thread_occupied, const int thread_limit) {
+void Filter::runFilter() {
     this->thread_occupied = thread_occupied;
     this->thread_limit = thread_limit;
     clock_t start, end;
