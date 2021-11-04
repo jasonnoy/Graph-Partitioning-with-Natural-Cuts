@@ -19,13 +19,10 @@ void Filter::contract_tiny_cuts(){
     //make a dfs tree on the graph
     cout<<"get DFS tree...\n";
     vector<bool> edge_in_fi( gGraph.get_edge_list().size(), true );
-    int thread_capacity = (thread_limit-thread_occupied)/thread_occupied;
+//    int thread_capacity = (thread_limit-thread_occupied)/thread_occupied;
     time_t start, end;
     time(&start);
-    if (thread_capacity > 1)
-        gGraph.parallel_dfs_tree(0, edge_in_fi, 0, thread_capacity);
-    else
-        gGraph.dfs_tree( 0, edge_in_fi, 0);
+    gGraph.dfs_tree( 0, edge_in_fi, 0);
     time(&end);
     cout<<"Time cost: "<<end-start<<"s\n";
 
@@ -110,8 +107,8 @@ void Filter::runFilter(const int thread_occupied, const int thread_limit) {
     start = clock();
     read_in_graph();
     contract_tiny_cuts();
-    contract_natural_cuts();
-    convert_and_output();
+//    contract_natural_cuts();
+//    convert_and_output();
     end = clock();
     int time = (end - start) / CLOCKS_PER_SEC;
     cout<<"Filter run time: "<<time<<"s.\n";

@@ -22,8 +22,6 @@ private:
     vector<vector<unsigned int>>& anodes;
     vector<vector<unsigned int>>& aedges;
     vector<unsigned int> real_map;
-    int thread_occupied = 1;
-    int thread_limit = 1;
 
     void read_in_graph();
     void contract_tiny_cuts();
@@ -37,7 +35,7 @@ public:
             U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
     };
     ~Filter() = default;
-    void runFilter(const int thread_occupied, const int thread_limit);
+    void runFilter();
     int getF(){return F;}
     void setF(int f){F = f;}
     vector<vector<unsigned int>>& get_anodes(){return anodes;}
