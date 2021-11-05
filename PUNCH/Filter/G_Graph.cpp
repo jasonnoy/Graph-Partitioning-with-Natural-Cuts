@@ -780,6 +780,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 //                total_size += this->contract_node_list[cid].size();
 
                 // make sure every node is checked
+                if (comp_size > sz_lim)
+                    cout<<"comp size > sz_lim\n";
 				if( total_size + comp_size > sz_lim){
 
 					//no need to record neighbor, if a target node
@@ -844,7 +846,7 @@ NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
         // !! efficiency is too low
 		NodeID count = not_in_core.size();
         NodeID mileStone = 10000;
-        if (count % (node_list.size()/100) == 0 && count > mileStone )
+        if (count % (node_list.size()/10000) == 0 && count > mileStone )
             cout<<"Natural cut: "<<100 - not_in_core.size() * 100 / node_list.size()<<"%\r";
         if (count < mileStone)
             cout<<"Remaining id count: "<<count<<"\r";
