@@ -15,7 +15,7 @@ using namespace std;
 typedef uint32_t NodeID ;
 //typedef size_t NodeID ;
 typedef double Coordinate;
-typedef uint32_t NodeSize;
+typedef unsigned int NodeSize;
 //typedef size_t NodeSize;
 #define REALLATLNG 100000.0
 
