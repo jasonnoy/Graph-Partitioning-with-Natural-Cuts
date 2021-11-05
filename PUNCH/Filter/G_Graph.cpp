@@ -736,7 +736,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 //		bool * node_in_core = new bool[this->node_list.size()]();
 //        NodeID not_in_core = new NodeID[not_in_core_size]();
-        unordered_set<NodeID> not_in_core {this->node_list.size()};
+        unordered_set<NodeID> not_in_core {(unsigned int)this->node_list.size()};
         for (NodeID i = 0; i < this->node_list.size(); i++)
             not_in_core.insert(i);
         bool * node_visited = new bool[this->node_list.size()]();
@@ -852,7 +852,7 @@ NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
 			return -1u;
 
 		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-		int random = (int)( rand() % count );
+		NodeID random = (int)( rand() % count );
         auto iter = not_in_core.begin();
 
 		//DEBUG
