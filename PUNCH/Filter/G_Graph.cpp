@@ -734,13 +734,17 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
-		bool * node_in_core = new bool[this->node_list.size()]();
+//		bool * node_in_core = new bool[this->node_list.size()]();
+//        NodeID not_in_core = new NodeID[not_in_core_size]();
+        unordered_set<NodeID> not_in_core {this->node_list.size()};
+        for (NodeID i = 0; i < this->node_list.size(); i++)
+            not_in_core.insert(i);
         bool * node_visited = new bool[this->node_list.size()]();
 
 		NodeID nc = 0;
         NodeID count = 0;
 		while( true ){
-			nc = this->next_center( node_in_core );
+			nc = this->next_center( not_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
 
@@ -762,7 +766,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 			while( !nc_queue.empty() ){
 
 				NodeID n = nc_queue.front();
-				nc_queue.pop_front();
 
 				/*if( node_visited[n] ) continue;
 				this->mark_node_vis( n, node_visited );*/
@@ -778,7 +781,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
                 // make sure every node is checked
 				if( total_size + comp_size > sz_lim){
-                    nc_queue.insert(nc_queue.begin(), n);
 
 					//no need to record neighbor, if a target node
 					//cannot be found in all recorded nodes, it is
@@ -790,12 +792,14 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 					break;
 				}
+                nc_queue.pop_front();
                 total_size += comp_size;
 				if( total_size <= core_lim || first_always_add ){
 
 					//record the contracted node id
 					core.push_back( cid );
-					this->mark_node_vis( n, node_in_core );
+                    delete_node_in_core(not_in_core, n);
+//					this->mark_node_vis( n, node_in_core );
 					first_always_add = false;
 				}
 				else{
@@ -824,34 +828,37 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 		}
         delete[] node_visited;
-		delete[] node_in_core;
 
 	}
 	return;
 }
 
-NodeID G_Graph::next_center( bool node_in_core[] ){
+void G_Graph::delete_node_in_core(unordered_set<NodeID>& not_in_core, NodeID n) {
+    NodeID cid = this->contract_to[n];
+    for (NodeID nid : contract_node_list[cid])
+        not_in_core.erase(nid);
+    return;
+}
 
-		vector<NodeID> remain_id;
-		remain_id.reserve( this->node_list.size() );
-		for(int i = 0; i < this->node_list.size(); i++){
-			if( !node_in_core[i] )
-				remain_id.push_back(i);
-		}
-        if (remain_id.size() * 100 / node_list.size())
+NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
+        // !! efficiency is too low
+		NodeID count = not_in_core.size();
+        NodeID mileStone = 10000;
+        if (count % (node_list.size()/1000) == 0 && count > mileStone )
             cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_list.size()<<"%\r";
-        else
-            cout<<"Remaining ids: "<<remain_id.size()<<"\r";
-		if( remain_id.empty() )
+        if (count < mileStone)
+            cout<<"Remaining id count: "<<count<<"\r";
+		if( !count )
 			return -1u;
 
 		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-		int random = (int)( rand() % remain_id.size() );
+		int random = (int)( rand() % count );
+        auto iter = not_in_core.begin();
 
 		//DEBUG
 		//random = 0;
 
-		return remain_id[random];
+		return *(iter+random);
 }
 
 void G_Graph::mark_node_vis( NodeID nid, bool * mark_list ){
@@ -859,7 +866,7 @@ void G_Graph::mark_node_vis( NodeID nid, bool * mark_list ){
 		NodeID cid = this->contract_to[nid];
 		//if( cid ){ //have been contracted
 		vector<NodeID>::const_iterator nit = this->contract_node_list[cid].begin();
-		for(; nit != this->contract_node_list[cid].end(); nit++)
+		for(; nit != this->contract_node_list[cid].end(); ++nit)
 			mark_list[*nit] = true;
 		return;
 		//}

@@ -208,7 +208,7 @@ void MultiLayerPartition::MLP() {
 
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
-            cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\r";
+            cout<<"\nthread No."<<i<<"/"<<cells.size()-1<<" finished\n";
         }
 
         // option: 改写为不读取size

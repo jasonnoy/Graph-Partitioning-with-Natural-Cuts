@@ -13,6 +13,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <unordered_set>
 
 using namespace std;
 
@@ -160,9 +161,11 @@ private:
 
 	NodeSize cal_comp_size( const list<NodeID>& cnode_list );
 
-	NodeID next_center( bool node_in_core[] );
+	NodeID next_center( unordered_set<NodeID>& not_in_core );
 
 	void mark_node_vis( NodeID nid, bool * mark_list );
+
+    void delete_node_in_core(unordered_set<NodeID>& not_in_core, NodeID n);
 
 	void natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& core,
 		const vector<NodeID>& between_nodes );
