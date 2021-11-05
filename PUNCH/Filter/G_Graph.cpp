@@ -770,11 +770,14 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 				NodeID cid = this->contract_to[n];
 
 //				total_size++;
+                NodeSize comp_size = 0;
                 for (NodeID nid : contract_node_list[cid]) {
-                    total_size += contract_node_list[nid].size();
+                    comp_size += contract_node_list[nid].size();
                 }
 //                total_size += this->contract_node_list[cid].size();
-				if( total_size > sz_lim){
+                // make sure every node is checked
+				if( total_size + comp_size > sz_lim){
+                    nc_queue.push_back(n);
 
 					//no need to record neighbor, if a target node
 					//cannot be found in all recorded nodes, it is
@@ -786,6 +789,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 					break;
 				}
+                total_size += comp_size;
 				if( total_size <= core_lim || first_always_add ){
 
 					//record the contracted node id
