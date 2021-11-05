@@ -854,11 +854,12 @@ NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
 		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
 		NodeID random = (int)( rand() % count );
         auto iter = not_in_core.begin();
-
+        for (NodeID i = 0; i < random; i++)
+            ++iter;
 		//DEBUG
 		//random = 0;
 
-		return *(iter+random);
+		return *iter;
 }
 
 void G_Graph::mark_node_vis( NodeID nid, bool * mark_list ){
