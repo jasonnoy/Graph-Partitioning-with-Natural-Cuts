@@ -12,16 +12,16 @@ using namespace std;
 //#define NDEBUG
 
 //node
-typedef unsigned NodeID ;
+typedef uint32_t NodeID ;
 //typedef size_t NodeID ;
 typedef double Coordinate;
-typedef unsigned int NodeSize;
+typedef uint32_t NodeSize;
 //typedef size_t NodeSize;
 #define REALLATLNG 100000.0
 
 //edge
-typedef unsigned int EdgeID;
-typedef unsigned int EdgeWeight;
+typedef uint32_t EdgeID;
+typedef uint32_t EdgeWeight;
 //typedef size_t EdgeID;
 //typedef size_t EdgeWeight;
 typedef unsigned long long Bits;
