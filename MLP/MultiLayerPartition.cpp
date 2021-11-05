@@ -63,6 +63,70 @@ void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atom
     condition.notify_all();
 }
 
+void MultiLayerPartition::deal_phantom() {
+    clock_t start, end;
+    start = clock();
+    vector<vector<unsigned int>> graph_edges;
+    vector<unsigned int> graph_nodes;
+    cout<<"==============\n";
+    cout<<"PHANTOM LAYER"<<endl;
+    cout<<"==============\n";
+    U = 32, C = 1, FI = 10, M = 1, PS = 1;
+    cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+    read_Origin(graph_edges, graph_nodes);
+    vector<vector<unsigned int>> anodes;
+    vector<vector<unsigned int>> aedges;
+    Filter filter(U, C, FI, graph_nodes, graph_edges, anodes, aedges);
+    filter.runFilter();
+    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+    assembly.runAssembly();
+
+    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), graph_nodes, graph_edges, outPath, U, false);
+    graphPrinter.write_phantom_result();
+    cout<<"Phantom layer output finished\n";
+    end = clock();
+    int time = (end - start) / CLOCKS_PER_SEC;
+    cout<<"Phantom run time: "<<time<<"s.\n";
+}
+
+void MultiLayerPartition::read_Origin(vector<vector<unsigned int>>& graph_edges, vector<unsigned int>& graph_nodes) {
+    string in_edge_path = outPath + "layer0_edges.txt";
+    string in_node_path = outPath + "layer0_nodes.txt";
+    ifstream infile;
+    infile.open(in_node_path);
+    if (!infile.is_open()) {
+        cout<<"layer node file open failed!\n";
+        exit(1);
+    }
+    unsigned int node_size;
+    infile>>node_size;
+    graph_nodes.reserve(node_size);
+    for (unsigned int i = 0; i < node_size; i++){
+        graph_nodes.push_back(i);
+    }
+    infile.close();
+    infile.clear(ios::goodbit);
+
+    infile.open(in_edge_path);
+    if (!infile.is_open()) {
+        cout<<"graph edge file open failed!\n";
+        exit(1);
+    }
+    unsigned int edge_size;
+    infile>>edge_size;
+    graph_edges.resize(edge_size);
+    for (int i = 0; i < edge_size; i++) {
+        unsigned int sid, tid;
+        infile>>sid>>tid;
+        graph_edges[i].push_back(sid);
+        graph_edges[i].push_back(tid);
+//            graph_edges[i].push_back(weight);
+    }
+    infile.close();
+    infile.clear(ios::goodbit);
+    cout<<"Phantom layer read in "<<node_size<<" nodes and "<<edge_size<<" edges.\n";
+}
+
 void MultiLayerPartition::MLP() {
     cout<<"Server concurrency capacity: "<<thread::hardware_concurrency()<<endl;
 
@@ -89,39 +153,38 @@ void MultiLayerPartition::MLP() {
 //    vector<vector<vector<int>>> cut_edges_list;
     infile.close();
     infile.clear(ios::goodbit);
+    // deal phantom
+    if (!phantom){
+        cout<<"Run phantom layer...might take a long time.\n";
+        deal_phantom();
+    } else {
+        cout<<"Already has a phantom layer, skipping...\n";
+    }
 
+    // top-down MLP
     NodeID count;
 
-    // read edges
+    vector<vector<unsigned int>> graph_edges;
     infile.open(in_edge_path);
-    if (!infile.is_open()) {
-        cout<<"graph edge file open failed!\n";
-        exit(1);
-    }
     infile>>count;
-    cout<<"Input graph has "<<count<<" edges\n";
     graph_edges.resize(count);
-    for (int i = 0; i < count; i++) {
+    for (NodeID i = 0; i < count; i++) {
         NodeID sid, tid;
         infile>>sid>>tid;
         graph_edges[i].push_back(sid);
         graph_edges[i].push_back(tid);
-//            graph_edges[i].push_back(weight);
     }
     infile.close();
     infile.clear(ios::goodbit);
+    cout<<"Read in "<<count<<" edges from phantom layer\n";
 
-    // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
         cout<<"===========\n";
         cout<<"LAYER "<<l+1<<endl;
         cout<<"===========\n";
         int prefix = l == getL() - 1 ? -1 : l + 2;
-        if (prefix == -1 && !phantom) {
-//            phantom = true;
-        } else {
-            phantom = false;
-        }
+        phantom = false;
+
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
@@ -140,21 +203,10 @@ void MultiLayerPartition::MLP() {
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
         cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-//        if (phantom) {
-//            U = 32, C = 4, FI = 4, M = 4;
-//            l++;
-//            cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-//        } else {
-//            cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-//        }
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
         cout<<"input node: "<<in_node_path<<endl;
-        if (phantom) {
-            in_node_path = outPath + "layer0_nodes.txt";
-            in_edge_path = outPath + "layer0_edges.txt";
-        }
         // read nodes
         infile.open(in_node_path);
         if (!infile.is_open()) {
@@ -204,6 +256,7 @@ void MultiLayerPartition::MLP() {
         cout<<"Valid cells for next step: "<<count<<endl;
         cout<<"cell size: "<<cells.size()<<endl;
 
+
         // Parallel
         vector<thread> ths;
         current_occupied = cells.size() > thread_limit ? thread_limit : cells.size();
@@ -211,7 +264,45 @@ void MultiLayerPartition::MLP() {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
             ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
-        }
+
+//         for (auto cell_iter = cells.begin(); cell_iter != cells.end(); cell_count++, cell_iter++) {
+//             cout<<"------------\n";
+//             cout<<"CELL No."<<cell_count<<endl;
+//             cout<<"------------\n";
+//             bool* node_map = new bool[nodeNum](); // for finding edges in cell
+//             for (auto nid = cell_iter->begin(); nid != cell_iter->end(); nid++) {
+// //                cout<<"nid: "<<*nid<<endl;
+//                 node_map[*nid] = 1;
+//             }
+//             cout<<"bit map finished\n";
+//             vector<vector<unsigned int>> cell_edges;
+//             vector<vector<unsigned int>> anodes;
+//             vector<vector<unsigned int>> aedges;
+
+//             vector<vector<unsigned int>> output_edges; // for ram storage
+
+//             //filter inner edges inside cell.
+//             for (vector<unsigned int> edge : graph_edges) {
+//                 if (node_map[edge[0]] && node_map[edge[1]]) {
+//                     cell_edges.push_back(edge);
+//                 }
+//             }
+//             cout<<cell_iter->size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
+//             Filter filter(U, C, *cell_iter, cell_edges, anodes, aedges);
+//             filter.runFilter();
+//             Assembly assembly(U, FI, M, false, anodes, aedges, outPath, phantom); // ttodo: convert file into bin type, delete outpath intake
+//             assembly.runAssembly();
+// //            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
+// //            postProgress.runPostProgress();
+//             bool need_contract = l == getL() - 1;
+//             GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), *cell_iter, cell_edges, outPath, U, need_contract);
+//             graphPrinter.write_MLP_result(cur_layer, filter.get_real_map());
+//             void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
+//             cellCount += graphPrinter.nodes_result_size();
+//             edgeCount += graphPrinter.cuts_result_size();
+//             cout<<"Cell processing completed, cell cnt:"<<cellCount<<" edgeCnt: "<<edgeCount<<endl;
+//             delete[] node_map;
+//         }
 
         for (int i = 0; i < cells.size(); i++){
             ths[i].join();
@@ -254,6 +345,9 @@ int main(int argc, char** argv) {
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
         printf("<arg4> number of thread, must be an positive integer\n");
+
+//         printf("<arg5> has phantom layer or not, 1/0\n");
+
         exit(0);
     }
     time_t start, end;
@@ -269,6 +363,7 @@ int main(int argc, char** argv) {
         cout<<"input thread setting surpass 1/2 of the max capacity, please enter an integer no bigger than "<<hardware_threads / 2<<endl;
         exit(0);
     }
+//     bool hasPhantom(atoi(argv[5]));
 
     cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
@@ -278,7 +373,7 @@ int main(int argc, char** argv) {
     cout<<"Preprocess run time: "<<time_cost<<"s.\n";
 
 
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), hasPhantom);
     mlp.generateMLP();
 
 

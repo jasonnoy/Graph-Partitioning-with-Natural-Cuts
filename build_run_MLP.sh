@@ -4,9 +4,11 @@ time_str=$(date +%H%M%S)
 
 if [ -d bin ]
 then
+
   echo "bin file output dir ./bin"
 else
   echo "creating dir bin, bin file output dir ./bin"
+
   mkdir bin
 fi
 
@@ -20,7 +22,7 @@ fi
 
 if [ -d logs ]
 then
-  echo "log dir ./logs"
+  echo "log dir: ./logs"
 else
   echo "creating log dir ./logs"
   mkdir logs
@@ -28,18 +30,18 @@ fi
 
 if [ -d ./logs/"$date_str" ]
 then
-  echo "dir ./logs/$date_str exists"
+  echo "log output dir: ./logs/$date_str"
 else
-  echo "creating dir ./logs/$date_str"
+  echo "creating log output dir: ./logs/$date_str"
   mkdir "./logs/$date_str"
 fi
 
 if [ -f "./logs/$date_str/$time_str.log" ]
 then
-  echo "log .logs/$date_str/$time_str.log exists, creating $time_str _1"
+  echo "log .logs/$date_str/$time_str.log exists, log output to $time_str _1"
   touch ./logs/"$date_str"/"$time_str"_1.log || exit
 else
-  echo "output to .logs/$date_str/$time_str.log"
+  echo "log output to .logs/$date_str/$time_str.log"
   touch ./logs/"$date_str"/"$time_str".log || exit
 fi
 
@@ -49,4 +51,12 @@ g++ ./MLP/MultiLayerPartition.cpp -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp 
 
  ./bin/MLP ./data/paras.txt ./data/nodes_all ./data/links ./result/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
+if [ -f "./result/phantom_nodes.txt" ]
+then
+  echo "phantom_nodes file found."
+  ./bin/MLP ./data/paras.txt ./data/nodes_all ./data/links ./result/ 1 >> ./logs/"$date_str"/"$time_str".log 2>&1
+else
+  echo "phantom_nodes file not found."
+  ./bin/MLP ./data/paras.txt ./data/nodes_all ./data/links ./result/ 0 >> ./logs/"$date_str"/"$time_str".log 2>&1
+fi
 echo "Finished"

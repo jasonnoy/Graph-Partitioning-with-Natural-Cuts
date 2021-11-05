@@ -17,12 +17,14 @@ private:
     G_Graph gGraph;
     const int U;
     const int C;
+
     int F = 10;
     const vector<NodeID>& nodes;
     const vector<vector<NodeID>>& edges;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
     vector<NodeID> real_map;
+
 
     void read_in_graph();
     void contract_tiny_cuts();
@@ -42,6 +44,7 @@ public:
     vector<vector<NodeID>>& get_anodes(){return anodes;}
     vector<vector<NodeID>>& get_aedges(){return aedges;}
     vector<NodeID>& get_real_map(){return real_map;}
+
 };
 
 

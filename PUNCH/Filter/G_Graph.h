@@ -37,12 +37,13 @@ class G_Graph{
 
 public:
 	
-	G_Graph(){
-
-		//by default
-		DNCC = 1;
-		DNCF = 10;
+	G_Graph(unsigned int c, unsigned int f):DNCC(c), DNCF(f){
 	}
+
+    G_Graph() {
+        DNCC = 1;
+        DNCF = 10;
+    }
 
 	~G_Graph(){
 	}

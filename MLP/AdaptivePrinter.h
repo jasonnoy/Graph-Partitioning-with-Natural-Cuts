@@ -20,6 +20,8 @@ private:
     const int layer;
     const NodeID node_num;
     vector<vector<int>> node_parti;
+    vector<vector<unsigned int>> phantom_nodes;
+    void read_phantom_nodes();
 
 public:
     AdaptivePrinter(const string o_path, const int l, const NodeID n_num): out_path(o_path), layer(l), node_num(n_num){cell_nums.resize(l);}
