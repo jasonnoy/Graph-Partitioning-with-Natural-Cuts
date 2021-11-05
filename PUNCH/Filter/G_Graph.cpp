@@ -775,7 +775,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
                     if (!node_visited[nid])
                     total_size += contract_node_list[nid].size();
                 }
-				if( total_size > sz_lim && !core.empty() && !between_nodes.empty()){
+				if( total_size > sz_lim && !core.empty() ){
 
 					//no need to record neighbor, if a target node
 					//cannot be found in all recorded nodes, it is
