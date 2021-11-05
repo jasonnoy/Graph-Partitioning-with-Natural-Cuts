@@ -851,7 +851,7 @@ NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
             cout<<"Natural cut: "<<100 - not_in_core.size() * 100 / node_list.size()<<"%\r";
         if (count < mileStone)
             cout<<"Remaining id count: "<<count<<"\r";
-		if( !count )
+		if( count==1 )
 			return -1u;
 
 		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
