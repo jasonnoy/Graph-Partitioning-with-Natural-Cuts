@@ -26,12 +26,12 @@ void Preprocess::preprocess() {
         exit(1);
     }
 
-//    outfile<<"0\n"; // empty void nodes
+    outfile<<"0\n"; // empty void nodes
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<count<<" ";
+    outfile<<"1 "<<count<<" ";
     for (int i = 0; i < count; i++) {
         outfile<<i<<" ";
     }
