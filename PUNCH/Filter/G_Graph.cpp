@@ -770,11 +770,10 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 				NodeID cid = this->contract_to[n];
 
 //				total_size++;
-//                for (NodeID nid : contract_node_list[cid]) {
-//                    if (!node_visited[nid])
-//                    total_size += contract_node_list[nid].size();
-//                }
-                total_size += this->contract_node_list[cid].size();
+                for (NodeID nid : contract_node_list[cid]) {
+                    total_size += contract_node_list[nid].size();
+                }
+//                total_size += this->contract_node_list[cid].size();
 				if( total_size > sz_lim){
 
 					//no need to record neighbor, if a target node
