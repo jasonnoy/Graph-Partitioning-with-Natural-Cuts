@@ -846,7 +846,7 @@ NodeID G_Graph::next_center( unordered_set<NodeID>& not_in_core){
         // !! efficiency is too low
 		NodeID count = not_in_core.size();
         NodeID mileStone = 10000;
-        if (count % (node_list.size()/10000) == 0 && count > mileStone )
+        if ( count > mileStone )
             cout<<"Natural cut: "<<100 - not_in_core.size() * 100 / node_list.size()<<"%\r";
         if (count < mileStone)
             cout<<"Remaining id count: "<<count<<"\r";
