@@ -1704,6 +1704,8 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //            NodeSize comp_size = component.size();
 			NodeSize comp_size = this->cal_comp_size( component );
 			if( comp_size > max_comp_size ){
+                if (i < 0)
+                    cout<<"negative i: "<<i<<endl;
 				max_comp_pos = i;
 				max_comp_size = comp_size;
 			}
