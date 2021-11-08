@@ -125,10 +125,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-        if (cur_layer != "1") {
-            cout<<"not target, skip...\n";
-            continue;
-        }
+//        if (cur_layer != "1") {
+//            cout<<"not target, skip...\n";
+//            continue;
+//        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
@@ -232,7 +232,7 @@ void MultiLayerPartition::MLP() {
         for (int i = 0; i < thread_left; i++) {
             ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
-        for (int i = 0; i < thread_pool_capacity; i++){
+        for (int i = 0; i < thread_left; i++){
             ths[thread_count+i].join();
             cout<<thread_count+i<<"/"<<current_occupied<<" threads finished\n";
         }
