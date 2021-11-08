@@ -222,7 +222,7 @@ void MultiLayerPartition::MLP() {
             }
 
             for (int i = 0; i < thread_pool_capacity; i++){
-                ths[i].join();
+                ths[thread_count+i].join();
                 cout<<thread_count+i<<"/"<<current_occupied<<" threads finished\n";
             }
             thread_left -= thread_pool_capacity;
@@ -233,7 +233,7 @@ void MultiLayerPartition::MLP() {
             ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
         for (int i = 0; i < thread_pool_capacity; i++){
-            ths[i].join();
+            ths[thread_count+i].join();
             cout<<thread_count+i<<"/"<<current_occupied<<" threads finished\n";
         }
 
