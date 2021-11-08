@@ -1807,6 +1807,11 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
             return;
         }
 
+        if (component_tree[search_pos].children.empty()){
+            cout<<"children empty, returning\n";
+            return;
+        }
+
 		if( parent_pos != -1u )
 			component_tree[search_pos].parent = parent_pos;
 		vector<size_t> children_pos;
@@ -1820,6 +1825,9 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
+
+        if (component_tree[search_pos].children.empty())
+            cout<<"Children empty\n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 		chlit = component_tree[search_pos].children.begin();

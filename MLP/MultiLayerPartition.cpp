@@ -223,7 +223,7 @@ void MultiLayerPartition::MLP() {
 
             for (int i = 0; i < thread_pool_capacity; i++){
                 ths[thread_count+i].join();
-                cout<<thread_count+i<<"/"<<current_occupied<<" threads finished\n";
+                cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
             }
             thread_left -= thread_pool_capacity;
             thread_count += thread_pool_capacity;
@@ -234,7 +234,7 @@ void MultiLayerPartition::MLP() {
         }
         for (int i = 0; i < thread_left; i++){
             ths[thread_count+i].join();
-            cout<<thread_count+i<<"/"<<current_occupied<<" threads finished\n";
+            cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
         }
 
         // option: 改写为不读取size
