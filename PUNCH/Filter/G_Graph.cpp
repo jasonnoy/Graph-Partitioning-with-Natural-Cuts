@@ -1830,10 +1830,10 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
             cout<<"Children empty\n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
-		chlit = component_tree[search_pos].children.begin();
-		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-
-			size_t new_search_pos = *chlit;
+//		chlit = component_tree[search_pos].children.begin();
+//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+        for (NodeID chl_id : component_tree[search_pos].children){
+			size_t new_search_pos = chl_id;
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
 		return;
