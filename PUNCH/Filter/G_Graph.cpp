@@ -827,8 +827,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 			delete[] node_visited;
             big_loop_count++;
 		}
-        cout<<"avg natural cut time: "<<nc_timer/big_loop_count<<" avg bfs time: "<<bfs_timer/small_loop_count<<endl;
-        cout<<"small loop count: "<<small_loop_count<<", big loop count: "<<big_loop_count<<endl;
+        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
+        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
 		delete[] node_in_core;
 
 	}
