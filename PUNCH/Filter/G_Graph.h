@@ -180,7 +180,7 @@ private:
 	void cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, size_t root_p,
 		NodeSize sz_lim );
 
-	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
+	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 		comp_cnodes_to_pos, size_t search_pos, size_t parent_pos );
 
 	NodeID contract_cnodes( const list<NodeID>& cnode_list );

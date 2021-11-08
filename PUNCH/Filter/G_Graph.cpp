@@ -827,8 +827,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 			delete[] node_visited;
             big_loop_count++;
 		}
-        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
-        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
+//        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
+//        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
 		delete[] node_in_core;
 
 	}
@@ -1723,7 +1723,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		}
 
 		//now we have all the tree nodes and their sizes, then we build the tree
-		map<NodeID, size_t> comp_cnodes_to_pos;
+		map<NodeID, NodeID> comp_cnodes_to_pos;
 		for( i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
@@ -1799,7 +1799,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 		return;
 }
 
-void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
+void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, size_t search_pos, size_t parent_pos ){
 
         if (search_pos >= component_tree.size()){
