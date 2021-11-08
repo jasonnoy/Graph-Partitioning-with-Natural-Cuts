@@ -740,6 +740,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		check_new( node_in_core, "find natural cuts: node in core");
 		memset( node_in_core, false, this->node_list.size() );
         int big_loop_count = 0, small_loop_count = 0;
+        unsigned int nc_timer = 0, bfs_timer = 0;
 
 		NodeID nc = 0;
 
@@ -767,8 +768,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 			bool first_always_add = true;
 
+            auto bfs_start = chrono::steady_clock::now();
 			NodeSize total_size = 0;
-
 			while( !nc_queue.empty() ){
 
 				NodeID n = nc_queue.front();
@@ -813,16 +814,20 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 				}//end for all original nodes in the contracted node
                 small_loop_count++;
 			}//end while
+            auto bfs_end = chrono::steady_clock::now();
+            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+            bfs_timer += bfs_duration.count();
             // if () milli timer.
-            auto start = chrono::steady_clock::now();
+            auto nc_start = chrono::steady_clock::now();
             this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-            auto end = chrono::steady_clock::now();
-            auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-            cout<<"Natural cut process time cost: "<<duration.count()<<"ms\n";
+            auto nc_end = chrono::steady_clock::now();
+            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
+            nc_timer += nc_duration.count();
 
 			delete[] node_visited;
             big_loop_count++;
 		}
+        cout<<"avg natural cut time: "<<nc_timer/big_loop_count<<" avg bfs time: "<<bfs_timer/small_loop_count<<endl;
         cout<<"small loop count: "<<small_loop_count<<", big loop count: "<<big_loop_count<<endl;
 		delete[] node_in_core;
 
