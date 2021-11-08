@@ -739,6 +739,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		node_in_core = new bool[this->node_list.size()];
 		check_new( node_in_core, "find natural cuts: node in core");
 		memset( node_in_core, false, this->node_list.size() );
+        int big_loop_count = 0, small_loop_count = 0;
 
 		NodeID nc = 0;
 
@@ -780,15 +781,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 				total_size += this->contract_node_list[cid].size();
 				if( total_size > sz_lim ){
-
-					//no need to record neighbor, if a target node
-					//cannot be found in all recorded nodes, it is
-					//the neighbor (ring) node
-					//nc_queue.push_front( n );
-					//natural cuts mark array, core, ring-core between nodes
-					this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-					//this->natural_st_cuts_from_t( natural_cuts, core, between_nodes );
-
+                    // Go to natural cut process
 					break;
 				}
 				if( total_size <= core_lim || first_always_add ){
@@ -818,12 +811,19 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 					}//end for all targets
 				}//end for all original nodes in the contracted node
-
+                small_loop_count++;
 			}//end while
+            // if () milli timer.
+            auto start = chrono::steady_clock::now();
+            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+            auto end = chrono::steady_clock::now();
+            auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+            cout<<"Natural cut process time cost: "<<duration.count()<<"ms\n";
 
 			delete[] node_visited;
+            big_loop_count++;
 		}
-
+        cout<<"small loop count: "<<small_loop_count<<", big loop count: "<<big_loop_count<<endl;
 		delete[] node_in_core;
 
 	}
