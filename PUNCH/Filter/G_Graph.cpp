@@ -1730,7 +1730,7 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		}
 		//recursively link the tree
         if (component_tree.size())
-		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
+		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
 
 		return max_comp_pos;
 }
@@ -1812,7 +1812,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
             return;
         }
 
-		if( parent_pos != -1u )
+		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
 		vector<size_t> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
