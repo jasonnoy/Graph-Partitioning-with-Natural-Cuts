@@ -212,7 +212,7 @@ void MultiLayerPartition::MLP() {
         // Parallel
         vector<thread> ths;
         current_occupied = cells.size() > thread_limit ? thread_limit : cells.size();
-        int thread_left = current_occupied;
+        int thread_left = cells.size();
         int thread_count = 0;
         while (thread_left > thread_pool_capacity) {
             for (int i = 0; i < thread_pool_capacity; i++) {
