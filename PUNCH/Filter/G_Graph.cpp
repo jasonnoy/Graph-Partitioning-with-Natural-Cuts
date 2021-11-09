@@ -1657,7 +1657,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
 
-		for(; stnit != comp_start_node.end(); stnit++, i++){
+		for(; stnit != comp_start_node.end(); stnit++){
 
 			NodeID start = *stnit;
 
@@ -1700,7 +1700,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				}//for all contained nodes
 			}//while the component is expanding
             if( component.empty() ) {
-                i--; // match the tree size
                 continue;
             }
 
@@ -1709,8 +1708,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //            NodeSize comp_size = component.size();
 			NodeSize comp_size = this->cal_comp_size( component );
 			if( comp_size > max_comp_size ){
-                if (i < 0)
-                    cout<<"negative i: "<<i<<endl;
 				max_comp_pos = i;
 				max_comp_size = comp_size;
 			}
@@ -1719,12 +1716,12 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			tree_node.children.assign( children.begin(), children.end() );
 
 			component_tree.push_back( tree_node );
-
+            i++;
 		}
 
 		//now we have all the tree nodes and their sizes, then we build the tree
 		map<NodeID, NodeID> comp_cnodes_to_pos;
-		for( i = 0; i < component_tree.size(); i++ ){
+		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
