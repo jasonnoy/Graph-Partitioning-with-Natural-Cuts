@@ -13,7 +13,7 @@ using namespace std;
 
 //node
 typedef uint32_t NodeID ;
-//typedef size_t NodeID ;
+typedef size_t NodeID ;
 typedef double Coordinate;
 typedef uint32_t NodeSize;
 //typedef size_t NodeSize;

@@ -1814,7 +1814,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-		vector<size_t> children_pos;
+		vector<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
             if (!comp_cnodes_to_pos.count(*chlit)){
@@ -1837,7 +1837,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         for (NodeID chl_id : component_tree[search_pos].children){
-			size_t new_search_pos = chl_id;
+			NodeID new_search_pos = chl_id;
 			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
 		}
 		return;
