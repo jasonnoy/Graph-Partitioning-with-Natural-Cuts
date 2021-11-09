@@ -12,8 +12,8 @@ using namespace std;
 //#define NDEBUG
 
 //node
-typedef uint32_t NodeID ;
-typedef size_t NodeID ;
+typedef uint32_t NodeID;
+typedef NodeID size_t;
 typedef double Coordinate;
 typedef uint32_t NodeSize;
 //typedef size_t NodeSize;
