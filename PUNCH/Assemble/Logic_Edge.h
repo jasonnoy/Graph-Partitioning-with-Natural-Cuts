@@ -36,7 +36,7 @@ public:
 	NodeID target;
 	EdgeWeight weight;
 	double score;
-	//size_t counter;
+	//NodeID counter;
 };
 
 

@@ -97,7 +97,7 @@ public:
 		A_Graph& local_graph, 
 		//EdgeID next_eid,
 		//map<NodeID, NodeID>& old_to_final,
-		map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+		map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 		pair<NodeID, NodeID>& next_edge,
 		map<NodeID,NodeID>& old_to_local,
 		//set<NodeID>& cnt_neighbor_id,
@@ -122,9 +122,9 @@ public:
 
 	void convert_with_contract( F_Graph* g, contract_struct& c_s );
 
-	void initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph );
+	void initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph );
 
-	void initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+	void initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 		set< pair<NodeID, NodeID> >& random_edges );
 
 	void multistart_and_combination( vector< vector<NodeID> >& result, NodeSize sz_lim );
@@ -176,19 +176,19 @@ private:
 
 	double cal_edge_score(Logic_Edge& le);
 
-	void next_local_search_edge( map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+	void next_local_search_edge( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 		pair<NodeID, NodeID>& next_edge );
 
-	void delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+	void delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 		vector<NodeID>& delete_nodes );
 
-	void delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+	void delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 		vector<NodeID>& delete_nodes, set< pair<NodeID, NodeID> >& random_edges );
 
-	void add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >&logic_final_graph, 
+	void add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >&logic_final_graph,
 		vector<NodeID>& add_nodes );
 
-	void add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >&logic_final_graph, 
+	void add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >&logic_final_graph,
 		vector<NodeID>& add_nodes, set< pair<NodeID, NodeID> >& random_edges );
 
 	void cal_cut_set_weight( Pool_Item& pi );
@@ -201,7 +201,7 @@ private:
 
 	void replace_pool( deque<Pool_Item>& pool, Pool_Item& pi );
 
-	size_t set_sym_dif( const set<EdgeID>& s1, const set<EdgeID>& s2 );
+	NodeID set_sym_dif( const set<EdgeID>& s1, const set<EdgeID>& s2 );
 
 	void set_minus( const set<EdgeID>& head, const set<EdgeID>& tail, set<EdgeID>& result );
 

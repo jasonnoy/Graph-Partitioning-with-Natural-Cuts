@@ -26,7 +26,7 @@ void Filter::contract_tiny_cuts(){
     time(&end);
     cout<<"Time cost: "<<end-start<<"s\n";
 
-    size_t ten = 0;
+    NodeID ten = 0;
     for( int i = 0; i < edge_in_fi.size(); i++ ){
         if( !edge_in_fi[i] )
             ten++;
@@ -74,7 +74,7 @@ void Filter::contract_natural_cuts(){
     memset( natural_cuts, false, gGraph.get_edge_list().size() );
     gGraph.find_natural_cuts( natural_cuts, U );
 
-    size_t ten = 0;
+    NodeID ten = 0;
     for( int i = 0; i < gGraph.get_edge_list().size(); i++ ){
         if( natural_cuts[i])
             ten++;

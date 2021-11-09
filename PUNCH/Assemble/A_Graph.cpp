@@ -106,10 +106,10 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 		//intial contraction
         cout<<"Initial contraction...\n";
 		this->contract_to.resize( this->node_list.size() );
-		for( size_t i = 0; i < this->node_list.size(); i++ )
+		for( NodeID i = 0; i < this->node_list.size(); i++ )
 			contract_to[i] = i;
 		this->contract_node_list.resize( this->node_list.size() );
-		for( size_t i = 0; i < this->node_list.size(); i++ )
+		for( NodeID i = 0; i < this->node_list.size(); i++ )
 			this->contract_node_list[i].push_back( i );
         cout<<"Initial contraction done!\n";
 }
@@ -117,7 +117,7 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		//initialize the logic edge structure
 		vector<Logic_Edge> logic_edges;
-		map<NodeID, size_t> logic_edge_counter;
+		map<NodeID, NodeID> logic_edge_counter;
 		set<NodeID> node_deleted;
 		vector<NodeID> available_new_id;
 
@@ -125,7 +125,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		double score = 0.0;
 		Logic_Edge min_e;
 		vector<Logic_Edge>::iterator leit;
-		//size_t min_pos = 0;
+		//NodeID min_pos = 0;
 		//min_e.score = numeric_limits<double>::max();
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
 		logic_edges.reserve( 10 * this->edge_list.size() );
@@ -256,7 +256,7 @@ void A_Graph::greedy_algorithm( NodeSize sz_lim ){
 		double score = 0.0;
 		Logic_Edge min_e;
 		list<Logic_Edge>::iterator leit;
-		size_t min_pos = 0;
+		NodeID min_pos = 0;
 		min_e.score = numeric_limits<double>::max();
 
 		vector<A_Edge>::const_iterator eit = this->edge_list.begin();
@@ -335,7 +335,7 @@ void A_Graph::greedy_algorithm( NodeSize sz_lim ){
 			}//end if contract
 
 			//find next minimun score logic edge, remove it and loop
-			size_t pos_ct = 0;
+			NodeID pos_ct = 0;
 			min_pos = 0;
 			min_e.score = numeric_limits<double>::max();
 			if( logic_edges.empty() )
@@ -511,7 +511,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 		//map: old id (contracted node id) to new id
 		//map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -521,7 +521,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 		//node
 		ag->node_list.reserve( new_id );
 		NodeID s_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -539,7 +539,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
 		NodeID nt_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -599,7 +599,7 @@ void A_Graph::convert( F_Graph* ag ){
 		//map: old id (contracted node id) to new id
 		map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -609,7 +609,7 @@ void A_Graph::convert( F_Graph* ag ){
 		//node
 		ag->node_list.reserve( new_id );
 		NodeID s_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -627,7 +627,7 @@ void A_Graph::convert( F_Graph* ag ){
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
 		NodeID nt_id = 0;
-		for(size_t i = 0; i < this->contract_node_list.size(); i++){
+		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
 				continue;
@@ -689,15 +689,15 @@ void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 		//this->convert( &result_g, old_to_final );
 		
 		//logic_final_graph: < Source, < Target, Counter > >
-		map< NodeID, map<NodeID, size_t> > logic_final_graph;
+		map< NodeID, map<NodeID, NodeID> > logic_final_graph;
 		set< pair<NodeID, NodeID> > random_edges;
 		//this->initial_logic_final_edges( logic_final_graph );
 		this->initial_logic_final_edges( logic_final_graph, random_edges );
 
-		//map<NodeID, map<NodeID, size_t> >::const_iterator neit = logic_final_graph.begin();
+		//map<NodeID, map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
 		//for(; neit != logic_final_graph.end(); neit++){
 
-		//	map<NodeID, size_t>::const_iterator lseit = neit->second.begin();
+		//	map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
 		//	for(; lseit != neit->second.end(); lseit++){
 
 		//		pair<NodeID, NodeID> p( neit->first, lseit->first );
@@ -709,15 +709,15 @@ void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 		////initalize new contraction
 		//final_contraction.contract_node_list.resize( this->contract_node_list.size() );
 		//vector< vector<NodeID> >::const_iterator cnt_it = this->contract_node_list.begin();
-		//for(size_t i = 0; cnt_it != this->contract_node_list.end(); cnt_it++){
+		//for(NodeID i = 0; cnt_it != this->contract_node_list.end(); cnt_it++){
 		//	final_contraction.contract_node_list[i++].assign( cnt_it->begin(), cnt_it->end() );
 		//}
 		//final_contraction.contract_to.assign( this->contract_to.begin(), this->contract_to.end() );
 		//final_contraction.del_cnt_node.assign( this->del_cnt_node.begin(), this->del_cnt_node.end() );
 
-		//vector<size_t> edge_opt_cter( result_g.get_edge_list().size(), 0 );
+		//vector<NodeID> edge_opt_cter( result_g.get_edge_list().size(), 0 );
 		//EdgeID next_eid = 0; // or pair
-		//size_t fail_time_ct = 0;
+		//NodeID fail_time_ct = 0;
 		//while( next_eid < result_g.get_edge_list().size() ){
 		pair<NodeID, NodeID> next_edge;
 		set< pair<NodeID, NodeID> >::const_iterator next_pos;
@@ -801,7 +801,7 @@ void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 //void A_Graph::auxiliary_instance( F_Graph& result_g, A_Graph& local_graph, 
 //	EdgeID next_eid, map<NodeID, NodeID>& old_to_final, map<NodeID,NodeID>& old_to_local,
 //	set<NodeID>& cnt_neighbor_id, set<NodeID>& pair_fra_id ){
-void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	pair<NodeID, NodeID>& next_edge, map<NodeID,NodeID>& old_to_local, EdgeWeight& total_weight ){//,
 	//set<NodeID>& cnt_neighbor_id, set<NodeID>& pair_fra_id ){
 
@@ -834,7 +834,7 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 
 			//	cnt_neighbor_id.insert( final_to_old[(*nei_it)->get_target()] );
 			//}
-			map<NodeID, size_t>::const_iterator nei_it = logic_final_graph[pn1].begin();
+			map<NodeID, NodeID>::const_iterator nei_it = logic_final_graph[pn1].begin();
 			for(; nei_it != logic_final_graph[pn1].end(); nei_it++){
 
 				cnt_neighbor_id.insert( nei_it->first );
@@ -1021,12 +1021,12 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 			//local_graph.edge_list.resize( loc_e_id );
 
 			//intial contraction
-			size_t new_id = local_graph.node_list.size();
+			NodeID new_id = local_graph.node_list.size();
 			local_graph.contract_to.resize( new_id );
-			for( size_t i = 0; i < new_id; i++ )
+			for( NodeID i = 0; i < new_id; i++ )
 				local_graph.contract_to[i] = i;
 			local_graph.contract_node_list.resize( new_id );
-			for( size_t i = 0; i < new_id; i++ )
+			for( NodeID i = 0; i < new_id; i++ )
 				local_graph.contract_node_list[i].push_back( i );
 
 		}//end for local variables
@@ -1047,7 +1047,7 @@ void A_Graph::form_new_contraction( A_Graph& local_graph,
 		//initalize new contraction
 		new_contraction->contract_node_list.resize( this->contract_node_list.size() );
 		vector< vector<NodeID> >::const_iterator cnt_it = this->contract_node_list.begin();
-		for(size_t i = 0; cnt_it != this->contract_node_list.end(); cnt_it++){
+		for(NodeID i = 0; cnt_it != this->contract_node_list.end(); cnt_it++){
 			new_contraction->contract_node_list[i++].assign( cnt_it->begin(), cnt_it->end() );
 		}
 		new_contraction->contract_to.assign( this->contract_to.begin(), this->contract_to.end() );
@@ -1169,7 +1169,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		//map: old id (contracted node id) to new id
 		map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
-		for(size_t i = 0; i < c_s.contract_node_list.size(); i++){
+		for(NodeID i = 0; i < c_s.contract_node_list.size(); i++){
 
 			if( c_s.contract_node_list[i].empty() )
 				continue;
@@ -1179,7 +1179,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		//node
 		g->node_list.reserve( new_id );
 		NodeID s_id = 0;
-		for(size_t i = 0; i < c_s.contract_node_list.size(); i++){
+		for(NodeID i = 0; i < c_s.contract_node_list.size(); i++){
 
 			if( c_s.contract_node_list[i].empty() )
 				continue;
@@ -1196,7 +1196,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
 		NodeID nt_id = 0;
-		for(size_t i = 0; i < c_s.contract_node_list.size(); i++){
+		for(NodeID i = 0; i < c_s.contract_node_list.size(); i++){
 
 			if( c_s.contract_node_list[i].empty() )
 				continue;
@@ -1251,9 +1251,9 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		return;
 }
 
-void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph ){
+void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph ){
 
-		size_t s_id = 0;
+		NodeID s_id = 0;
 		vector< vector<NodeID> >::const_iterator sit = 
 			this->contract_node_list.begin();
 		for(; sit != this->contract_node_list.end(); sit++, s_id++){
@@ -1279,10 +1279,10 @@ void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logi
 		return;
 }
 
-void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	set< pair<NodeID, NodeID> >& random_edges){
 
-		size_t s_id = 0;
+		NodeID s_id = 0;
 		vector< vector<NodeID> >::const_iterator sit = 
 			this->contract_node_list.begin();
 		for(; sit != this->contract_node_list.end(); sit++, s_id++){
@@ -1309,14 +1309,14 @@ void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, size_t> >& logi
 		return;
 }
 
-void A_Graph::next_local_search_edge( map<NodeID, map<NodeID, size_t> >& logic_final_graph,
+void A_Graph::next_local_search_edge( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	pair<NodeID, NodeID>& next_edge ){
 
 		vector< pair<NodeID, NodeID> > random;
-		map<NodeID, map<NodeID, size_t> >::const_iterator neit = logic_final_graph.begin();
+		map<NodeID, map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
 		for(; neit != logic_final_graph.end(); neit++){
 
-			map<NodeID, size_t>::const_iterator lseit = neit->second.begin();
+			map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
 			for(; lseit != neit->second.end(); lseit++){
 
 				if( lseit->second < FI ){
@@ -1331,19 +1331,19 @@ void A_Graph::next_local_search_edge( map<NodeID, map<NodeID, size_t> >& logic_f
 			next_edge.second = -1;
 			return;
 		}
-		size_t r_pos = (size_t)( rand() % random.size() );
+		NodeID r_pos = (NodeID)( rand() % random.size() );
 		next_edge.first = random[r_pos].first;
 		next_edge.second = random[r_pos].second;
 		return;
 }
 
-void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& delete_nodes ){
 
 		vector<NodeID>::const_iterator dnit = delete_nodes.begin();
 		for(; dnit != delete_nodes.end(); dnit++){
 
-			map<NodeID, size_t>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
+			map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
 			for(; adjit != logic_final_graph[*dnit].end(); adjit++){
 
 				//erase <target, source>
@@ -1355,13 +1355,13 @@ void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic
 		return;
 }
 
-void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& delete_nodes, set< pair<NodeID, NodeID> >& random_edges ){
 
 		vector<NodeID>::const_iterator dnit = delete_nodes.begin();
 		for(; dnit != delete_nodes.end(); dnit++){
 
-			map<NodeID, size_t>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
+			map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
 			for(; adjit != logic_final_graph[*dnit].end(); adjit++){
 
 				//erase <target, source>
@@ -1375,7 +1375,7 @@ void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic
 		return;
 }
 
-void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& add_nodes ){
 
 		//only traverse souce node list
@@ -1401,7 +1401,7 @@ void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_fi
 		return;
 }
 
-void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_final_graph, 
+void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& add_nodes, set< pair<NodeID, NodeID> >& random_edges ){
 
 		//only traverse souce node list
@@ -1432,7 +1432,7 @@ void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, size_t> >& logic_fi
 void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 		
 		deque<Pool_Item> pool;
-		for(size_t iter = 0; iter < M; iter++){
+		for(NodeID iter = 0; iter < M; iter++){
 
 			VERBOSE(printf("Iteration %u ...\n", iter);)
 			Pool_Item pi;	//set<EdgeID> cut_edges;
@@ -1454,16 +1454,16 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			this->contract_node_list.clear();
 			this->del_cnt_node.clear();
 
-			size_t node_num = this->node_list.size();
+			NodeID node_num = this->node_list.size();
 			this->contract_to.resize( node_num );
 			this->contract_node_list.resize( node_num );
-			for( size_t i = 0; i < node_num; i++ ){
+			for( NodeID i = 0; i < node_num; i++ ){
 				this->contract_to[i] = i;
 				this->contract_node_list[i].push_back( i );
 			}
 
 			//pool item is ready
-			if( !this->use_combine || iter < (size_t)ceil(sqrt((double)M)) ){
+			if( !this->use_combine || iter < (NodeID)ceil(sqrt((double)M)) ){
 				pool.push_back( pi );
 			}
 			else{
@@ -1550,7 +1550,7 @@ void A_Graph::combine_two_pool_item( Pool_Item& pi_1, Pool_Item& pi_2, Pool_Item
 		for(; eit != this->edge_list.end(); eit++){
 
 			EdgeWeight w = eit->get_weight();
-			size_t num_of_contain = 0;
+			NodeID num_of_contain = 0;
 			if( pi_1.cut_edges.count( eit->get_id() ) ||
 				pi_1.cut_edges.count( this->sym_id[eit->get_id()] ) )
 				num_of_contain++;
@@ -1592,11 +1592,11 @@ void A_Graph::combine_two_pool_item( Pool_Item& pi_1, Pool_Item& pi_2, Pool_Item
 void A_Graph::pool_internal_random_combine( deque<Pool_Item>& pool, 
 	Pool_Item& pi_result, NodeSize sz_lim ){
 
-		size_t p1=0, p2=0;
-		p1 = (size_t)( rand() % pool.size() );
-		p2 = (size_t)( rand() % pool.size());
+		NodeID p1=0, p2=0;
+		p1 = (NodeID)( rand() % pool.size() );
+		p2 = (NodeID)( rand() % pool.size());
 		while( p2 == p1 ){
-			p2 = (size_t)( rand() % pool.size());
+			p2 = (NodeID)( rand() % pool.size());
 		}
 
 		this->combine_two_pool_item( pool[p1], pool[p2], pi_result, sz_lim );
@@ -1605,21 +1605,21 @@ void A_Graph::pool_internal_random_combine( deque<Pool_Item>& pool,
 
 void A_Graph::replace_pool( deque<Pool_Item>& pool, Pool_Item& pi ){
 		
-		size_t min_dif = numeric_limits<size_t>::max();
+		NodeID min_dif = numeric_limits<NodeID>::max();
 		deque<Pool_Item>::iterator del_pos;
 		deque<Pool_Item>::iterator piit = pool.begin();
 		for(; piit != pool.end(); piit++){
 
 			if( piit->item_weight < pi.item_weight )
 				continue;
-			size_t dif = this->set_sym_dif( piit->cut_edges, pi.cut_edges );
+			NodeID dif = this->set_sym_dif( piit->cut_edges, pi.cut_edges );
 			if( dif < min_dif ){
 
 				min_dif = dif;
 				del_pos = piit;
 			}
 		}
-		if( min_dif != numeric_limits<size_t>::max() ){
+		if( min_dif != numeric_limits<NodeID>::max() ){
 
 			pool.erase( del_pos );
 			pool.push_back( pi );
@@ -1627,7 +1627,7 @@ void A_Graph::replace_pool( deque<Pool_Item>& pool, Pool_Item& pi ){
 		return;
 }
 
-size_t A_Graph::set_sym_dif( const set<EdgeID>& s1, const set<EdgeID>& s2 ){
+NodeID A_Graph::set_sym_dif( const set<EdgeID>& s1, const set<EdgeID>& s2 ){
 		
 		set<EdgeID> s1_s2, s2_s1;
 		this->set_minus( s1, s2, s1_s2 );
