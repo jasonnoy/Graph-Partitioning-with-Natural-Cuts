@@ -1817,6 +1817,10 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		vector<size_t> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+            if (!comp_cnodes_to_pos.count(*chlit)){
+                cout<<"key "<<*chlit<<" not exists\n";
+                continue;
+            }
 
 			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
