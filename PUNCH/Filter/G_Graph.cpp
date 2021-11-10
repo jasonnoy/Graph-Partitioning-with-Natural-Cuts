@@ -1726,8 +1726,15 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				comp_cnodes_to_pos[*cnit] = i;
 		}
 		//recursively link the tree
-        if (component_tree.size())
-		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
+        if (component_tree.size()) {
+            if (max_comp_pos < component_tree.size()){
+                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
+            } else {
+                link_component( component_tree, comp_cnodes_to_pos, 0, numeric_limits<NodeID>::max());
+                cout<<"max_comp_pos oversize, redirecting search pos to 0.\n";
+            }
+        }
+
 
 		return max_comp_pos;
 }
@@ -1827,8 +1834,6 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 			}
 		}
 
-        if (component_tree[search_pos].children.empty())
-            cout<<"Children empty\n";
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
 //		chlit = component_tree[search_pos].children.begin();
@@ -1838,6 +1843,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
                 NodeID new_search_pos = chl_id;
                 this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
             }
+        } else {
+            cout<<"search_pos oversize, skipping current linking process.\n";
         }
 		return;
 }
