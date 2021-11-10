@@ -1808,9 +1808,9 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 
         if (search_pos >= component_tree.size()){
             cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
-            cout<<"parent pos: "<<parent_pos<<" is default parent: "<<(parent_pos==numeric_limits<NodeID>::max())<<endl;
+            cout<<"parent pos: "<<parent_pos<<"; max pos: "<<numeric_limits<NodeID>::max()<<endl;
             search_pos = component_tree.size() - 1;
-            cout<<"redirecting search pos to"<<search_pos<<endl;
+            cout<<"redirecting search pos to "<<search_pos<<endl;
         }
 
 		if( parent_pos != numeric_limits<NodeID>::max())
