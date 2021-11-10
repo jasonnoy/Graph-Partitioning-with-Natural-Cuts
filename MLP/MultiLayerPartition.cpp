@@ -7,7 +7,7 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
-const int thread_pool_capacity = 2048; // the max threads that can be started at the same timed limited by linux system.
+const int thread_pool_capacity = 128; // the max threads that can be started at the same timed limited by linux system.
 atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
