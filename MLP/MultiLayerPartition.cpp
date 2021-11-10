@@ -7,7 +7,7 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
-const int thread_pool_capacity = 128; // the max threads that can be started at the same timed limited by linux system.
+const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
 atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
@@ -125,10 +125,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-//        if (cur_layer != "1") {
-//            cout<<"not target, skip...\n";
-//            continue;
-//        }
+        if (l + 1 > 2) {
+            cout<<"not target, skip...\n";
+            continue;
+        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
