@@ -62,6 +62,7 @@ void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atom
     edgeCount += graphPrinter.cuts_result_size();
     process_count--;
     condition.notify_all();
+    delete node_map[];
 }
 
 void MultiLayerPartition::MLP() {
