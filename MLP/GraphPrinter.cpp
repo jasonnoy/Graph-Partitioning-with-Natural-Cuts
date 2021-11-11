@@ -209,7 +209,7 @@ void GraphPrinter::filter_edges() {
             result_cuts.push_back(edge);
         }
     }
-    delete edge_map[];
+    delete [] edge_map;
 }
 
 void GraphPrinter::fill_contracts() {
