@@ -28,7 +28,7 @@ void contract_tiny_cuts( G_Graph &graph, NodeSize sz_lim ){
 	vector<bool> edge_in_fi( graph.get_edge_list().size(), true );
 	graph.dfs_tree( 10000, edge_in_fi, 0);
 	VERBOSE(
-		size_t ten = 0;
+		NodeID ten = 0;
 		for( int i = 0; i < edge_in_fi.size(); i++ ){
 			if( edge_in_fi[i] == false )
 				ten++;
@@ -85,7 +85,7 @@ void contract_natural_cuts( G_Graph &graph, NodeSize sz_lim ){
 	graph.find_natural_cuts( natural_cuts, sz_lim );
 
 	VERBOSE(
-		size_t ten = 0;
+		NodeID ten = 0;
 		for( int i = 0; i < graph.get_edge_list().size(); i++ ){
 			if( natural_cuts[i] == true )
 				ten++;

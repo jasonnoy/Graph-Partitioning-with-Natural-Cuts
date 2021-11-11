@@ -35,7 +35,7 @@ public:
 
 	//bool operator < ( const Edge_sort& es ) const {
 
-	//	size_t len = this->bits_pt->size();
+	//	NodeID len = this->bits_pt->size();
 	//	vector<bool>::const_iterator bit1 = this->bits_pt->begin();
 	//	vector<bool>::const_iterator bit2 = es.bits_pt->begin();
 
@@ -54,7 +54,7 @@ public:
 
 	//bool operator == ( const Edge_sort& es ) const {
 
-	//	size_t len = this->bits_pt->size();
+	//	NodeID len = this->bits_pt->size();
 	//	vector<bool>::const_iterator bit1 = this->bits_pt->begin();
 	//	vector<bool>::const_iterator bit2 = es.bits_pt->begin();
 

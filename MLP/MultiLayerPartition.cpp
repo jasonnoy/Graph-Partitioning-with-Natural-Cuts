@@ -7,6 +7,7 @@
 // Parallel global variables.
 condition_variable condition, file_condition;
 mutex m_lock, file_lock;
+const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
 atomic<int> process_count(0);
 
 const unsigned int hardware_threads = thread::hardware_concurrency();
@@ -124,6 +125,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
+        if (l + 1 > 1) {
+            cout<<"not target, skip...\n";
+            continue;
+        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
@@ -207,15 +212,29 @@ void MultiLayerPartition::MLP() {
         // Parallel
         vector<thread> ths;
         current_occupied = cells.size() > thread_limit ? thread_limit : cells.size();
-        for (int i = 0; i < cells.size(); i++) {
+        int thread_left = cells.size();
+        int thread_count = 0;
+        while (thread_left > thread_pool_capacity) {
+            for (int i = 0; i < thread_pool_capacity; i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-            ths.push_back(thread(dealCell, i, l, cur_layer, ref(cells[i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
-        }
+                ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+            }
 
-        for (int i = 0; i < cells.size(); i++){
-            ths[i].join();
-            cout<<"thread No."<<i<<"/"<<cells.size()-1<<" finished\r";
+            for (int i = 0; i < thread_pool_capacity; i++){
+                ths[thread_count+i].join();
+                cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
+            }
+            thread_left -= thread_pool_capacity;
+            thread_count += thread_pool_capacity;
+        }
+        // now there is enough thread space for the rest threads
+        for (int i = 0; i < thread_left; i++) {
+            ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+        }
+        for (int i = 0; i < thread_left; i++){
+            ths[thread_count+i].join();
+            cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
         }
 
         // option: 改写为不读取size
@@ -286,7 +305,7 @@ int main(int argc, char** argv) {
     AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result();
-    adaptivePrinter.print_result_for_show(nodePath, edgePath);
+//    adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
     end = time(&end);
     time_cost = end - start;

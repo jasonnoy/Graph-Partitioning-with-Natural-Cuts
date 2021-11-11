@@ -13,6 +13,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <chrono>
 
 using namespace std;
 
@@ -27,8 +28,8 @@ using namespace std;
 struct edge_cncted_comp{
 
 	list<NodeID> component; //here the node ID is the contracted node ID
-	list<NodeID> children; //the node ID is actually size_t, position of its children
-	NodeID parent; //the node ID is actually size_t, position of its parent
+	list<NodeID> children; //the node ID is actually NodeID, position of its children
+	NodeID parent; //the node ID is actually NodeID, position of its parent
 	NodeID neighbor_id_in_parent;
 	NodeSize subtree_size; //zero means the tree node is removed or merged with parent
 };
@@ -172,24 +173,24 @@ private:
 
 	void contract_nodes( const deque<NodeID>& node_list );
 
-	size_t build_component_tree( const vector<EdgeID>& one_cut_edges, 
+	NodeID build_component_tree( const vector<EdgeID>& one_cut_edges,
 		vector<edge_cncted_comp>& component_tree );
 
-	NodeSize fill_subtree_size( vector<edge_cncted_comp>& component_tree, size_t root_p );
+	NodeSize fill_subtree_size( vector<edge_cncted_comp>& component_tree, NodeID root_p );
 
-	void cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, size_t root_p,
+	void cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, NodeID root_p,
 		NodeSize sz_lim );
 
-	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
-		comp_cnodes_to_pos, size_t search_pos, size_t parent_pos );
+	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
+		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos );
 
 	NodeID contract_cnodes( const list<NodeID>& cnode_list );
 
 	NodeID contract_child_to_parent( NodeID child, NodeID parent );
 
-	NodeID contract_subtree( vector<edge_cncted_comp>& component_tree, size_t root_pos );
+	NodeID contract_subtree( vector<edge_cncted_comp>& component_tree, NodeID root_pos );
 
-	void find_all_comp( vector<edge_cncted_comp>& component_tree, size_t root_pos, 
+	void find_all_comp( vector<edge_cncted_comp>& component_tree, NodeID root_pos,
 		list<NodeID>& all_comp );
 
 };

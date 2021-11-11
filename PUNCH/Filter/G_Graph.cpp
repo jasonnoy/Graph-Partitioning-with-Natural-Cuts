@@ -100,7 +100,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
 //    edge_list.reserve(this->edge_list.size() * 2);
 //    cout<<"counter: "<<counter<<endl;
-//    size_t eid = counter;
+//    NodeID eid = counter;
 //    for (int i = 0; i < counter; i++) {
 //        auto sym_edge_iter = this->node_list[edge_list[i].get_target()].get_adj_list().begin();
 //        for (; sym_edge_iter != this->node_list[edge_list[i].get_target()].get_adj_list().end(); sym_edge_iter++) {
@@ -120,10 +120,10 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     //initial contraction
     this->contract_to.resize( this->node_list.size() );
-    for( size_t i = 0; i < this->node_list.size(); i++ )
+    for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
     this->contract_node_list.resize( this->node_list.size() );
-    for( size_t i = 0; i < this->node_list.size(); i++ )
+    for( NodeID i = 0; i < this->node_list.size(); i++ )
         this->contract_node_list[i].push_back( i );
     cout<<"initial contraction done\n";
 }
@@ -262,7 +262,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
 				continue;
 
-			size_t comp_lim = ecit->size()/2 - 1; // k - number of connected components
+			NodeID comp_lim = ecit->size()/2 - 1; // k - number of connected components
 
 			//close edges in this class
 			//and initially mark class edges unvisited
@@ -286,11 +286,11 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 			stacks[1].push_back( this->edge_list[eid].get_target() );
 
 			//find small components to contract
-			size_t di = 1;
+			NodeID di = 1;
 			vector< vector<NodeID> > component;
 			component.resize( 2 );
 			EdgeID neid[2] = {0,0};
-			size_t comp_cnt = 0;
+			NodeID comp_cnt = 0;
 			while( !stacks[0].empty() && !stacks[1].empty() ){
 
 				/*
@@ -382,7 +382,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 				random = (NodeID)rand(); //rand (0, 2^15)
 				random &= 0x0000000f;          // 只保留后四位
 				b_bits[b_id] |= random;
-				for( size_t i = 0; i < 4 ; i++ ){
+				for( NodeID i = 0; i < 4 ; i++ ){
 
 					random = (NodeID)rand(); //rand (0, 2^15)
 					b_bits[b_id] <<= 15;
@@ -398,14 +398,14 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 		/*fill all edges in tree*/
 
 		//count every node remain edges
-		vector<size_t>			node_rem_edge( this->get_node_list().size() );
+		vector<NodeID>			node_rem_edge( this->get_node_list().size() );
 		vector< set<NodeID> >	degree_node;
 
 		vector<G_Node>::iterator nit = this->get_node_list().begin();
-		vector<size_t>::iterator cn_it = node_rem_edge.begin();
+		vector<NodeID>::iterator cn_it = node_rem_edge.begin();
 		for(; nit != this->get_node_list().end(); nit++, cn_it++ ){
 
-			size_t remain_edge_count = nit->get_adj_list().size();
+			NodeID remain_edge_count = nit->get_adj_list().size();
 			//map<NodeID, G_Edge*>::iterator eit = nit->get_adj_list().begin();
 			vector<G_Edge*>::iterator eit = nit->get_adj_list().begin();
 			for(; eit != nit->get_adj_list().end(); eit++){
@@ -446,7 +446,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 			edge_removed[eid] = true;
 			edge_removed[this->sym_edge_id(eid)] = true;
 
-			size_t td = 0;
+			NodeID td = 0;
 			td = node_rem_edge[(*eit)->get_target()];
 			degree_node[td].erase( degree_node[td].find((*eit)->get_target()) );
 			node_rem_edge[(*eit)->get_target()]--;
@@ -476,7 +476,7 @@ void G_Graph::classify_edge( const vector< Bits >& b_bit_list,
 
 			//O(nlogn) sort, need more spaces
 			list< Edge_sort > sort_bits;
-			for( size_t i = 0; i < b_bit_list.size(); i++ ){
+			for( NodeID i = 0; i < b_bit_list.size(); i++ ){
 
 				Edge_sort tes( i, b_bit_list[i] );
 				sort_bits.push_back( tes );
@@ -485,7 +485,7 @@ void G_Graph::classify_edge( const vector< Bits >& b_bit_list,
 			sort_bits.sort();
 
 			edge_classes.resize( this->edge_list.size() );
-			size_t new_class = 0;
+			NodeID new_class = 0;
 			Edge_sort cmp( sort_bits.front() );
 			//edge_classes[new_class].push_back( cmp.eid );
 
@@ -634,7 +634,7 @@ void G_Graph::cnt_two_degree_path( NodeSize sz_lim ){
 
 							   nit = this->node_list.begin();
 		vector<bool>::iterator vis_it = node_visited.begin();
-		size_t nid = 0;
+		NodeID nid = 0;
 		for(; nit != this->node_list.end(); nit++, vis_it++, nid++ ){
 
 			if( *vis_it ) continue;
@@ -731,19 +731,29 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 	
 	//dectect natural cuts C times
 	for( int t = 0; t < DNCC; t++ ){
+
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
-		bool * node_in_core = new bool[this->node_list.size()]();
-        bool * node_visited = new bool[this->node_list.size()]();
+		bool * node_in_core = NULL;
+		node_in_core = new bool[this->node_list.size()];
+		check_new( node_in_core, "find natural cuts: node in core");
+		memset( node_in_core, false, this->node_list.size() );
+        int big_loop_count = 0, small_loop_count = 0;
+        unsigned int nc_timer = 0, bfs_timer = 0;
 
 		NodeID nc = 0;
-        NodeID count = 0;
+
 		while( true ){
-            cout<<count++<<endl;
+
 			nc = this->next_center( node_in_core );
 			if( nc == -1u ) //0xffffffff )
 				break;
+
+			bool * node_visited = NULL;
+			node_visited = new bool[this->node_list.size()];
+			check_new( node_visited, "find natural cuts: node visited");
+			memset( node_visited, false, this->node_list.size() );
 
 			deque<NodeID> core; //core and between_nodes all contain the contracted id
 			vector<NodeID> between_nodes;
@@ -758,8 +768,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 			bool first_always_add = true;
 
+            auto bfs_start = chrono::steady_clock::now();
 			NodeSize total_size = 0;
-
 			while( !nc_queue.empty() ){
 
 				NodeID n = nc_queue.front();
@@ -770,21 +780,9 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 				NodeID cid = this->contract_to[n];
 
-				total_size++; // contracted nodes shouldn't be counted
-//                for (NodeID nid : contract_node_list[cid]) {
-//                    if (!node_visited[nid])
-//                    total_size += contract_node_list[nid].size();
-//                }
+				total_size += this->contract_node_list[cid].size();
 				if( total_size > sz_lim ){
-
-					//no need to record neighbor, if a target node
-					//cannot be found in all recorded nodes, it is
-					//the neighbor (ring) node
-					//nc_queue.push_front( n );
-					//natural cuts mark array, core, ring-core between nodes
-					this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-					//this->natural_st_cuts_from_t( natural_cuts, core, between_nodes );
-
+                    // Go to natural cut process
 					break;
 				}
 				if( total_size <= core_lim || first_always_add ){
@@ -814,12 +812,23 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 					}//end for all targets
 				}//end for all original nodes in the contracted node
-
+                small_loop_count++;
 			}//end while
+            auto bfs_end = chrono::steady_clock::now();
+            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+            bfs_timer += bfs_duration.count();
+            // if () milli timer.
+            auto nc_start = chrono::steady_clock::now();
+            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+            auto nc_end = chrono::steady_clock::now();
+            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
+            nc_timer += nc_duration.count();
 
-
+			delete[] node_visited;
+            big_loop_count++;
 		}
-        delete[] node_visited;
+//        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
+//        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
 		delete[] node_in_core;
 
 	}
@@ -1442,7 +1451,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 		//map: old id (contracted node id) to new id
 		map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
-		size_t i = 0;
+		NodeID i = 0;
 		for( i = 0; i < this->contract_node_list.size(); i++){
 
 			if( this->contract_node_list[i].empty() )
@@ -1603,7 +1612,7 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 
 		vector<edge_cncted_comp> component_tree;
 
-		size_t root_pos;
+		NodeID root_pos;
 		//build component tree T
         cout<<"building comp tree...\n";
 		root_pos = this->build_component_tree( one_cut_edges, component_tree );
@@ -1624,7 +1633,7 @@ void G_Graph::cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim
 		return;
 }
 
-size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges, 
+NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 	vector<edge_cncted_comp>& component_tree ){
 
 		set<NodeID> comp_start_node; //the node id is the contracted node id
@@ -1643,12 +1652,12 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 		bool * node_visited = new bool[this->contract_node_list.size()]();
 
-		size_t max_comp_pos = 0;
-		size_t i = 0;
+		NodeID max_comp_pos = 0;
+		NodeID i = 0;
 		NodeSize max_comp_size = numeric_limits<NodeSize>::min();
 		set<NodeID>::const_iterator stnit = comp_start_node.begin();
 
-		for(; stnit != comp_start_node.end(); stnit++, i++){
+		for(; stnit != comp_start_node.end(); stnit++){
 
 			NodeID start = *stnit;
 
@@ -1691,7 +1700,6 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				}//for all contained nodes
 			}//while the component is expanding
             if( component.empty() ) {
-                i--; // match the tree size
                 continue;
             }
 
@@ -1708,24 +1716,30 @@ size_t G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			tree_node.children.assign( children.begin(), children.end() );
 
 			component_tree.push_back( tree_node );
-
+            i++;
 		}
-        delete [] node_visited;
 
 		//now we have all the tree nodes and their sizes, then we build the tree
-		map<NodeID, size_t> comp_cnodes_to_pos;
-		for( i = 0; i < component_tree.size(); i++ ){
+		map<NodeID, NodeID> comp_cnodes_to_pos;
+		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
 		//recursively link the tree
-        if (component_tree.size())
-		    this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, -1u );
+        if (component_tree.size()) {
+            if (max_comp_pos < component_tree.size()){
+                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
+            } else {
+                link_component( component_tree, comp_cnodes_to_pos, 0, numeric_limits<NodeID>::max());
+                cout<<"max_comp_pos oversize, redirecting search pos to 0.\n";
+            }
+        }
+
 
 		return max_comp_pos;
 }
 
-NodeSize G_Graph::fill_subtree_size( vector<edge_cncted_comp>& component_tree, size_t root_p ){
+NodeSize G_Graph::fill_subtree_size( vector<edge_cncted_comp>& component_tree, NodeID root_p ){
 		
 		if( component_tree[root_p].children.empty() )
 			return component_tree[root_p].subtree_size; //leaf node size
@@ -1739,7 +1753,7 @@ NodeSize G_Graph::fill_subtree_size( vector<edge_cncted_comp>& component_tree, s
 		return component_tree[root_p].subtree_size;
 }
 
-void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, size_t root_p,
+void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, NodeID root_p,
 	NodeSize sz_lim ){
 
 		//just in case
@@ -1769,7 +1783,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 						/* actually I think there is no need to mantain the tree
 						/* for we just use it for once and no more operations on it
 						 */
-						//size_t parent = component_tree[root_p].parent;
+						//NodeID parent = component_tree[root_p].parent;
 						//component_tree[parent].children.remove( root_p );
 
 						component_tree[root_p].neighbor_id_in_parent = new_merge_id;
@@ -1789,19 +1803,25 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 		return;
 }
 
-void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, size_t>&
-	comp_cnodes_to_pos, size_t search_pos, size_t parent_pos ){
+void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
+	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos ){
 
-        if (search_pos >= component_tree.size()){
-            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
-            return;
-        }
+//        if (search_pos >= component_tree.size()){
+//            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
+//            cout<<"parent pos: "<<parent_pos<<"; max pos: "<<numeric_limits<NodeID>::max()<<endl;
+//            search_pos = component_tree.size() - 1;
+//            cout<<"redirecting search pos to "<<search_pos<<endl;
+//        }
 
-		if( parent_pos != -1u )
+		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-		vector<size_t> children_pos;
+		vector<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+//            if (!comp_cnodes_to_pos.count(*chlit)){
+//                cout<<"key "<<*chlit<<" not exists\n";
+//                continue;
+//            }
 
 			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
@@ -1810,25 +1830,32 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
+//        if (children_pos.empty())
+//            cout<<"children_pos empty.\n";
+
 		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
 		//recursively link
-		chlit = component_tree[search_pos].children.begin();
-		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-
-			size_t new_search_pos = *chlit;
-			this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
-		}
+//		chlit = component_tree[search_pos].children.begin();
+//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+        if (search_pos < component_tree.size()) {
+            for (NodeID chl_id : component_tree[search_pos].children){
+                NodeID new_search_pos = chl_id;
+                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
+            }
+        } else {
+            cout<<"search_pos oversize, skipping current linking process.\n";
+        }
 		return;
 }
 
-NodeID G_Graph::contract_subtree( vector<edge_cncted_comp>& component_tree, size_t root_pos ){
+NodeID G_Graph::contract_subtree( vector<edge_cncted_comp>& component_tree, NodeID root_pos ){
 		
 		list<NodeID> all_comp;
 		this->find_all_comp( component_tree, root_pos, all_comp );
 		return this->contract_cnodes( all_comp );
 }
 
-void G_Graph::find_all_comp( vector<edge_cncted_comp>& component_tree, size_t root_pos, 
+void G_Graph::find_all_comp( vector<edge_cncted_comp>& component_tree, NodeID root_pos,
 	list<NodeID>& all_comp ){
 
 		all_comp.insert( all_comp.end(), component_tree[root_pos].component.begin(),
@@ -1837,7 +1864,7 @@ void G_Graph::find_all_comp( vector<edge_cncted_comp>& component_tree, size_t ro
 		list<NodeID>::const_iterator chlit = component_tree[root_pos].children.begin();
 		for(; chlit != component_tree[root_pos].children.end(); chlit++){
 
-			size_t new_root_pos = *chlit;
+			NodeID new_root_pos = *chlit;
 			this->find_all_comp( component_tree, new_root_pos, all_comp );
 		}
 		return;
