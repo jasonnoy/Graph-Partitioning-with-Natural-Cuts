@@ -15,7 +15,7 @@ void Preprocess::preprocess() {
     string out_edge_path = out_path + "layer-1_edges.txt";
 
     infile.open(sw_node_path, std::ios::binary);
-    vector<node_info_t> nodes;
+
     if (!infile.is_open()) {
         cout<<"sw_node_file open failed!\n";
         exit(1);
@@ -31,7 +31,7 @@ void Preprocess::preprocess() {
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
-    outfile<<count<<" ";
+    outfile<<"1\n"<<count<<" ";
     for (int i = 0; i < count; i++) {
         outfile<<i<<" ";
     }
