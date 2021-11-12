@@ -1,5 +1,197 @@
 #include "G_Graph.h"
+///////////////////////parallel methods///////////////////////////
+void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& core,
+                                      const vector<NodeID>& between_nodes, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
 
+    //core and between_nodes form the tree T
+    PushRelabel pr( between_nodes.size() + 1 );
+    NodeID neighborID = between_nodes.size();
+
+    map<NodeID, NodeID> old_to_new;
+    { //to destroy temp variable
+        //map: old id --> new id
+        vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
+        NodeID new_id = 1;
+        for(; nit != between_nodes.end(); nit++, new_id++ ){
+            old_to_new[ *nit ] = new_id;
+        }
+        deque<NodeID>::const_iterator cit = core.begin();
+        for(; cit != core.end(); cit++ ){
+            old_to_new[ *cit ] = 0 ; //new index of core is 0
+        }
+
+        // map: target --> weight
+        map<NodeID, EdgeWeight> accumulate_wet;
+
+        //first, handle core, which contains contracted node id
+        //node_visited[0] = true; //core id is 0
+        cit = core.begin();
+        for(; cit != core.end(); cit++ ){
+
+            vector<NodeID>::const_iterator cnit =
+                    contract_node_list[ *cit ].begin();
+            for(; cnit != contract_node_list[ *cit ].end(); cnit++){
+                vector<G_Edge*>::const_iterator eit =
+                        node_list[ *cnit ].get_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                    NodeID new_tid = 0;
+                    if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                        new_tid = old_to_new[contract_to[(*eit)->get_target()]];
+                    }
+                    else{
+                        new_tid = neighborID;
+                    }
+                    if( new_tid > 0 ){
+                        if( accumulate_wet.count( new_tid ) )
+                            accumulate_wet[new_tid]++;
+                        else
+                            accumulate_wet[new_tid] = 1;
+                    }
+                }
+            }//for all node in the contracted node
+
+        }//for all contracted node in core
+        map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+        for(; i_eit != accumulate_wet.end(); i_eit++){
+            pr.AddEdge( 0, i_eit->first, i_eit->second );
+            //////////////////newly added/////////////////
+            pr.AddEdge( i_eit->first, 0, i_eit->second );
+        }
+
+        //second, handle between nodes
+        nit = between_nodes.begin() + 1;
+        NodeID new_sid = 1;
+        for(; nit != between_nodes.end(); nit++, new_sid++){
+
+            accumulate_wet.clear();
+
+            vector<NodeID>::const_iterator cnit =
+                    contract_node_list[ *nit ].begin();
+            for(; cnit != contract_node_list[ *nit ].end(); cnit++){
+
+                vector<G_Edge*>::const_iterator eit =
+                        node_list[ *cnit ].get_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                    NodeID new_tid = 0;
+                    if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                        new_tid = old_to_new[contract_to[(*eit)->get_target()]];
+                    }
+                    else{
+                        new_tid = neighborID;
+                    }
+                    if( new_tid > new_sid ){
+                        if( accumulate_wet.count( new_tid ) )
+                            accumulate_wet[new_tid]++;
+                        else
+                            accumulate_wet[new_tid] = 1;
+                    }
+                }
+            }//for all contracted nodes
+
+            i_eit = accumulate_wet.begin();//i = new_sid
+            for(; i_eit != accumulate_wet.end(); i_eit++){
+                pr.AddEdge( new_sid, i_eit->first, i_eit->second );
+                //////////////////newly added/////////////////
+                pr.AddEdge( i_eit->first, new_sid, i_eit->second );
+            }
+        }//for all between nodes
+
+        pr.GetMaxFlow( 0, neighborID );
+    }
+
+    //mark natural cuts
+
+    //record node sets of S, every other node is in T
+    set<NodeID> nc_source( core.begin(), core.end() );
+
+    bool * node_visited = NULL;
+    node_visited = new bool[ between_nodes.size() + 1 ];
+    check_new( node_visited, "natural_st_cuts: node_visited" );
+    memset( node_visited, false, between_nodes.size() + 1 );
+
+    node_visited[0] = true;
+    node_visited[neighborID] = true;
+
+    deque<NodeID> nc_que;
+    nc_que.push_back( 0 ); //start from 0
+
+    while( !nc_que.empty() ){
+
+        NodeID n = nc_que.front();
+        nc_que.pop_front();
+
+        //if( node_visited[ n ] ) continue;
+        //node_visited[n] = true;
+
+        if( n ){
+            //between_nodes can work as new_to_old
+            nc_source.insert( between_nodes[n] );
+        }
+
+        vector<Edge>::const_iterator eit = pr.G[n].begin();
+        for(; eit != pr.G[n].end(); eit++){
+
+            if( node_visited[ eit->to ] )
+                continue;
+
+            //if( eit->cap == 0 || eit->cap > eit->flow ){
+            //if( eit->cap != 0 && eit->cap > eit->flow ){
+            if( eit->cap > eit->flow ){
+                nc_que.push_back( eit->to );
+                node_visited[ eit->to ] = true;
+            }
+        }
+    }
+
+    set<NodeID>::const_iterator sr_it = nc_source.begin();
+    for(; sr_it != nc_source.end(); sr_it++){
+
+        NodeID cid = *sr_it;
+        vector<NodeID>::const_iterator cnit =
+                contract_node_list[ cid ].begin();
+        for(; cnit != contract_node_list[cid].end(); cnit++){
+
+            vector<G_Edge*>::const_iterator eit =
+                    node_list[ *cnit ].get_adj_list().begin();
+            for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                NodeID target = contract_to[ (*eit)->get_target() ];
+                if( nc_source.count( target ) )
+                    continue;//else
+
+                /////////////////////have a try//////////////////////
+                NodeID pr_s = old_to_new[cid];
+                NodeID pr_t = old_to_new[target];
+                bool satr = true;
+                vector<Edge>::const_iterator pr_eit = pr.G[pr_s].begin();
+                for(; pr_eit != pr.G[pr_s].end(); pr_eit++){
+
+                    if( pr_eit->to == pr_t ){
+                        //if( eit->cap == 0 || eit->cap > eit->flow ){
+                        if( pr_eit->cap > pr_eit->flow ){
+                            satr = false;
+                        }
+                        break;
+                    }
+                }
+                if( !satr )
+                    continue;
+                /////////////////////////////////////////////////////
+
+                natural_cuts[ (*eit)->get_id() ] = true;
+                ///////////////////have a try//////////////////////
+                //natural_cuts[ this->sym_edge_id( (*eit)->get_id() ) ] = true;
+                ///////////////////////////////////////////////////
+            }//for all edges from this contracted node
+        }//for all contracted nodes
+    }//for all nodes in S
+
+    delete[] node_visited;
+
+    return;
+}
 ///////////////////////public methods///////////////////////////
 
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
@@ -741,9 +933,14 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		memset( node_in_core, false, this->node_list.size() );
         int big_loop_count = 0, small_loop_count = 0;
         unsigned int nc_timer = 0, bfs_timer = 0;
+        // todo: member variable available_threads
+        if (available_threads > 2) {
 
+
+            delete [] node_in_core;
+            return;
+        }
 		NodeID nc = 0;
-
 		while( true ){
 
 			nc = this->next_center( node_in_core );
