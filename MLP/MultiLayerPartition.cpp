@@ -146,13 +146,13 @@ void MultiLayerPartition::MLP() {
         M = parameters[l][3];
         PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
         cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-        if (phantom) {
-            U = 32, C = 4, FI = 4, M = 4;
-            l++;
-            cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-        } else {
-            cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
-        }
+//        if (phantom) {
+//            U = 32, C = 4, FI = 4, M = 4;
+//            l++;
+//            cout<<"Phantom layer parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        } else {
+//            cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+//        }
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
         string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
@@ -181,10 +181,10 @@ void MultiLayerPartition::MLP() {
         atomic<int> edgeCount(0);
         infile>>voidSize;
         cout<<"current layer has "<<voidSize<<" void nodes.\n";
-        for (int i = 0; i < voidSize; i++) {
+        for (NodeID i = 0; i < voidSize; i++) {
             NodeID vid;
             infile>>vid;
-            void_nodes.push_back(vid);
+            void_nodes.push_back(i);
         }
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
