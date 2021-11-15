@@ -1730,8 +1730,9 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
             if (max_comp_pos < component_tree.size()){
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
             } else {
-                link_component( component_tree, comp_cnodes_to_pos, 0, numeric_limits<NodeID>::max());
+//                link_component( component_tree, comp_cnodes_to_pos, 0, numeric_limits<NodeID>::max());
                 cout<<"max_comp_pos oversize, redirecting search pos to 0.\n";
+                exit(1);
             }
         }
 
