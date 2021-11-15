@@ -15,7 +15,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int C, const int FI, const int M, const int L) {
 
     if (process_count > thread_limit-1) {
         unique_lock<mutex> lck(m_lock);
@@ -43,7 +43,7 @@ void dealCell(int processId, int l, string cur_layer, vector<NodeID> &cell, atom
     }
 
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
-    Filter filter(U, C, cell, cell_edges, anodes, aedges);
+    Filter filter(U, C, extra_thread, cell, cell_edges, anodes, aedges);
     cout<<"Running filter...";
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake

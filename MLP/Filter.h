@@ -17,6 +17,7 @@ private:
     G_Graph gGraph;
     const int U;
     const int C;
+    int thread_cap;
     int F = 10;
     const vector<NodeID>& nodes;
     const vector<vector<NodeID>>& edges;
@@ -29,11 +30,11 @@ private:
     void contract_natural_cuts();
     void convert_and_output();
 public:
-    Filter(int u, int c, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges):
-    U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+    Filter(int u, int c, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
+    U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), thread_cap(thread){
     };
-    Filter(int u, int c, int f, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges):
-            U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges){
+    Filter(int u, int c, int f, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
+            U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), thread_cap(thread){
     };
     ~Filter() = default;
     void runFilter();

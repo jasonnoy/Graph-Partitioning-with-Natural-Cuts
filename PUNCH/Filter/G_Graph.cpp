@@ -1,5 +1,28 @@
 #include "G_Graph.h"
 ///////////////////////parallel methods///////////////////////////
+NodeID static_next_center( bool node_in_core[], const NodeID node_num) {
+    vector<NodeID> remain_id;
+    remain_id.reserve( node_num );
+    for(int i = 0; i < node_num; i++){
+        if( !node_in_core[i] )
+            remain_id.push_back(i);
+    }
+    if (remain_id.size() * 100 / node_num)
+        cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_num<<"%\r";
+    else
+        cout<<"Remaining ids: "<<node_num<<"\r";
+    if( remain_id.empty() )
+        return -1u;
+
+    //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
+    int random = (int)( rand() % node_num );
+
+    //DEBUG
+    //random = 0;
+
+    return remain_id[random];
+}
+
 void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& core,
                                       const vector<NodeID>& between_nodes, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
 
@@ -192,6 +215,7 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
+void parallel_find_natural_cuts()
 ///////////////////////public methods///////////////////////////
 
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
@@ -917,7 +941,7 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 		return total_size;
 }
 
-void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
+void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap = 1 ){
 
 	NodeSize core_lim = sz_lim/DNCF;
 	
@@ -934,7 +958,16 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
         int big_loop_count = 0, small_loop_count = 0;
         unsigned int nc_timer = 0, bfs_timer = 0;
         // todo: member variable available_threads
-        if (available_threads > 2) {
+        if (thread_cap > 2) {
+            mutex file_lock, m_lock;
+            condition_variable condition;
+            bool visited_all = false;
+            while (!visited_all) {
+                vector<thread> ths;
+                for (int i = 0; i < thread_cap; i++) {
+                    ths.push_back()
+                }
+            }
 
 
             delete [] node_in_core;
