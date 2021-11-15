@@ -32,8 +32,8 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
                     contract_node_list[ *cit ].begin();
             for(; cnit != contract_node_list[ *cit ].end(); cnit++){
                 vector<G_Edge*>::const_iterator eit =
-                        node_list[ *cnit ].get_adj_list().begin();
-                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+                        node_list[ *cnit ].get_const_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
 
                     NodeID new_tid = 0;
                     if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
@@ -71,8 +71,8 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
             for(; cnit != contract_node_list[ *nit ].end(); cnit++){
 
                 vector<G_Edge*>::const_iterator eit =
-                        node_list[ *cnit ].get_adj_list().begin();
-                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+                        node_list[ *cnit ].get_const_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
 
                     NodeID new_tid = 0;
                     if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
@@ -154,8 +154,8 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
         for(; cnit != contract_node_list[cid].end(); cnit++){
 
             vector<G_Edge*>::const_iterator eit =
-                    node_list[ *cnit ].get_adj_list().begin();
-            for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+                    node_list[ *cnit ].get_const_adj_list().begin();
+            for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
 
                 NodeID target = contract_to[ (*eit)->get_target() ];
                 if( nc_source.count( target ) )
