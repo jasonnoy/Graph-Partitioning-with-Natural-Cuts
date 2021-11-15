@@ -1,6 +1,6 @@
 #include "G_Graph.h"
 ///////////////////////parallel methods///////////////////////////
-NodeID static_next_center( bool node_in_core[], const NodeID node_num) {
+vector<NodeID> next_centers( bool node_in_core[], const NodeID node_num, const int rand_num ) {
     vector<NodeID> remain_id;
     remain_id.reserve( node_num );
     for(int i = 0; i < node_num; i++){
@@ -15,12 +15,13 @@ NodeID static_next_center( bool node_in_core[], const NodeID node_num) {
         return -1u;
 
     //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-    int random = (int)( rand() % node_num );
+    vector<NodeID> res;
+    for (int i = 0; i < rand_num; i++) {
+        int random = (int)( rand() % node_num );
+        res.push_back(remain_id[random]);
+    }
 
-    //DEBUG
-    //random = 0;
-
-    return remain_id[random];
+    return res;
 }
 
 void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& core,
@@ -215,7 +216,10 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
-void parallel_find_natural_cuts()
+void parallel_find_natural_cuts(mutex& m_lock, bool*& node_in_core, const NodeID node_num) {
+
+
+}
 ///////////////////////public methods///////////////////////////
 
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
@@ -964,6 +968,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             bool visited_all = false;
             while (!visited_all) {
                 vector<thread> ths;
+                vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap);
                 for (int i = 0; i < thread_cap; i++) {
                     ths.push_back()
                 }
@@ -1049,7 +1054,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             bfs_timer += bfs_duration.count();
             // if () milli timer.
             auto nc_start = chrono::steady_clock::now();
-            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+//            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+            parallel_compute_natural_cuts(natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to);
             auto nc_end = chrono::steady_clock::now();
             auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
             nc_timer += nc_duration.count();
