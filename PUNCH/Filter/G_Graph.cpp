@@ -1663,7 +1663,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 			vector<NodeID> stack;
 			list<NodeID> component;
-			set<NodeID> children;
+			list<NodeID> children;
 			stack.push_back( start ); //the contracted node id
 
 			//DFS search to find the component
@@ -1713,7 +1713,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			}
 			tree_node.subtree_size = comp_size; //subtree includes the root
 			//borrow the children space
-			tree_node.children.assign( children.begin(), children.end() );
+			tree_node.children = children;
 
 			component_tree.push_back( tree_node );
             i++;
