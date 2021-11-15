@@ -1840,6 +1840,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         if (search_pos < component_tree.size()) {
             for (NodeID chl_id : component_tree[search_pos].children){
+                if (chl_id >= component_tree.size())
+                    continue;
                 NodeID new_search_pos = chl_id;
                 this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
             }
