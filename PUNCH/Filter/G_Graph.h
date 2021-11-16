@@ -113,7 +113,7 @@ public:
 
 	void cnt_two_degree_path( NodeSize sz_lim );
 
-	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap );
+	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap = 1 );
 
 	void cnt_natural_cuts( bool natural_cuts[] );
 
