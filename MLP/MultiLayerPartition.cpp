@@ -213,6 +213,7 @@ void MultiLayerPartition::MLP() {
         // Parallel
         vector<thread> ths;
         current_occupied = cells.size() > thread_limit ? thread_limit : cells.size();
+        cout<<"cur occ: "<<current_occupied<<endl;
         int thread_left = cells.size();
         int thread_count = 0;
         int extra_thread = thread_limit/current_occupied > 1 ? thread_limit/current_occupied : 1;
