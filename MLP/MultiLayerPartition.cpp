@@ -217,6 +217,7 @@ void MultiLayerPartition::MLP() {
         int thread_left = cells.size();
         int thread_count = 0;
         int extra_thread = thread_limit/current_occupied > 1 ? thread_limit/current_occupied : 1;
+        cout<<"extra_thread: "<<extra_thread<<endl;
         while (thread_left > thread_pool_capacity) {
             for (int i = 0; i < thread_pool_capacity; i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
