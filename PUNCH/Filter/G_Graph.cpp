@@ -294,7 +294,6 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
 
             }//end for all targets
         }//end for all original nodes in the contracted node
-        small_loop_count++;
     }//end while
 //    auto bfs_end = chrono::steady_clock::now();
 //    auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
@@ -1035,7 +1034,7 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 		return total_size;
 }
 
-void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap = 1 ){
+void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap ){
 
 	NodeSize core_lim = sz_lim/DNCF;
 	
