@@ -15,7 +15,7 @@ vector<NodeID> next_centers( bool node_in_core[], const NodeID node_num, const i
 
     //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
     for (int i = 0; i < rand_num && i < remain_id.size(); i++) {
-        int random = (int)( rand() % node_num );
+        int random = (int)( rand(time(0)) % node_num );
         res.push_back(remain_id[random]);
     }
 
@@ -1051,7 +1051,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
         int big_loop_count = 0, small_loop_count = 0;
         unsigned int nc_timer = 0, bfs_timer = 0;
         // todo: member variable available_threads
-        vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap*10); // generate more centers for simplicity
+        vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
         if (thread_cap > 2) {
             cout<<"multithread processing...\n";
             mutex file_lock, m_lock;
