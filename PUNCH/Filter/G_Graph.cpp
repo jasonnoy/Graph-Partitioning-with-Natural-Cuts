@@ -1816,7 +1816,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-		vector<NodeID> children_pos;
+		list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 //            if (!comp_cnodes_to_pos.count(*chlit)){
@@ -1834,7 +1834,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
-		component_tree[search_pos].children.assign( children_pos.begin(), children_pos.end() );
+		component_tree[search_pos].children = children_pos;
 		//recursively link
 //		chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
