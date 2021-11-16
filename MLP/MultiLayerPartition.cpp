@@ -215,11 +215,12 @@ void MultiLayerPartition::MLP() {
         current_occupied = cells.size() > thread_limit ? thread_limit : cells.size();
         int thread_left = cells.size();
         int thread_count = 0;
+        int extra_thread = thread_limit/current_occupied > 1 ? thread_limit/current_occupied : 1;
         while (thread_left > thread_pool_capacity) {
             for (int i = 0; i < thread_pool_capacity; i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-                ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+                ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
             }
 
             for (int i = 0; i < thread_pool_capacity; i++){
@@ -231,7 +232,7 @@ void MultiLayerPartition::MLP() {
         }
         // now there is enough thread space for the rest threads
         for (int i = 0; i < thread_left; i++) {
-            ths.push_back(thread(dealCell, thread_count+i, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+            ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
         }
         for (int i = 0; i < thread_left; i++){
             ths[thread_count+i].join();
