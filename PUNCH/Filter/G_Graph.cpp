@@ -222,7 +222,7 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
-void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+void parallel_find_natural_cuts(mutex& m_lock, bool*& node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
     if (node_in_core[nc])
         return;
     bool * node_visited = NULL;
@@ -1067,7 +1067,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                 if (centers.size() < thread_cap)
                     visited_all = true;
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
-                    ths.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
+                    ths.push_back(thread(parallel_find_natural_cuts, ref(m_lock), ref(node_in_core), centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
                     centers.pop_back();
                 }
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
