@@ -15,7 +15,7 @@ vector<NodeID> next_centers( bool node_in_core[], const NodeID node_num, const i
 
     //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
     for (int i = 0; i < rand_num && i < remain_id.size(); i++) {
-        int random = (int)( rand(time(0)) % node_num );
+        int random = (int)( srand(time(0)) % node_num );
         res.push_back(remain_id[random]);
     }
 
