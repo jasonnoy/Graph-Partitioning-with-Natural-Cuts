@@ -1062,7 +1062,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             while (!visited_all) {
                 vector<thread> ths;
                 if (centers.empty())
-                    centers = next_centers(node_in_core, node_list.size(), thread_cap*10); // generate more centers for simplicity
+                    centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
                 if (centers.size() < thread_cap)
                     visited_all = true;
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
