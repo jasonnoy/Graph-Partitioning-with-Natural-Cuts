@@ -263,12 +263,14 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
             // Go to natural cut process
             break;
         }
-        if( total_size <= core_lim || first_always_add ){
 
+        if( total_size <= core_lim || first_always_add ){
             //record the contracted node id
+            lock.lock();
+            if (node_in_core[cid])
+                continue;
             core.push_back( cid );
 
-            lock.lock();
             static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
             lock.unlock();
 
