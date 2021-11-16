@@ -101,13 +101,13 @@ void Filter::convert_and_output(){
 }
 
 void Filter::runFilter() {
-    clock_t start, end;
-    start = clock();
+    time_t start, end;
+    start = time(&start);
     read_in_graph();
     contract_tiny_cuts();
     contract_natural_cuts();
     convert_and_output();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Filter run time: "<<time<<"s.\n";
+    end = time(&end);
+    int time_cost = end - start;
+    cout<<"filter run time: "<<time_cost<<"s.\n";
 }
