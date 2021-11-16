@@ -72,7 +72,7 @@ void Filter::contract_natural_cuts(){
     natural_cuts = new bool[ gGraph.get_edge_list().size() ];
 //    if( !natural_cuts ){ printf("ERROR bad alloc: natural_cuts!\n"); exit(0); }
     memset( natural_cuts, false, gGraph.get_edge_list().size() );
-    gGraph.find_natural_cuts( natural_cuts, U );
+    gGraph.find_natural_cuts( natural_cuts, U, thread_cap );
 
     NodeID ten = 0;
     for( int i = 0; i < gGraph.get_edge_list().size(); i++ ){
