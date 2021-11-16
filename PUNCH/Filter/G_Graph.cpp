@@ -283,8 +283,8 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
         for(auto cnit = contract_node_list[cid].begin(); cnit != contract_node_list[cid].end(); cnit++){
 
             vector<G_Edge*>::const_iterator eit =
-                    node_list[*cnit].get_adj_list().begin();
-            for(; eit != node_list[*cnit].get_adj_list().end(); eit++){
+                    node_list[*cnit].get_const_adj_list().begin();
+            for(; eit != node_list[*cnit].get_const_adj_list().end(); eit++){
 
                 if( node_visited[(*eit)->get_target()] )
                     continue;
