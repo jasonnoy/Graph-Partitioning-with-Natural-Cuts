@@ -10,7 +10,7 @@ vector<NodeID> next_centers( vector<bool>& node_in_core, const NodeID node_num, 
 //    if (remain_id.size() * 100 / node_num)
 //        cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_num<<"%\r";
 //    else
-    cout<<"Remaining ids: "<<node_num<<"\r";
+    cout<<"Remaining ids: "<<remain_id.size()<<"\r";
     vector<NodeID> res;
 
     //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
@@ -1183,10 +1183,7 @@ NodeID G_Graph::next_center( vector<bool>& node_in_core ){
 			if( !node_in_core[i] )
 				remain_id.push_back(i);
 		}
-        if (remain_id.size() * 100 / node_list.size())
-            cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_list.size()<<"%\r";
-        else
-            cout<<"Remaining ids: "<<remain_id.size()<<"\r";
+        cout<<"Remaining ids: "<<remain_id.size()<<"\r";
 		if( remain_id.empty() )
 			return -1u;
 
