@@ -1089,10 +1089,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 			if( nc == -1u ) //0xffffffff )
 				break;
 
-			bool * node_visited = NULL;
-			node_visited = new bool[this->node_list.size()];
-			check_new( node_visited, "find natural cuts: node visited");
-			memset( node_visited, false, this->node_list.size() );
+			bool node_visited[] = new bool[this->node_list.size()]();
 
 			deque<NodeID> core; //core and between_nodes all contain the contracted id
 			vector<NodeID> between_nodes;
