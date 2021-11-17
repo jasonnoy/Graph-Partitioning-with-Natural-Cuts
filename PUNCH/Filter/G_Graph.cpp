@@ -243,7 +243,7 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
-void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID> centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
     unique_lock<mutex> lock(m_lock);
     while (node_in_core[centers.back()]) {
         centers.pop_back();
