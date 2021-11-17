@@ -1076,7 +1076,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                     centers.pop_back();
                 }
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
-                    threads[i].join();
+                    threads[thread_count++].join();
                 }
             }
 //            delete [] node_in_core;
