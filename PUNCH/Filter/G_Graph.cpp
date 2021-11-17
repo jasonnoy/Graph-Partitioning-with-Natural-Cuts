@@ -32,8 +32,8 @@ void static_mark_node_vis( NodeID nid, vector<bool>& mark_list, const vector<Nod
         if (*nit == cid)
             cid_in = true;
     }
-    if (!cid_in)
-        cout<<cid<<"didnt mark\n";
+//    if (!cid_in)
+//        cout<<cid<<"didnt mark\n";
     return;
 }
 
