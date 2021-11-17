@@ -243,7 +243,14 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
-void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID> centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+    unique_lock<mutex> lock(m_lock);
+    while (node_in_core[centers.back()]) {
+        centers.pop_back();
+        if (centers.empty())
+            centers = next_centers(node_in_core, node_list.size(), 100);
+    }
+
 //    cout<<"parallel_find_natural_cuts\n";
     if (node_in_core[nc]) {
         cout<<"already in core\n";
@@ -290,7 +297,7 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
 
         if( total_size <= core_lim || first_always_add ){
             //record the contracted node id
-            unique_lock<mutex> lock(m_lock);
+            lock.lock();
             if (node_in_core[cid]) {
                 lock.unlock();
                 continue;
@@ -1086,14 +1093,11 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             vector<thread> threads;
             int thread_count = 0;
             while (!visited_all) {
-                if (centers.empty())
-                    centers = next_centers(node_in_core, node_list.size(), 10*thread_cap); // generate more centers for simplicity
                 if (centers.size() < thread_cap)
                     visited_all = true;
                 int thread_num = thread_cap < centers.size() ? thread_cap : centers.size();
                 for (int i = 0; i < thread_num; i++) {
-                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
-                    centers.pop_back();
+                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, ref(centers), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
                 }
                 for (int i = 0; i < thread_num; i++) {
                     threads[thread_count++].join();
