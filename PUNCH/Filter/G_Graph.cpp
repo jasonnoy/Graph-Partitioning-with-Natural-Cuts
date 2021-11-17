@@ -28,6 +28,8 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
 //    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
     for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++)
         mark_list[*nit] = true;
+    if (!mark_list[cid] || !mark_list[nid])
+        cout<<"mark failed\n";
     return;
 }
 
@@ -244,8 +246,6 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
     nc_queue.push_back( nc );
 
     static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
-    if (!node_visited[nc])
-        cout<<"nc not marked\n";
 
     bool first_always_add = true;
 
