@@ -259,6 +259,7 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
             centers = next_centers(node_in_core, node_list.size(), 100);
     }
     NodeID nc = centers.back();
+    centers.pop_back();
 
 //    cout<<"parallel_find_natural_cuts\n";
     if (node_in_core[nc]) {
