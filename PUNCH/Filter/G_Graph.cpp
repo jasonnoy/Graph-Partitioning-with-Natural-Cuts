@@ -1075,8 +1075,9 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                     threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), ref(node_in_core), centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
                     centers.pop_back();
                 }
+                cout<<"line 1078\n";
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
-                    threads[thread_count++].join();
+                    threads[i].join();
                     cout<<"thread no."<<thread_count<<" joined\n";
                 }
             }
