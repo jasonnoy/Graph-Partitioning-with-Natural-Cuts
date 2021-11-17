@@ -1187,7 +1187,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 	return;
 }
 
-NodeID G_Graph::next_center( vector<bool>& node_in_core ){
+NodeID G_Graph::next_center( bool* node_in_core ){
 
 		vector<NodeID> remain_id;
 		remain_id.reserve( this->node_list.size() );
