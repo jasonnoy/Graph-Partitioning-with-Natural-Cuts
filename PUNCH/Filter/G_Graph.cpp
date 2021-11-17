@@ -7,10 +7,10 @@ vector<NodeID> next_centers( bool node_in_core[], const NodeID node_num, const i
         if( !node_in_core[i] )
             remain_id.push_back(i);
     }
-    if (remain_id.size() * 100 / node_num)
-        cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_num<<"%\r";
-    else
-        cout<<"Remaining ids: "<<node_num<<"\r";
+//    if (remain_id.size() * 100 / node_num)
+//        cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_num<<"%\r";
+//    else
+    cout<<"Remaining ids: "<<node_num<<"\r";
     vector<NodeID> res;
 
     //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
