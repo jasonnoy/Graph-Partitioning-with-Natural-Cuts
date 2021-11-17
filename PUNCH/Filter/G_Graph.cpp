@@ -243,9 +243,9 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
     deque<NodeID> nc_queue;
     nc_queue.push_back( nc );
 
-    unique_lock<mutex> lock(m_lock);
     static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
-    lock.unlock();
+    if (!node_visited[nc])
+        cout<<"nc not marked\n";
 
     bool first_always_add = true;
 
