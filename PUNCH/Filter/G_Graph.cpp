@@ -276,6 +276,8 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
         this->mark_node_vis( n, node_visited );*/
 
         NodeID cid = contract_to[n];
+        if (contract_node_list[cid].size() > sz_lim)
+            cout<<"comp size > limit\n";
 
         total_size += contract_node_list[cid].size();
         if( total_size > sz_lim ){
