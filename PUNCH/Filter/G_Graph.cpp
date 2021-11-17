@@ -275,7 +275,6 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
                 continue;
             }
             core.push_back( cid );
-            cout<<"marked "<<cid<<endl;
             static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
             lock.unlock();
 
