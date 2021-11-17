@@ -29,11 +29,11 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
     for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
         mark_list[*nit] = true;
         if (mark_list[cid]) {
-            cout<<"marked\n";
+            cout<<cid<<" marked\n";
         }
     }
     if (!mark_list[cid])
-        cout<<"didnt mark\n";
+        cout<<cid<<"didnt mark\n";
     return;
 }
 
