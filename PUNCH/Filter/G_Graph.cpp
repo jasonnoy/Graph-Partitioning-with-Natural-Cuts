@@ -27,6 +27,7 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
     //if( cid ){ //have been contracted
 //    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
     for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
+        cout<<"nit: "<<*nit<<endl;
         mark_list[*nit] = true;
         if (!mark_list[*nit] || !mark_list[*nit])
             cout<<"mark failed\n";
