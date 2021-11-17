@@ -1062,17 +1062,17 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             condition_variable condition;
             bool visited_all = false;
             while (!visited_all) {
-                vector<thread> ths;
+                vector<thread> threads;
                 if (centers.empty())
                     centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
                 if (centers.size() < thread_cap)
                     visited_all = true;
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
-                    ths.push_back(thread(parallel_find_natural_cuts, ref(m_lock), ref(node_in_core), centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
+                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), ref(node_in_core), centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
                     centers.pop_back();
                 }
                 for (int i = 0; i < thread_cap && i < centers.size(); i++) {
-                    ths[i].join();
+                    threads[i].join();
                 }
             }
             delete [] node_in_core;
