@@ -244,6 +244,14 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
     return;
 }
 void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+    bool* node_visited = new bool[node_num]();
+
+    deque<NodeID> core; //core and between_nodes all contain the contracted id
+    vector<NodeID> between_nodes;
+    between_nodes.reserve( sz_lim );
+    //between nodes: to calculate s-t cut, new id is the index
+    //old id is the content, and index 0 is reserved for core
+    between_nodes.push_back( 0 );
     unique_lock<mutex> lock(m_lock);
     while (node_in_core[centers.back()]) {
         centers.pop_back();
@@ -258,19 +266,11 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
         return;
     }
 
-    bool* node_visited = new bool[node_num]();
-
-    deque<NodeID> core; //core and between_nodes all contain the contracted id
-    vector<NodeID> between_nodes;
-    between_nodes.reserve( sz_lim );
-    //between nodes: to calculate s-t cut, new id is the index
-    //old id is the content, and index 0 is reserved for core
-    between_nodes.push_back( 0 );
-
     deque<NodeID> nc_queue;
     nc_queue.push_back( nc );
 
     static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
+    lock.unlock();
 
     bool first_always_add = true;
 
