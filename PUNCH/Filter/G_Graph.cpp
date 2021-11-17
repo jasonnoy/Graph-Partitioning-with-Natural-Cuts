@@ -224,8 +224,10 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 }
 void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
 //    cout<<"parallel_find_natural_cuts\n";
-    if (node_in_core[nc])
+    if (node_in_core[nc]) {
         return;
+    }
+
     bool * node_visited = NULL;
     node_visited = new bool[node_num];
     check_new( node_visited, "find natural cuts: node visited");
@@ -272,7 +274,7 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
                 lock.unlock();
                 continue;
             core.push_back( cid );
-
+            cout<<"marked "<<cid<<endl;
             static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
             lock.unlock();
 
