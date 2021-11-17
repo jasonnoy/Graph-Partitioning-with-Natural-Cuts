@@ -1,6 +1,6 @@
 #include "G_Graph.h"
 ///////////////////////parallel methods///////////////////////////
-vector<NodeID> next_centers( vector<bool>& node_in_core, const NodeID node_num, const int rand_num ) {
+vector<NodeID> next_centers( bool*node_in_core, const NodeID node_num, const int rand_num ) {
     vector<NodeID> remain_id;
     remain_id.reserve( node_num );
     for(int i = 0; i < node_num; i++){
@@ -23,6 +23,21 @@ vector<NodeID> next_centers( vector<bool>& node_in_core, const NodeID node_num, 
 }
 
 void static_mark_node_vis( NodeID nid, vector<bool>& mark_list, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list) {
+    NodeID cid = contract_to[nid];
+    //if( cid ){ //have been contracted
+//    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
+    bool cid_in = false;
+    for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
+        mark_list[*nit] = true;
+        if (*nit == cid)
+            cid_in = true;
+    }
+//    if (!cid_in)
+//        cout<<cid<<"didnt mark\n";
+    return;
+}
+
+void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list) {
     NodeID cid = contract_to[nid];
     //if( cid ){ //have been contracted
 //    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
@@ -228,7 +243,7 @@ void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& co
 
     return;
 }
-void parallel_find_natural_cuts(mutex& m_lock, vector<bool>& node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID nc, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
 //    cout<<"parallel_find_natural_cuts\n";
     if (node_in_core[nc]) {
         return;
@@ -1049,7 +1064,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
-        vector<bool> node_in_core(this->node_list.size());
+        bool* node_in_core = new bool[this->node_list.size()]();
 //		bool * node_in_core = NULL;
 //		node_in_core = new bool[this->node_list.size()];
 //		check_new( node_in_core, "find natural cuts: node in core");
@@ -1072,7 +1087,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                     visited_all = true;
                 int thread_num = thread_cap < centers.size() ? thread_cap : centers.size();
                 for (int i = 0; i < thread_num; i++) {
-                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), ref(node_in_core), centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
+                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, centers.back(), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
                     centers.pop_back();
                 }
                 for (int i = 0; i < thread_num; i++) {
