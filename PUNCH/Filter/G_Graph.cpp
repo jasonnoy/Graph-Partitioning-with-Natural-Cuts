@@ -269,7 +269,7 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, const NodeID 
 
         if( total_size <= core_lim || first_always_add ){
             //record the contracted node id
-            lock.lock();
+            unique_lock<mutex> lock(m_lock);
             if (node_in_core[cid]) {
                 lock.unlock();
                 continue;
