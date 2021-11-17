@@ -313,8 +313,6 @@ void parallel_find_natural_cuts(mutex& m_lock, vector<bool>& node_in_core, const
 //    auto nc_end = chrono::steady_clock::now();
 //    auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
 //    nc_timer += nc_duration.count();
-
-    delete[] node_visited;
 }
 ///////////////////////public methods///////////////////////////
 
@@ -1081,7 +1079,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                     threads[i].join();
                 }
             }
-            delete [] node_in_core;
+//            delete [] node_in_core;
             return;
         }
 		NodeID nc = 0;
@@ -1171,13 +1169,13 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 		}
 //        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
 //        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
-		delete[] node_in_core;
+//		delete[] node_in_core;
 
 	}
 	return;
 }
 
-NodeID G_Graph::next_center( bool node_in_core[] ){
+NodeID G_Graph::next_center( vector<bool>& node_in_core ){
 
 		vector<NodeID> remain_id;
 		remain_id.reserve( this->node_list.size() );
