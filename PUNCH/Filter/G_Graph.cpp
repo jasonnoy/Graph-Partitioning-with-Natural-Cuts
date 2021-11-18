@@ -1175,8 +1175,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                 cout<<"core and between size not equal\n";
                 exit(0);
             }
-            for (int i = 0; i < cores.size(); i++)
-                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+//            for (int i = 0; i < cores.size(); i++)
+//                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
             while (thread_count < cores.size()) {
                 int thread_num = thread_cap < cores.size()-thread_count ? thread_cap : cores.size()-thread_count;
                 for (int i = 0; i < thread_num; i++) {
