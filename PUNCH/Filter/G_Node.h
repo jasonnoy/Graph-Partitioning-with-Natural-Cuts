@@ -25,10 +25,6 @@ public:
 //        return this->geo_info;
 //    }
 
-    vector<G_Edge*>  &get_const_adj_list() {
-		return this->adj_list;
-	}
-
     vector<G_Edge*> &get_adj_list() {
         return this->adj_list;
     }

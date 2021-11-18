@@ -1179,20 +1179,20 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                 cout<<"core and between size not equal\n";
                 exit(0);
             }
-//            for (int i = 0; i < cores.size(); i++)
-//                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
-            vector<vector<int>> thread_index;
-            thread_index.resize(thread_cap);
-            for (NodeID i = 0; i < cores.size(); i++)
-                thread_index[i%thread_cap].push_back(i);
-
-            for (int i = 0; i < thread_cap; i++) {
-                threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
-            }
-            for (int i = 0; i < thread_cap; i++) {
-                threads[i].join();
-            }
-        }
+            for (int i = 0; i < cores.size(); i++)
+                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+//            vector<vector<int>> thread_index;
+//            thread_index.resize(thread_cap);
+//            for (NodeID i = 0; i < cores.size(); i++)
+//                thread_index[i%thread_cap].push_back(i);
+//
+//            for (int i = 0; i < thread_cap; i++) {
+//                threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
+//            }
+//            for (int i = 0; i < thread_cap; i++) {
+//                threads[i].join();
+//            }
+//        }
         delete [] node_in_core;
 
 
