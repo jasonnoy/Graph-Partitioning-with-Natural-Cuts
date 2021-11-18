@@ -1166,7 +1166,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
         vector<vector<NodeID>> between_nodes_vec;
         mutex file_lock, m_lock;
         vector<thread> threads;
-        if (thread_cap == 1) {
+        if (thread_cap == 1000) {
             cout<<"multithread processing...\n";
             condition_variable condition;
             bool visited_all = false;
