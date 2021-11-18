@@ -1177,17 +1177,19 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             }
             for (int i = 0; i < cores.size(); i++)
                 natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
-//            while (!visited_all) {
-//                if (centers.size() < thread_cap)
-//                    visited_all = true;
-//                int thread_num = thread_cap < centers.size() ? thread_cap : centers.size();
-//                for (int i = 0; i < thread_num; i++) {
-//                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, ref(centers), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
-//                }
-//                for (int i = 0; i < thread_num; i++) {
-//                    threads[thread_count++].join();
-//                }
-//            }
+            while (!visited_all) {
+                if (centers.size() < thread_cap)
+                    visited_all = true;
+                int thread_num = thread_cap < cores.size() ? thread_cap : cores.size();
+                for (int i = 0; i < thread_num; i++) {
+                    threads.push_back(thread(parallel_compute_natural_cuts, natural_cuts, ref(cores.back()), ref(between_nodes_vec.back()), ref(contract_node_list), ref(node_list), ref(contract_to)));
+                    cores.pop_back();
+                    between_nodes_vec.pop_back();
+                }
+                for (int i = 0; i < thread_num; i++) {
+                    threads[thread_count++].join();
+                }
+            }
             delete [] node_in_core;
             continue;
         }
