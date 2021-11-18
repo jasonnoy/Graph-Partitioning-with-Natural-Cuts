@@ -1180,9 +1180,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             while (!cores.empty()) {
                 int thread_num = thread_cap < cores.size() ? thread_cap : cores.size();
                 for (int i = 0; i < thread_num; i++) {
-                    threads.push_back(thread(parallel_compute_natural_cuts, natural_cuts, ref(cores.back()), ref(between_nodes_vec.back()), ref(contract_node_list), ref(node_list), ref(contract_to)));
-                    cores.pop_back();
-                    between_nodes_vec.pop_back();
+                    threads.push_back(thread(parallel_compute_natural_cuts, natural_cuts, ref(cores[thread_count+i]), ref(between_nodes_vec[thread_count+i]), ref(contract_node_list), ref(node_list), ref(contract_to)));
                 }
                 for (int i = 0; i < thread_num; i++) {
                     threads[thread_count++].join();
