@@ -344,7 +344,7 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
 }
 ///////////////////////public methods///////////////////////////
 
-void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize core_lim){
+void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim){
     while (true) {
         NodeID nc = this->next_center( node_in_core );
         if (nc == -1u)
