@@ -158,6 +158,8 @@ private:
 
 	void contract_nodes( NodeID m, NodeID n );
 
+	void compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize core_lim);
+
 	unsigned int node_degree( NodeID n );
 
 	NodeSize cal_node_size( const vector<NodeID>& node_list );

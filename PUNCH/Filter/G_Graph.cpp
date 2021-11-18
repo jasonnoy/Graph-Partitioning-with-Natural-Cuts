@@ -299,11 +299,10 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
 
         if( total_size <= core_lim || first_always_add ){
             //record the contracted node id
-            lock.lock();
             if (node_in_core[cid]) {
-                lock.unlock();
                 continue;
             }
+            lock.lock();
             core.push_back( cid );
             static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
             lock.unlock();
@@ -345,6 +344,65 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
 }
 ///////////////////////public methods///////////////////////////
 
+void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize core_lim){
+    while (true) {
+        NodeID nc = this->next_center( node_in_core );
+        if (nc == -1u)
+            break;
+        bool* node_visited = new bool[this->node_list.size()]();
+        deque<NodeID> core; //core and between_nodes all contain the contracted id
+        vector<NodeID> between_nodes;
+        between_nodes.reserve( sz_lim );
+        //between nodes: to calculate s-t cut, new id is the index
+        //old id is the content, and index 0 is reserved for core
+        between_nodes.push_back( 0 );
+        deque<NodeID> nc_queue;
+        nc_queue.push_back( nc );
+        this->mark_node_vis( nc, node_visited );
+
+        bool first_always_add = true;
+        NodeSize total_size = 0;
+
+        while( !nc_queue.empty() ){
+
+            NodeID n = nc_queue.front();
+            nc_queue.pop_front();
+
+            NodeID cid = this->contract_to[n];
+            total_size += this->contract_node_list[cid].size();
+
+            if( total_size > sz_lim ){
+                break;
+            }
+
+            if( total_size <= core_lim || first_always_add ){
+                //record the contracted node id
+                core.push_back( cid );
+                this->mark_node_vis( n, node_in_core );
+                first_always_add = false;
+            }
+            else{
+                between_nodes.push_back( cid );
+            }
+
+            for(auto cnit = this->contract_node_list[cid].begin(); cnit != this->contract_node_list[cid].end(); cnit++){
+
+                for(auto eit = this->node_list[*cnit].get_adj_list().begin(); eit != this->node_list[*cnit].get_adj_list().end(); eit++){
+
+                    if( node_visited[(*eit)->get_target()] )
+                        continue;
+
+                    nc_queue.push_back( (*eit)->get_target() );
+                    this->mark_node_vis( (*eit)->get_target(), node_visited );
+
+                }//end for all targets
+            }//end for all original nodes in the contracted node
+        }//end while
+        // add to vectors
+        cores.push_back(core);
+        between_nodes_vec.push_back(between_nodes);
+    }
+}
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
 
     // read in node
@@ -1094,18 +1152,28 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             bool visited_all = false;
             vector<thread> threads;
             int thread_count = 0;
-            while (!visited_all) {
-                if (centers.size() < thread_cap)
-                    visited_all = true;
-                int thread_num = thread_cap < centers.size() ? thread_cap : centers.size();
-                for (int i = 0; i < thread_num; i++) {
-                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, ref(centers), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
-                }
-                for (int i = 0; i < thread_num; i++) {
-                    threads[thread_count++].join();
-                }
+            vector<deque<NodeID>> cores;
+            vector<vector<NodeID>> between_nodes_vec;
+
+            compute_centers(cores, between_nodes_vec, node_in_core, core_lim);
+            if (cores.size() != between_nodes_vec.size()){
+                cout<<"core and between size not equal\n";
+                exit(0);
             }
-//            delete [] node_in_core;
+            for (int i = 0; i < cores.size(); i++)
+                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+//            while (!visited_all) {
+//                if (centers.size() < thread_cap)
+//                    visited_all = true;
+//                int thread_num = thread_cap < centers.size() ? thread_cap : centers.size();
+//                for (int i = 0; i < thread_num; i++) {
+//                    threads.push_back(thread(parallel_find_natural_cuts, ref(m_lock), node_in_core, ref(centers), node_list.size(), core_lim, sz_lim, ref(contract_to), ref(contract_node_list), ref(node_list), natural_cuts));
+//                }
+//                for (int i = 0; i < thread_num; i++) {
+//                    threads[thread_count++].join();
+//                }
+//            }
+            delete [] node_in_core;
             return;
         }
 		NodeID nc = 0;
