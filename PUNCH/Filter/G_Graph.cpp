@@ -53,7 +53,6 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
 }
 
 void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
-    cout<<"index size: "<<index.size()<<endl;
     for (int i : index) {
 
         deque<NodeID> core = cores[i];
@@ -88,8 +87,8 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
                 for(; cnit != contract_node_list[ *cit ].end(); cnit++){
 
                     vector<G_Edge*>::const_iterator eit =
-                            node_list[ *cnit ].get_const_adj_list().begin();
-                    for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+                            node_list[ *cnit ].get_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
 
                         NodeID new_tid = 0;
                         if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
@@ -127,8 +126,8 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
                 for(; cnit != contract_node_list[ *nit ].end(); cnit++){
 
                     vector<G_Edge*>::const_iterator eit =
-                            node_list[ *cnit ].get_const_adj_list().begin();
-                    for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+                            node_list[ *cnit ].get_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
 
                         NodeID new_tid = 0;
                         if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
@@ -210,8 +209,8 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
             for(; cnit != contract_node_list[cid].end(); cnit++){
 
                 vector<G_Edge*>::const_iterator eit =
-                        node_list[ *cnit ].get_const_adj_list().begin();
-                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+                        node_list[ *cnit ].get_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
 
                     NodeID target = contract_to[ (*eit)->get_target() ];
                     if( nc_source.count( target ) )

@@ -25,7 +25,7 @@ public:
 //        return this->geo_info;
 //    }
 
-    const vector<G_Edge*>  &get_const_adj_list() const{
+    vector<G_Edge*>  &get_const_adj_list() {
 		return this->adj_list;
 	}
 
