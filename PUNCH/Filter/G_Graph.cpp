@@ -347,7 +347,6 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
 void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim){
     int i = 0;
     while (true) {
-        cout<<i++<<"\r";
         NodeID nc = this->next_center( node_in_core );
         if (nc == -1u)
             break;
@@ -1176,7 +1175,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 //                }
 //            }
             delete [] node_in_core;
-            return;
+            continue;
         }
 		NodeID nc = 0;
 		while( true ){

@@ -90,7 +90,6 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 //		}
 //        infile.close();
 ////		fclose( co_f );
-        cout<<"Read in "<<edge_list.size()<<" edges\n";
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
