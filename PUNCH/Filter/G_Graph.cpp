@@ -1174,6 +1174,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
 
 
             compute_centers(cores, between_nodes_vec, node_in_core, core_lim);
+            cout<<"cores size: "<<cores.size()<<endl;
             if (cores.size() != between_nodes_vec.size()){
                 cout<<"core and between size not equal\n";
                 exit(0);
