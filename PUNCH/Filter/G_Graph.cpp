@@ -1146,6 +1146,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
         unsigned int nc_timer = 0, bfs_timer = 0;
         // todo: member variable available_threads
         vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
+        vector<deque<NodeID>> cores;
+        vector<vector<NodeID>> between_nodes_vec;
         if (thread_cap == 10) {
             cout<<"multithread processing...\n";
             mutex file_lock, m_lock;
@@ -1153,8 +1155,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             bool visited_all = false;
             vector<thread> threads;
             int thread_count = 0;
-            vector<deque<NodeID>> cores;
-            vector<vector<NodeID>> between_nodes_vec;
+
 
             compute_centers(cores, between_nodes_vec, node_in_core, core_lim);
             if (cores.size() != between_nodes_vec.size()){
@@ -1250,15 +1251,20 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             bfs_timer += bfs_duration.count();
             // if () milli timer.
             auto nc_start = chrono::steady_clock::now();
-            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-//            parallel_compute_natural_cuts(natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to); // for test
+//            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
             auto nc_end = chrono::steady_clock::now();
             auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
             nc_timer += nc_duration.count();
 
 			delete[] node_visited;
             big_loop_count++;
+            cores.push_back(core);
+            between_nodes_vec.push_back(between_nodes);
 		}
+        for (int i = 0; i < cores.size(); i++)
+            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+
+
 //        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
 //        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
 //		delete[] node_in_core;
