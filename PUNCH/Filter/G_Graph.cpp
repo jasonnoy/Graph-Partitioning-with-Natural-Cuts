@@ -1182,13 +1182,13 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             vector<vector<int>> thread_index;
             thread_index.resize(thread_cap);
             for (NodeID i = 0; i < cores.size(); i++)
-                thread_index[cores.size()%thread_cap].push_back(i);
+                thread_index[i%thread_cap].push_back(i);
 
             for (int i = 0; i < thread_cap; i++) {
                 threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), ref(thread_index[i]), natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
             }
             for (int i = 0; i < thread_cap; i++) {
-                threads[thread_count++].join();
+                threads[i].join();
             }
         }
         delete [] node_in_core;
