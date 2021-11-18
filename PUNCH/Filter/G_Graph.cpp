@@ -52,195 +52,197 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
     return;
 }
 
-void parallel_compute_natural_cuts( bool * natural_cuts, const deque<NodeID>& core, const vector<NodeID>& between_nodes, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
+void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
+    for (int i : index) {
+        deque<NodeID> core = cores[i];
+        vector<NodeID> between_nodes = between_nodes_vec[i];
+        //core and between_nodes form the tree T
+        PushRelabel pr( between_nodes.size() + 1 );
+        NodeID neighborID = between_nodes.size();
 
-    //core and between_nodes form the tree T
-    PushRelabel pr( between_nodes.size() + 1 );
-    NodeID neighborID = between_nodes.size();
-
-    map<NodeID, NodeID> old_to_new;
-    { //to destroy temp variable
-        //map: old id --> new id
-        vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
-        NodeID new_id = 1;
-        for(; nit != between_nodes.end(); nit++, new_id++ ){
-            old_to_new[ *nit ] = new_id;
-        }
-        deque<NodeID>::const_iterator cit = core.begin();
-        for(; cit != core.end(); cit++ ){
-            old_to_new[ *cit ] = 0 ; //new index of core is 0
-        }
-
-        // map: target --> weight
-        map<NodeID, EdgeWeight> accumulate_wet;
-
-        //first, handle core, which contains contracted node id
-        //node_visited[0] = true; //core id is 0
-        cit = core.begin();
-        for(; cit != core.end(); cit++ ){
-
-            vector<NodeID>::const_iterator cnit =
-                    contract_node_list[ *cit ].begin();
-            for(; cnit != contract_node_list[ *cit ].end(); cnit++){
-                vector<G_Edge*>::const_iterator eit =
-                        node_list[ *cnit ].get_const_adj_list().begin();
-                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
-
-                    NodeID new_tid = 0;
-                    if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
-                        new_tid = old_to_new[contract_to[(*eit)->get_target()]];
-                    }
-                    else{
-                        new_tid = neighborID;
-                    }
-                    if( new_tid > 0 ){
-                        if( accumulate_wet.count( new_tid ) )
-                            accumulate_wet[new_tid]++;
-                        else
-                            accumulate_wet[new_tid] = 1;
-                    }
-                }
-            }//for all node in the contracted node
-
-        }//for all contracted node in core
-        map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
-        for(; i_eit != accumulate_wet.end(); i_eit++){
-            pr.AddEdge( 0, i_eit->first, i_eit->second );
-            //////////////////newly added/////////////////
-            pr.AddEdge( i_eit->first, 0, i_eit->second );
-        }
-
-        //second, handle between nodes
-        nit = between_nodes.begin() + 1;
-        NodeID new_sid = 1;
-        for(; nit != between_nodes.end(); nit++, new_sid++){
-
-            accumulate_wet.clear();
-
-            vector<NodeID>::const_iterator cnit =
-                    contract_node_list[ *nit ].begin();
-            for(; cnit != contract_node_list[ *nit ].end(); cnit++){
-
-                vector<G_Edge*>::const_iterator eit =
-                        node_list[ *cnit ].get_const_adj_list().begin();
-                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
-
-                    NodeID new_tid = 0;
-                    if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
-                        new_tid = old_to_new[contract_to[(*eit)->get_target()]];
-                    }
-                    else{
-                        new_tid = neighborID;
-                    }
-                    if( new_tid > new_sid ){
-                        if( accumulate_wet.count( new_tid ) )
-                            accumulate_wet[new_tid]++;
-                        else
-                            accumulate_wet[new_tid] = 1;
-                    }
-                }
-            }//for all contracted nodes
-
-            i_eit = accumulate_wet.begin();//i = new_sid
-            for(; i_eit != accumulate_wet.end(); i_eit++){
-                pr.AddEdge( new_sid, i_eit->first, i_eit->second );
-                //////////////////newly added/////////////////
-                pr.AddEdge( i_eit->first, new_sid, i_eit->second );
+        map<NodeID, NodeID> old_to_new;
+        { //to destroy temp variable
+            //map: old id --> new id
+            vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
+            NodeID new_id = 1;
+            for(; nit != between_nodes.end(); nit++, new_id++ ){
+                old_to_new[ *nit ] = new_id;
             }
-        }//for all between nodes
-
-        pr.GetMaxFlow( 0, neighborID );
-    }
-
-    //mark natural cuts
-
-    //record node sets of S, every other node is in T
-    set<NodeID> nc_source( core.begin(), core.end() );
-
-    bool * node_visited = NULL;
-    node_visited = new bool[ between_nodes.size() + 1 ];
-    check_new( node_visited, "natural_st_cuts: node_visited" );
-    memset( node_visited, false, between_nodes.size() + 1 );
-
-    node_visited[0] = true;
-    node_visited[neighborID] = true;
-
-    deque<NodeID> nc_que;
-    nc_que.push_back( 0 ); //start from 0
-
-    while( !nc_que.empty() ){
-
-        NodeID n = nc_que.front();
-        nc_que.pop_front();
-
-        //if( node_visited[ n ] ) continue;
-        //node_visited[n] = true;
-
-        if( n ){
-            //between_nodes can work as new_to_old
-            nc_source.insert( between_nodes[n] );
-        }
-
-        vector<Edge>::const_iterator eit = pr.G[n].begin();
-        for(; eit != pr.G[n].end(); eit++){
-
-            if( node_visited[ eit->to ] )
-                continue;
-
-            //if( eit->cap == 0 || eit->cap > eit->flow ){
-            //if( eit->cap != 0 && eit->cap > eit->flow ){
-            if( eit->cap > eit->flow ){
-                nc_que.push_back( eit->to );
-                node_visited[ eit->to ] = true;
+            deque<NodeID>::const_iterator cit = core.begin();
+            for(; cit != core.end(); cit++ ){
+                old_to_new[ *cit ] = 0 ; //new index of core is 0
             }
-        }
-    }
 
-    set<NodeID>::const_iterator sr_it = nc_source.begin();
-    for(; sr_it != nc_source.end(); sr_it++){
+            // map: target --> weight
+            map<NodeID, EdgeWeight> accumulate_wet;
 
-        NodeID cid = *sr_it;
-        vector<NodeID>::const_iterator cnit =
-                contract_node_list[ cid ].begin();
-        for(; cnit != contract_node_list[cid].end(); cnit++){
+            //first, handle core, which contains contracted node id
+            //node_visited[0] = true; //core id is 0
+            cit = core.begin();
+            for(; cit != core.end(); cit++ ){
 
-            vector<G_Edge*>::const_iterator eit =
-                    node_list[ *cnit ].get_const_adj_list().begin();
-            for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+                vector<NodeID>::const_iterator cnit =
+                        contract_node_list[ *cit ].begin();
+                for(; cnit != contract_node_list[ *cit ].end(); cnit++){
+                    vector<G_Edge*>::const_iterator eit =
+                            node_list[ *cnit ].get_const_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
 
-                NodeID target = contract_to[ (*eit)->get_target() ];
-                if( nc_source.count( target ) )
-                    continue;//else
-
-                /////////////////////have a try//////////////////////
-                NodeID pr_s = old_to_new[cid];
-                NodeID pr_t = old_to_new[target];
-                bool satr = true;
-                vector<Edge>::const_iterator pr_eit = pr.G[pr_s].begin();
-                for(; pr_eit != pr.G[pr_s].end(); pr_eit++){
-
-                    if( pr_eit->to == pr_t ){
-                        //if( eit->cap == 0 || eit->cap > eit->flow ){
-                        if( pr_eit->cap > pr_eit->flow ){
-                            satr = false;
+                        NodeID new_tid = 0;
+                        if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                            new_tid = old_to_new[contract_to[(*eit)->get_target()]];
                         }
-                        break;
+                        else{
+                            new_tid = neighborID;
+                        }
+                        if( new_tid > 0 ){
+                            if( accumulate_wet.count( new_tid ) )
+                                accumulate_wet[new_tid]++;
+                            else
+                                accumulate_wet[new_tid] = 1;
+                        }
                     }
+                }//for all node in the contracted node
+
+            }//for all contracted node in core
+            map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+            for(; i_eit != accumulate_wet.end(); i_eit++){
+                pr.AddEdge( 0, i_eit->first, i_eit->second );
+                //////////////////newly added/////////////////
+                pr.AddEdge( i_eit->first, 0, i_eit->second );
+            }
+
+            //second, handle between nodes
+            nit = between_nodes.begin() + 1;
+            NodeID new_sid = 1;
+            for(; nit != between_nodes.end(); nit++, new_sid++){
+
+                accumulate_wet.clear();
+
+                vector<NodeID>::const_iterator cnit =
+                        contract_node_list[ *nit ].begin();
+                for(; cnit != contract_node_list[ *nit ].end(); cnit++){
+
+                    vector<G_Edge*>::const_iterator eit =
+                            node_list[ *cnit ].get_const_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+
+                        NodeID new_tid = 0;
+                        if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                            new_tid = old_to_new[contract_to[(*eit)->get_target()]];
+                        }
+                        else{
+                            new_tid = neighborID;
+                        }
+                        if( new_tid > new_sid ){
+                            if( accumulate_wet.count( new_tid ) )
+                                accumulate_wet[new_tid]++;
+                            else
+                                accumulate_wet[new_tid] = 1;
+                        }
+                    }
+                }//for all contracted nodes
+
+                i_eit = accumulate_wet.begin();//i = new_sid
+                for(; i_eit != accumulate_wet.end(); i_eit++){
+                    pr.AddEdge( new_sid, i_eit->first, i_eit->second );
+                    //////////////////newly added/////////////////
+                    pr.AddEdge( i_eit->first, new_sid, i_eit->second );
                 }
-                if( !satr )
+            }//for all between nodes
+
+            pr.GetMaxFlow( 0, neighborID );
+        }
+
+        //mark natural cuts
+
+        //record node sets of S, every other node is in T
+        set<NodeID> nc_source( core.begin(), core.end() );
+
+        bool * node_visited = NULL;
+        node_visited = new bool[ between_nodes.size() + 1 ];
+        check_new( node_visited, "natural_st_cuts: node_visited" );
+        memset( node_visited, false, between_nodes.size() + 1 );
+
+        node_visited[0] = true;
+        node_visited[neighborID] = true;
+
+        deque<NodeID> nc_que;
+        nc_que.push_back( 0 ); //start from 0
+
+        while( !nc_que.empty() ){
+
+            NodeID n = nc_que.front();
+            nc_que.pop_front();
+
+            //if( node_visited[ n ] ) continue;
+            //node_visited[n] = true;
+
+            if( n ){
+                //between_nodes can work as new_to_old
+                nc_source.insert( between_nodes[n] );
+            }
+
+            vector<Edge>::const_iterator eit = pr.G[n].begin();
+            for(; eit != pr.G[n].end(); eit++){
+
+                if( node_visited[ eit->to ] )
                     continue;
-                /////////////////////////////////////////////////////
 
-                natural_cuts[ (*eit)->get_id() ] = true;
-                ///////////////////have a try//////////////////////
-                //natural_cuts[ this->sym_edge_id( (*eit)->get_id() ) ] = true;
-                ///////////////////////////////////////////////////
-            }//for all edges from this contracted node
-        }//for all contracted nodes
-    }//for all nodes in S
+                //if( eit->cap == 0 || eit->cap > eit->flow ){
+                //if( eit->cap != 0 && eit->cap > eit->flow ){
+                if( eit->cap > eit->flow ){
+                    nc_que.push_back( eit->to );
+                    node_visited[ eit->to ] = true;
+                }
+            }
+        }
 
-    delete[] node_visited;
+        set<NodeID>::const_iterator sr_it = nc_source.begin();
+        for(; sr_it != nc_source.end(); sr_it++){
 
+            NodeID cid = *sr_it;
+            vector<NodeID>::const_iterator cnit =
+                    contract_node_list[ cid ].begin();
+            for(; cnit != contract_node_list[cid].end(); cnit++){
+
+                vector<G_Edge*>::const_iterator eit =
+                        node_list[ *cnit ].get_const_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
+
+                    NodeID target = contract_to[ (*eit)->get_target() ];
+                    if( nc_source.count( target ) )
+                        continue;//else
+
+                    /////////////////////have a try//////////////////////
+                    NodeID pr_s = old_to_new[cid];
+                    NodeID pr_t = old_to_new[target];
+                    bool satr = true;
+                    vector<Edge>::const_iterator pr_eit = pr.G[pr_s].begin();
+                    for(; pr_eit != pr.G[pr_s].end(); pr_eit++){
+
+                        if( pr_eit->to == pr_t ){
+                            //if( eit->cap == 0 || eit->cap > eit->flow ){
+                            if( pr_eit->cap > pr_eit->flow ){
+                                satr = false;
+                            }
+                            break;
+                        }
+                    }
+                    if( !satr )
+                        continue;
+                    /////////////////////////////////////////////////////
+
+                    natural_cuts[ (*eit)->get_id() ] = true;
+                    ///////////////////have a try//////////////////////
+                    //natural_cuts[ this->sym_edge_id( (*eit)->get_id() ) ] = true;
+                    ///////////////////////////////////////////////////
+                }//for all edges from this contracted node
+            }//for all contracted nodes
+        }//for all nodes in S
+
+        delete[] node_visited;
+    }
     return;
 }
 void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
@@ -1177,103 +1179,108 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             }
 //            for (int i = 0; i < cores.size(); i++)
 //                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
-            while (thread_count < cores.size()) {
-                int thread_num = thread_cap < cores.size()-thread_count ? thread_cap : cores.size()-thread_count;
-                for (int i = 0; i < thread_num; i++) {
-                    threads.push_back(thread(parallel_compute_natural_cuts, natural_cuts, ref(cores[thread_count+i]), ref(between_nodes_vec[thread_count+i]), ref(contract_node_list), ref(node_list), ref(contract_to)));
-                }
-                for (int i = 0; i < thread_num; i++) {
-                    threads[thread_count++].join();
-                }
+            vector<vector<int>> thread_index;
+            thread_index.resize(thread_cap);
+            for (NodeID i = 0; i < cores.size(); i++)
+                thread_index[cores.size()%thread_cap].push_back(i);
+
+            for (int i = 0; i < thread_cap; i++) {
+                threads.push_back(thread(parallel_compute_natural_cuts, ref(thread_index[i]), natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
             }
-            delete [] node_in_core;
-            continue;
+            for (int i = 0; i < thread_num; i++) {
+                threads[thread_count++].join();
+            }
         }
-		NodeID nc = 0;
-		while( true ){
+        delete [] node_in_core;
+        continue;
 
-			nc = this->next_center( node_in_core );
-			if( nc == -1u ) //0xffffffff )
-				break;
 
-			bool* node_visited = new bool[this->node_list.size()]();
 
-			deque<NodeID> core; //core and between_nodes all contain the contracted id
-			vector<NodeID> between_nodes;
-			between_nodes.reserve( sz_lim );
-			//between nodes: to calculate s-t cut, new id is the index
-			//old id is the content, and index 0 is reserved for core
-			between_nodes.push_back( 0 );
-
-			deque<NodeID> nc_queue;
-			nc_queue.push_back( nc );
-			this->mark_node_vis( nc, node_visited );
-
-			bool first_always_add = true;
-
-            auto bfs_start = chrono::steady_clock::now();
-			NodeSize total_size = 0;
-			while( !nc_queue.empty() ){
-
-				NodeID n = nc_queue.front();
-				nc_queue.pop_front();
-
-				/*if( node_visited[n] ) continue;
-				this->mark_node_vis( n, node_visited );*/
-
-				NodeID cid = this->contract_to[n];
-
-				total_size += this->contract_node_list[cid].size();
-				if( total_size > sz_lim ){
-                    // Go to natural cut process
-					break;
-				}
-				if( total_size <= core_lim || first_always_add ){
-
-					//record the contracted node id
-					core.push_back( cid );
-					this->mark_node_vis( n, node_in_core );
-					first_always_add = false;
-				}
-				else{
-
-					between_nodes.push_back( cid );
-				}
-
-				vector<NodeID>::const_iterator cnit = this->contract_node_list[cid].begin();
-				for(; cnit != this->contract_node_list[cid].end(); cnit++){
-
-					vector<G_Edge*>::const_iterator eit =
-						this->node_list[*cnit].get_adj_list().begin();
-					for(; eit != this->node_list[*cnit].get_adj_list().end(); eit++){
-
-						if( node_visited[(*eit)->get_target()] )
-							continue;
-
-						nc_queue.push_back( (*eit)->get_target() );
-						this->mark_node_vis( (*eit)->get_target(), node_visited );
-
-					}//end for all targets
-				}//end for all original nodes in the contracted node
-                small_loop_count++;
-			}//end while
-            auto bfs_end = chrono::steady_clock::now();
-            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
-            bfs_timer += bfs_duration.count();
-            // if () milli timer.
-            auto nc_start = chrono::steady_clock::now();
-//            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-            auto nc_end = chrono::steady_clock::now();
-            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
-            nc_timer += nc_duration.count();
-
-			delete[] node_visited;
-            big_loop_count++;
-            cores.push_back(core);
-            between_nodes_vec.push_back(between_nodes);
-		}
-        for (int i = 0; i < cores.size(); i++)
-            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+//		NodeID nc = 0;
+//		while( true ){
+//
+//			nc = this->next_center( node_in_core );
+//			if( nc == -1u ) //0xffffffff )
+//				break;
+//
+//			bool* node_visited = new bool[this->node_list.size()]();
+//
+//			deque<NodeID> core; //core and between_nodes all contain the contracted id
+//			vector<NodeID> between_nodes;
+//			between_nodes.reserve( sz_lim );
+//			//between nodes: to calculate s-t cut, new id is the index
+//			//old id is the content, and index 0 is reserved for core
+//			between_nodes.push_back( 0 );
+//
+//			deque<NodeID> nc_queue;
+//			nc_queue.push_back( nc );
+//			this->mark_node_vis( nc, node_visited );
+//
+//			bool first_always_add = true;
+//
+//            auto bfs_start = chrono::steady_clock::now();
+//			NodeSize total_size = 0;
+//			while( !nc_queue.empty() ){
+//
+//				NodeID n = nc_queue.front();
+//				nc_queue.pop_front();
+//
+//				/*if( node_visited[n] ) continue;
+//				this->mark_node_vis( n, node_visited );*/
+//
+//				NodeID cid = this->contract_to[n];
+//
+//				total_size += this->contract_node_list[cid].size();
+//				if( total_size > sz_lim ){
+//                    // Go to natural cut process
+//					break;
+//				}
+//				if( total_size <= core_lim || first_always_add ){
+//
+//					//record the contracted node id
+//					core.push_back( cid );
+//					this->mark_node_vis( n, node_in_core );
+//					first_always_add = false;
+//				}
+//				else{
+//
+//					between_nodes.push_back( cid );
+//				}
+//
+//				vector<NodeID>::const_iterator cnit = this->contract_node_list[cid].begin();
+//				for(; cnit != this->contract_node_list[cid].end(); cnit++){
+//
+//					vector<G_Edge*>::const_iterator eit =
+//						this->node_list[*cnit].get_adj_list().begin();
+//					for(; eit != this->node_list[*cnit].get_adj_list().end(); eit++){
+//
+//						if( node_visited[(*eit)->get_target()] )
+//							continue;
+//
+//						nc_queue.push_back( (*eit)->get_target() );
+//						this->mark_node_vis( (*eit)->get_target(), node_visited );
+//
+//					}//end for all targets
+//				}//end for all original nodes in the contracted node
+//                small_loop_count++;
+//			}//end while
+//            auto bfs_end = chrono::steady_clock::now();
+//            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+//            bfs_timer += bfs_duration.count();
+//            // if () milli timer.
+//            auto nc_start = chrono::steady_clock::now();
+////            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+//            auto nc_end = chrono::steady_clock::now();
+//            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
+//            nc_timer += nc_duration.count();
+//
+//			delete[] node_visited;
+//            big_loop_count++;
+//            cores.push_back(core);
+//            between_nodes_vec.push_back(between_nodes);
+//		}
+//        for (int i = 0; i < cores.size(); i++)
+//            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
 
 
 //        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
@@ -1296,7 +1303,8 @@ NodeID G_Graph::next_center( bool* node_in_core ){
 		if( remain_id.empty() )
 			return -1u;
 
-		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
+//		random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
+        srand((unsigned )time(NULL));
 		int random = (int)( rand() % remain_id.size() );
 
 		//DEBUG
