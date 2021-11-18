@@ -53,8 +53,9 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
 }
 
 void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
+    cout<<"index size: "<<index.size()<<endl;
     for (int i : index) {
-        cout<<"i: "<<i<<endl;
+
         deque<NodeID> core = cores[i];
         vector<NodeID> between_nodes = between_nodes_vec[i];
         //core and between_nodes form the tree T
