@@ -245,105 +245,105 @@ void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cut
     }
     return;
 }
-void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
-    bool* node_visited = new bool[node_num]();
-
-    deque<NodeID> core; //core and between_nodes all contain the contracted id
-    vector<NodeID> between_nodes;
-    between_nodes.reserve( sz_lim );
-    //between nodes: to calculate s-t cut, new id is the index
-    //old id is the content, and index 0 is reserved for core
-    between_nodes.push_back( 0 );
-    unique_lock<mutex> lock(m_lock);
-    while (node_in_core[centers.back()]) {
-        centers.pop_back();
-        if (centers.empty())
-            centers = next_centers(node_in_core, node_list.size(), 100);
-    }
-    NodeID nc = centers.back();
-    centers.pop_back();
-
-//    cout<<"parallel_find_natural_cuts\n";
-    if (node_in_core[nc]) {
-        cout<<"already in core\n";
-        return;
-    }
-
-    deque<NodeID> nc_queue;
-    nc_queue.push_back( nc );
-
-    static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
-    lock.unlock();
-
-    bool first_always_add = true;
-
-    auto bfs_start = chrono::steady_clock::now();
-    NodeSize total_size = 0;
-    while( !nc_queue.empty() ){
-
-        NodeID n = nc_queue.front();
-        nc_queue.pop_front();
-
-        /*if( node_visited[n] ) continue;
-        this->mark_node_vis( n, node_visited );*/
-
-        NodeID cid = contract_to[n];
-        if (contract_node_list[cid].size() > sz_lim)
-            cout<<"comp size > limit\n";
-        if (!contract_node_list[cid].size())
-            cout<<cid<<" contract list size = 0\n";
-
-        total_size += contract_node_list[cid].size();
-        if( total_size > sz_lim ){
-            // Go to natural cut process
-            break;
-        }
-
-        if( total_size <= core_lim || first_always_add ){
-            //record the contracted node id
-            if (node_in_core[cid]) {
-                continue;
-            }
-            lock.lock();
-            core.push_back( cid );
-            static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
-            lock.unlock();
-
-            first_always_add = false;
-        }
-        else{
-
-            between_nodes.push_back( cid );
-        }
-
-//        vector<NodeID>::const_iterator cnit = contract_node_list[cid].begin();
-        for(auto cnit = contract_node_list[cid].begin(); cnit != contract_node_list[cid].end(); cnit++){
-
-            vector<G_Edge*>::const_iterator eit =
-                    node_list[*cnit].get_const_adj_list().begin();
-            for(; eit != node_list[*cnit].get_const_adj_list().end(); eit++){
-
-                if( node_visited[(*eit)->get_target()] )
-                    continue;
-
-                nc_queue.push_back( (*eit)->get_target() );
-                static_mark_node_vis( (*eit)->get_target(), node_visited, contract_to, contract_node_list );
-
-            }//end for all targets
-        }//end for all original nodes in the contracted node
-    }//end while
-//    auto bfs_end = chrono::steady_clock::now();
-//    auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
-//    bfs_timer += bfs_duration.count();
-//    // if () milli timer.
-//    auto nc_start = chrono::steady_clock::now();
-//    this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-    parallel_compute_natural_cuts( natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to );
-//            parallel_compute_natural_cuts(natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to); // for test
-//    auto nc_end = chrono::steady_clock::now();
-//    auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
-//    nc_timer += nc_duration.count();
-}
+//void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+//    bool* node_visited = new bool[node_num]();
+//
+//    deque<NodeID> core; //core and between_nodes all contain the contracted id
+//    vector<NodeID> between_nodes;
+//    between_nodes.reserve( sz_lim );
+//    //between nodes: to calculate s-t cut, new id is the index
+//    //old id is the content, and index 0 is reserved for core
+//    between_nodes.push_back( 0 );
+//    unique_lock<mutex> lock(m_lock);
+//    while (node_in_core[centers.back()]) {
+//        centers.pop_back();
+//        if (centers.empty())
+//            centers = next_centers(node_in_core, node_list.size(), 100);
+//    }
+//    NodeID nc = centers.back();
+//    centers.pop_back();
+//
+////    cout<<"parallel_find_natural_cuts\n";
+//    if (node_in_core[nc]) {
+//        cout<<"already in core\n";
+//        return;
+//    }
+//
+//    deque<NodeID> nc_queue;
+//    nc_queue.push_back( nc );
+//
+//    static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
+//    lock.unlock();
+//
+//    bool first_always_add = true;
+//
+//    auto bfs_start = chrono::steady_clock::now();
+//    NodeSize total_size = 0;
+//    while( !nc_queue.empty() ){
+//
+//        NodeID n = nc_queue.front();
+//        nc_queue.pop_front();
+//
+//        /*if( node_visited[n] ) continue;
+//        this->mark_node_vis( n, node_visited );*/
+//
+//        NodeID cid = contract_to[n];
+//        if (contract_node_list[cid].size() > sz_lim)
+//            cout<<"comp size > limit\n";
+//        if (!contract_node_list[cid].size())
+//            cout<<cid<<" contract list size = 0\n";
+//
+//        total_size += contract_node_list[cid].size();
+//        if( total_size > sz_lim ){
+//            // Go to natural cut process
+//            break;
+//        }
+//
+//        if( total_size <= core_lim || first_always_add ){
+//            //record the contracted node id
+//            if (node_in_core[cid]) {
+//                continue;
+//            }
+//            lock.lock();
+//            core.push_back( cid );
+//            static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
+//            lock.unlock();
+//
+//            first_always_add = false;
+//        }
+//        else{
+//
+//            between_nodes.push_back( cid );
+//        }
+//
+////        vector<NodeID>::const_iterator cnit = contract_node_list[cid].begin();
+//        for(auto cnit = contract_node_list[cid].begin(); cnit != contract_node_list[cid].end(); cnit++){
+//
+//            vector<G_Edge*>::const_iterator eit =
+//                    node_list[*cnit].get_const_adj_list().begin();
+//            for(; eit != node_list[*cnit].get_const_adj_list().end(); eit++){
+//
+//                if( node_visited[(*eit)->get_target()] )
+//                    continue;
+//
+//                nc_queue.push_back( (*eit)->get_target() );
+//                static_mark_node_vis( (*eit)->get_target(), node_visited, contract_to, contract_node_list );
+//
+//            }//end for all targets
+//        }//end for all original nodes in the contracted node
+//    }//end while
+////    auto bfs_end = chrono::steady_clock::now();
+////    auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+////    bfs_timer += bfs_duration.count();
+////    // if () milli timer.
+////    auto nc_start = chrono::steady_clock::now();
+////    this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+//    parallel_compute_natural_cuts( natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to );
+////            parallel_compute_natural_cuts(natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to); // for test
+////    auto nc_end = chrono::steady_clock::now();
+////    auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
+////    nc_timer += nc_duration.count();
+//}
 ///////////////////////public methods///////////////////////////
 
 void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim){
@@ -1187,7 +1187,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             for (int i = 0; i < thread_cap; i++) {
                 threads.push_back(thread(parallel_compute_natural_cuts, ref(thread_index[i]), natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
             }
-            for (int i = 0; i < thread_num; i++) {
+            for (int i = 0; i < thread_cap; i++) {
                 threads[thread_count++].join();
             }
         }
