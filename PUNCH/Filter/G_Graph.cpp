@@ -1158,7 +1158,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
         int big_loop_count = 0, small_loop_count = 0;
         unsigned int nc_timer = 0, bfs_timer = 0;
         // todo: member variable available_threads
-        vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
+//        vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
         vector<deque<NodeID>> cores;
         vector<vector<NodeID>> between_nodes_vec;
         if (thread_cap == 10) {
