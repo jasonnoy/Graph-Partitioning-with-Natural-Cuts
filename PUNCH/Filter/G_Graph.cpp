@@ -345,50 +345,63 @@ void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID
 ///////////////////////public methods///////////////////////////
 
 void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim){
-    int i = 0;
-    while (true) {
-        NodeID nc = this->next_center( node_in_core );
-        if (nc == -1u)
+    NodeID nc = 0;
+    while( true ){
+
+        nc = this->next_center( node_in_core );
+        if( nc == -1u ) //0xffffffff )
             break;
+
         bool* node_visited = new bool[this->node_list.size()]();
+
         deque<NodeID> core; //core and between_nodes all contain the contracted id
         vector<NodeID> between_nodes;
         between_nodes.reserve( sz_lim );
         //between nodes: to calculate s-t cut, new id is the index
         //old id is the content, and index 0 is reserved for core
         between_nodes.push_back( 0 );
+
         deque<NodeID> nc_queue;
         nc_queue.push_back( nc );
         this->mark_node_vis( nc, node_visited );
 
         bool first_always_add = true;
-        NodeSize total_size = 0;
 
+        auto bfs_start = chrono::steady_clock::now();
+        NodeSize total_size = 0;
         while( !nc_queue.empty() ){
 
             NodeID n = nc_queue.front();
             nc_queue.pop_front();
 
-            NodeID cid = this->contract_to[n];
-            total_size += this->contract_node_list[cid].size();
+            /*if( node_visited[n] ) continue;
+            this->mark_node_vis( n, node_visited );*/
 
+            NodeID cid = this->contract_to[n];
+
+            total_size += this->contract_node_list[cid].size();
             if( total_size > sz_lim ){
+                // Go to natural cut process
                 break;
             }
+            if( total_size <= core_lim || first_always_add ){
 
-            if( total_size <= sz_lim || first_always_add ){
                 //record the contracted node id
                 core.push_back( cid );
                 this->mark_node_vis( n, node_in_core );
                 first_always_add = false;
             }
             else{
+
                 between_nodes.push_back( cid );
             }
 
-            for(auto cnit = this->contract_node_list[cid].begin(); cnit != this->contract_node_list[cid].end(); cnit++){
+            vector<NodeID>::const_iterator cnit = this->contract_node_list[cid].begin();
+            for(; cnit != this->contract_node_list[cid].end(); cnit++){
 
-                for(auto eit = this->node_list[*cnit].get_adj_list().begin(); eit != this->node_list[*cnit].get_adj_list().end(); eit++){
+                vector<G_Edge*>::const_iterator eit =
+                        this->node_list[*cnit].get_adj_list().begin();
+                for(; eit != this->node_list[*cnit].get_adj_list().end(); eit++){
 
                     if( node_visited[(*eit)->get_target()] )
                         continue;
@@ -399,7 +412,7 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
                 }//end for all targets
             }//end for all original nodes in the contracted node
         }//end while
-        // add to vectors
+        delete[] node_visited;
         cores.push_back(core);
         between_nodes_vec.push_back(between_nodes);
     }
