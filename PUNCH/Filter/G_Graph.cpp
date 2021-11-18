@@ -375,7 +375,7 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
                 break;
             }
 
-            if( total_size <= core_lim || first_always_add ){
+            if( total_size <= sz_lim || first_always_add ){
                 //record the contracted node id
                 core.push_back( cid );
                 this->mark_node_vis( n, node_in_core );
