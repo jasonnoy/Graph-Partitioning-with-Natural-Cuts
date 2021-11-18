@@ -52,7 +52,7 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
     return;
 }
 
-void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
+void parallel_compute_natural_cuts( mutex& m_lock, const vector<int>& index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
     for (int i : index) {
         deque<NodeID> core = cores[i];
         vector<NodeID> between_nodes = between_nodes_vec[i];
@@ -233,8 +233,9 @@ void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cut
                     if( !satr )
                         continue;
                     /////////////////////////////////////////////////////
-
+                    unique_lock<mutex> lock(m_lock);
                     natural_cuts[ (*eit)->get_id() ] = true;
+                    lock.unlock();
                     ///////////////////have a try//////////////////////
                     //natural_cuts[ this->sym_edge_id( (*eit)->get_id() ) ] = true;
                     ///////////////////////////////////////////////////
