@@ -52,7 +52,7 @@ void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& co
     return;
 }
 
-void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
+void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cuts, const vector<deque<NodeID>>& cores, const vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, const vector<NodeID>& contract_to ){
     for (int i : index) {
         deque<NodeID> core = cores[i];
         vector<NodeID> between_nodes = between_nodes_vec[i];
@@ -84,6 +84,7 @@ void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cut
                 vector<NodeID>::const_iterator cnit =
                         contract_node_list[ *cit ].begin();
                 for(; cnit != contract_node_list[ *cit ].end(); cnit++){
+
                     vector<G_Edge*>::const_iterator eit =
                             node_list[ *cnit ].get_const_adj_list().begin();
                     for(; eit != node_list[ *cnit ].get_const_adj_list().end(); eit++){
@@ -240,10 +241,8 @@ void parallel_compute_natural_cuts( const vector<int>& index, bool * natural_cut
                 }//for all edges from this contracted node
             }//for all contracted nodes
         }//for all nodes in S
-
         delete[] node_visited;
     }
-    return;
 }
 //void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
 //    bool* node_visited = new bool[node_num]();
@@ -1192,7 +1191,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
             }
         }
         delete [] node_in_core;
-        continue;
 
 
 
