@@ -2198,11 +2198,17 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //               }
 //           }
 		}
+        cout<<"tree0 comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
+        cout<<"children: ";
+        for (NodeID nid:component_tree[0].children)
+            cout<<nid<<" ";
+        cout<<endl;
 		//recursively link the tree
         bool * searched = new bool[component_tree.size()]();
         if (component_tree.size()) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
+
 
 
 		return max_comp_pos;
@@ -2306,7 +2312,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         if (search_pos < component_tree.size()) {
             for (NodeID chl_id : component_tree[search_pos].children){
                 NodeID new_search_pos = chl_id;
-                cout<<new_search_pos<<":"<<searched[new_search_pos]<<endl;
+//                cout<<new_search_pos<<":"<<searched[new_search_pos]<<endl;
                 if (!searched[new_search_pos])
                     this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
             }
