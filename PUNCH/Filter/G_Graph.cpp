@@ -2194,17 +2194,17 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
-        bool* child_pos = new bool[component_tree.size()]();
-        for (NodeID i = 0; i < component_tree.size(); i++) {
-            list<NodeID> children_pos;
-            for (NodeID chlid : component_tree[i].children) {
-                if (child_pos[comp_cnodes_to_pos[chlid]])
-                    continue;
-                child_pos[comp_cnodes_to_pos[chlid]] = true;
-                children_pos.push_back( comp_cnodes_to_pos[chlid] );
-            }
-            component_tree[i].children = children_pos;
-        }
+//        bool* child_pos = new bool[component_tree.size()]();
+//        for (NodeID i = 0; i < component_tree.size(); i++) {
+//            list<NodeID> children_pos;
+//            for (NodeID chlid : component_tree[i].children) {
+//                if (child_pos[comp_cnodes_to_pos[chlid]])
+//                    continue;
+//                child_pos[comp_cnodes_to_pos[chlid]] = true;
+//                children_pos.push_back( comp_cnodes_to_pos[chlid] );
+//            }
+//            component_tree[i].children = children_pos;
+//        }
         cout<<"tree size: "<<component_tree.size()<<"tree279 comp size: "<<component_tree[279].component.size()<<"; children size: "<<component_tree[279].children.size()<<endl;
         cout<<"children: ";
         for (NodeID nid:component_tree[279].children)
@@ -2303,18 +2303,21 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //                cout<<chlid<<" ";
 //            cout<<endl;
 //        }
+        list<NodeID> children_pos;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-			if( *chlit == parent_pos ){
+			if( comp_cnodes_to_pos[*chlit] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
-			}
+			} else {
+                children_pos.push_back(comp_cnodes_to_pos[*chlit]);
+            }
 		}
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
-//		component_tree[search_pos].children = children_pos;
+		component_tree[search_pos].children = children_pos;
 		//recursively link
 //		chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
