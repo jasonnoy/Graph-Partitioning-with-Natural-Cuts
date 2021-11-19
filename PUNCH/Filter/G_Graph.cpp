@@ -2273,30 +2273,15 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos ){
-
-//        if (search_pos >= component_tree.size()){
-//            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
-//            cout<<"parent pos: "<<parent_pos<<"; max pos: "<<numeric_limits<NodeID>::max()<<endl;
-//            search_pos = component_tree.size() - 1;
-//            cout<<"redirecting search pos to "<<search_pos<<endl;
-//        }
         if (parent_pos == 0) {
+            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
             cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
-//            cout<<"children: ";
-//            for (NodeID chid:component_tree[584].children)
-//                cout<<chid<<" ";
         }
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-        if (component_tree[search_pos].children.empty())
-            return;
 		list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-//            if (!comp_cnodes_to_pos.count(*chlit)){
-//                cout<<"key "<<*chlit<<" not exists\n";
-//                continue;
-//            }
 			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
