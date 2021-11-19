@@ -2205,11 +2205,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //            }
 //            component_tree[i].children = children_pos;
 //        }
-        cout<<"tree size: "<<component_tree.size()<<"tree279 comp size: "<<component_tree[279].component.size()<<"; children size: "<<component_tree[279].children.size()<<endl;
-        cout<<"children: ";
-        for (NodeID nid:component_tree[279].children)
-            cout<<nid<<" ";
-        cout<<endl;
 		//recursively link the tree
         bool * searched = new bool[component_tree.size()]();
         if (component_tree.size()) {
