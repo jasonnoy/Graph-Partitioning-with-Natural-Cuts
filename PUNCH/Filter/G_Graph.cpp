@@ -2118,6 +2118,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
 		bool * node_visited = new bool[this->contract_node_list.size()]();
+        bool * child_visited = new bool[this->contract_node_list.size()]();
 
 		NodeID max_comp_pos = 0;
 		NodeID i = 0;
@@ -2156,8 +2157,9 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 						NodeID target = this->contract_to[(*eit)->get_target()];
 						if( target == contract_to[cnid] )
 							continue;
-						if( cut_edges.count( (*eit)->get_id() ) ){
+						if( !child_visited[target] && cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
+                            child_visited[target] = true;
                             continue;
 						}
 						if( node_visited[target] )
