@@ -2156,9 +2156,8 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 						NodeID target = this->contract_to[(*eit)->get_target()];
 						if( target == contract_to[cnid] )
 							continue;
-						if( !node_visited[target] && cut_edges.count( (*eit)->get_id() ) ){
+						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
-                            node_visited[target] = true;
                             continue;
 						}
 						if( node_visited[target] )
