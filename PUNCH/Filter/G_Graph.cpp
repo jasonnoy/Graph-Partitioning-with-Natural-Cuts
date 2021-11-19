@@ -2158,7 +2158,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 							continue;
 						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
-                            component.push_back(target);
 							continue;
 						}
 						if( node_visited[target] )
@@ -2192,6 +2191,8 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
+            for (NodeID chlid : component_tree[i].children)
+                comp_cnodes_to_pos[chlid] = i;
 		}
 		//recursively link the tree
         if (component_tree.size()) {
