@@ -2293,6 +2293,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
 			else{
+                if (comp_cnodes_to_pos[(*chlit)] > 2008012832)
+                    cout<<"chil id: "<<(*chlit)<<endl;
 				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
