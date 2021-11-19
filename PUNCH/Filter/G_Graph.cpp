@@ -2156,7 +2156,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 						NodeID target = this->contract_to[(*eit)->get_target()];
 						if( target == cnid )
 							continue;
-						if( cut_edges.count( (*eit)->get_id() ) ){
+						if( !node_visited[target] && cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
                             node_visited[target] = true;
                             continue;
@@ -2288,6 +2288,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         }
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
+        if (component_tree[search_pos].children.empty())
+            return;
 		list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
