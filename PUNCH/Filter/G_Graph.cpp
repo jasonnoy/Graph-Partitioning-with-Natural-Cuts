@@ -2210,7 +2210,8 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
         if (component_tree.size()) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), child_visited );
         }
-
+        delete[] node_visited;
+        delete[] child_visited;
 
 
 		return max_comp_pos;
@@ -2283,6 +2284,10 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched ){
         searched[search_pos] = true;
+        NodeID count = 0;
+        for (int i = 0; i < component_tree.size(); i++)
+            count += searched[i];
+        cout<<count<<"\r";
 //        cout<<search_pos<<" marked\r";
 //        if (parent_pos == 0) {
 //            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
