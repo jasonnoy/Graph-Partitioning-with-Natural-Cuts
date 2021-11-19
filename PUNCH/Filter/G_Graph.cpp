@@ -2191,11 +2191,11 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
-           if (!component_tree[i].children.empty()) {
-               for (NodeID chlid:component_tree[i].children){
-                   comp_cnodes_to_pos[chlid] = i;
-               }
-           }
+//           if (!component_tree[i].children.empty()) {
+//               for (NodeID chlid:component_tree[i].children){
+//                   comp_cnodes_to_pos[chlid] = i;
+//               }
+//           }
 		}
 		//recursively link the tree
         if (component_tree.size()) {
