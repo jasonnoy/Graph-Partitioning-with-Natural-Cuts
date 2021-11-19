@@ -2158,6 +2158,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 							continue;
 						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
+                            node_visited[target] = true;
                             continue;
 						}
 						if( node_visited[target] )
@@ -2281,9 +2282,9 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //        }
         if (parent_pos == 584) {
             cout<<"comp size: "<<component_tree[584].component.size()<<"; children size: "<<component_tree[584].children.size()<<endl;
-            cout<<"children: ";
-            for (NodeID chid:component_tree[584].children)
-                cout<<chid<<" ";
+//            cout<<"children: ";
+//            for (NodeID chid:component_tree[584].children)
+//                cout<<chid<<" ";
         }
         cout<<"\n";
 		if( parent_pos != numeric_limits<NodeID>::max())
