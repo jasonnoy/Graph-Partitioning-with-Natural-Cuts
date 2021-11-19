@@ -2252,7 +2252,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 			//shrink further
 			if( component_tree[root_p].subtree_size <= 5 ){
 
-				if( component_tree[root_p].subtree_size + 
+				if( component_tree[root_p].neighbor_id_in_parent != -1u && component_tree[root_p].subtree_size +
 					this->contract_node_list[component_tree[root_p].neighbor_id_in_parent].size()
 					<= sz_lim ){
 

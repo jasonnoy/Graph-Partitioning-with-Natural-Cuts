@@ -33,7 +33,7 @@ struct edge_cncted_comp{
 	list<NodeID> component; //here the node ID is the contracted node ID
 	list<NodeID> children; //the node ID is actually NodeID, position of its children
 	NodeID parent; //the node ID is actually NodeID, position of its parent
-	NodeID neighbor_id_in_parent;
+	NodeID neighbor_id_in_parent = -1u;
 	NodeSize subtree_size; //zero means the tree node is removed or merged with parent
 };
 
