@@ -2300,7 +2300,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
-		component_tree[search_pos].children = children_pos );
+		component_tree[search_pos].children = children_pos;
 		//recursively link
 //		chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
