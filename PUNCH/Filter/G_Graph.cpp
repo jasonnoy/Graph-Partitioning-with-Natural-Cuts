@@ -2197,7 +2197,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //               }
 //           }
 		}
-        cout<<"tree0 comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
+        cout<<"tree size: "<<component_tree.size()<<"tree0 comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
         cout<<"children: ";
         for (NodeID nid:component_tree[0].children)
             cout<<nid<<":"<<comp_cnodes_to_pos[nid]<<" ";
