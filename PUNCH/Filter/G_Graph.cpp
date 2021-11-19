@@ -2155,7 +2155,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 					for(; eit != this->node_list[nid].get_adj_list().end(); eit++){
 
 						NodeID target = this->contract_to[(*eit)->get_target()];
-						if( target == contract_to[cnid] )
+						if( target == cnid )
 							continue;
 						if( !child_visited[target] && cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
@@ -2206,12 +2206,13 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
             cout<<nid<<":"<<comp_cnodes_to_pos[nid]<<" ";
         cout<<endl;
 		//recursively link the tree
-//        bool * searched = new bool[component_tree.size()]();
+        bool * searched = new bool[component_tree.size()]();
         if (component_tree.size()) {
-                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), child_visited );
+                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
         delete[] node_visited;
         delete[] child_visited;
+        delete[] searched;
 
 
 		return max_comp_pos;
