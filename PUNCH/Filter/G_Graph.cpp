@@ -2275,6 +2275,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched ){
         searched[search_pos] = true;
+        cout<<search_pos<<" marked\r";
         if (parent_pos == 0) {
             cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
             cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
