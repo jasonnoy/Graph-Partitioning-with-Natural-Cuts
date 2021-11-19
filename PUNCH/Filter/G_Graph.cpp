@@ -2194,8 +2194,8 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
-        list<NodeID> children_pos;
         for (NodeID i = 0; i < component_tree.size(); i++) {
+            list<NodeID> children_pos;
             for (NodeID chlid : component_tree[i].children)
                 children_pos.push_back( comp_cnodes_to_pos[chlid] );
             component_tree[i].children = children_pos;
