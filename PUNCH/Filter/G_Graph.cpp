@@ -2199,8 +2199,9 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //           }
 		}
 		//recursively link the tree
+        bool * searched = new bool[component_tree.size()]();
         if (component_tree.size()) {
-                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
+                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
 
 
@@ -2272,11 +2273,12 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 }
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
-	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos ){
+	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched ){
+        searched[search_pos] = true;
         if (parent_pos == 0) {
             cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
             cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
-            cout<<"children: "
+            cout<<"children: ";
             for (NodeID:component_tree[0].children)
                 cout<<NodeID<<" ";
             cout<<endl;
@@ -2303,7 +2305,9 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         if (search_pos < component_tree.size()) {
             for (NodeID chl_id : component_tree[search_pos].children){
                 NodeID new_search_pos = chl_id;
-                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
+                if (searched[new_search_pos])
+                    continue;
+                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
             }
         } else {
             cout<<"search_pos oversize, skipping current linking process.\n";
