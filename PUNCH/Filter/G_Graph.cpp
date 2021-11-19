@@ -2193,12 +2193,13 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
-//           if (!component_tree[i].children.empty()) {
-//               for (NodeID chlid:component_tree[i].children){
-//                   comp_cnodes_to_pos[chlid] = i;
-//               }
-//           }
 		}
+        list<NodeID> children_pos;
+        for (NodeID i = 0; i < component_tree.size(); i++) {
+            for (NodeID chlid : component_tree[i].children)
+                children_pos.push_back( comp_cnodes_to_pos[chlid] );
+            component_tree[i].children = children_pos;
+        }
         cout<<"tree size: "<<component_tree.size()<<"tree279 comp size: "<<component_tree[279].component.size()<<"; children size: "<<component_tree[279].children.size()<<endl;
         cout<<"children: ";
         for (NodeID nid:component_tree[0].children)
@@ -2282,25 +2283,21 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched ){
         searched[search_pos] = true;
-        cout<<search_pos<<" marked\r";
-        if (parent_pos == 0) {
-            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
-            cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
-            cout<<"children: ";
-            for (NodeID chlid:component_tree[0].children)
-                cout<<chlid<<" ";
-            cout<<endl;
-        }
+//        cout<<search_pos<<" marked\r";
+//        if (parent_pos == 0) {
+//            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
+//            cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
+//            cout<<"children: ";
+//            for (NodeID chlid:component_tree[0].children)
+//                cout<<chlid<<" ";
+//            cout<<endl;
+//        }
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-		list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
+			if( *chlit == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
-			}
-			else{
-				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 			}
 		}
 //        if (children_pos.empty())
@@ -2311,7 +2308,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         if (search_pos < component_tree.size()) {
-            for (NodeID chl_id : children_pos){
+            for (NodeID chl_id : component_tree[search_pos].children){
                 NodeID new_search_pos = chl_id;
 //                cout<<new_search_pos<<":"<<searched[new_search_pos]<<endl;
                 if (!searched[new_search_pos])
