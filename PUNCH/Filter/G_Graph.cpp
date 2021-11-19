@@ -2279,8 +2279,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
             cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
             cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
             cout<<"children: ";
-            for (NodeID:component_tree[0].children)
-                cout<<NodeID<<" ";
+            for (NodeID chlid:component_tree[0].children)
+                cout<<chlid<<" ";
             cout<<endl;
         }
 		if( parent_pos != numeric_limits<NodeID>::max())
