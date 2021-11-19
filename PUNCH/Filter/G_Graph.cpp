@@ -2194,11 +2194,10 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
            if (!component_tree[i].children.empty()) {
                for (NodeID chlid:component_tree[i].children){
                    comp_cnodes_to_pos[chlid] = i;
-                   if (chlid>10000000)
-                    cout<<"chlid = "<<chlid<<"\n";
                }
            } else {
                cout<<"empty children\n";
+               this_thread::sleep_for(10000);
            }
 		}
 		//recursively link the tree
