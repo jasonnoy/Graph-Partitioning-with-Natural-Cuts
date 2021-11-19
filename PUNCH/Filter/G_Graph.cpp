@@ -2280,13 +2280,12 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //            search_pos = component_tree.size() - 1;
 //            cout<<"redirecting search pos to "<<search_pos<<endl;
 //        }
-        if (parent_pos == 584) {
-            cout<<"comp size: "<<component_tree[584].component.size()<<"; children size: "<<component_tree[584].children.size()<<endl;
+        if (parent_pos == 0) {
+            cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
 //            cout<<"children: ";
 //            for (NodeID chid:component_tree[584].children)
 //                cout<<chid<<" ";
         }
-        cout<<"\n";
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
 		list<NodeID> children_pos;
