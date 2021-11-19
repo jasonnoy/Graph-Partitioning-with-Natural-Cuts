@@ -2202,18 +2202,18 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
         }
         cout<<"tree size: "<<component_tree.size()<<"tree279 comp size: "<<component_tree[279].component.size()<<"; children size: "<<component_tree[279].children.size()<<endl;
         cout<<"children: ";
-        for (NodeID nid:component_tree[0].children)
-            cout<<nid<<":"<<comp_cnodes_to_pos[nid]<<" ";
+        for (NodeID nid:component_tree[279].children)
+            cout<<nid<<" ";
         cout<<endl;
 		//recursively link the tree
         bool * searched = new bool[component_tree.size()]();
         if (component_tree.size()) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
+
         delete[] node_visited;
         delete[] child_visited;
         delete[] searched;
-
 
 		return max_comp_pos;
 }
