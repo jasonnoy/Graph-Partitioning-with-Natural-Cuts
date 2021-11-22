@@ -27,6 +27,7 @@ using namespace std;
 #include "G_Node.h"
 #include "Edge_sort.h"
 #include "PushRelabel.h"
+#include <assert.h>
 
 struct edge_cncted_comp{
 

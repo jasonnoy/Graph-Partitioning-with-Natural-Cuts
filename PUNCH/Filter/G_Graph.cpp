@@ -2207,6 +2207,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 //        }
 		//recursively link the tree
         bool * searched = new bool[component_tree.size()]();
+//        vector<bool> searched(component_tree.size(), false);
         if (component_tree.size()) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
@@ -2288,7 +2289,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         NodeID count = 0;
         for (int i = 0; i < component_tree.size(); i++)
             count += searched[i];
-        cout<<count<<"\r";
+        if (count == component_tree.size())
+            cout<<"searched all component trees.\n";
 //        cout<<search_pos<<" marked\r";
 //        if (parent_pos == 0) {
 //            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
@@ -2315,17 +2317,11 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 
 		component_tree[search_pos].children = children_pos;
 		//recursively link
-//		chlit = component_tree[search_pos].children.begin();
-//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-        if (search_pos < component_tree.size()) {
-            for (NodeID chl_id : component_tree[search_pos].children){
-                NodeID new_search_pos = chl_id;
-//                cout<<new_search_pos<<":"<<searched[new_search_pos]<<endl;
-                if (!searched[new_search_pos])
-                    this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched);
-            }
-        } else {
-            cout<<"search_pos oversize, skipping current linking process.\n";
+        assert(search_pos < component_tree.size());
+        for (NodeID chl_id : component_tree[search_pos].children){
+            NodeID new_search_pos = chl_id;
+            if (!searched[new_search_pos])
+                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched);
         }
 		return;
 }
