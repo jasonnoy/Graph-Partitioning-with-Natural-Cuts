@@ -46,8 +46,8 @@ fi
 
 g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
-./bin/MLP ./data/exp/paras.txt /data/cris.su/code/ch-routing-demo/data/china/nodes /data/cris.su/code/ch-routing-demo/data/china/links ./result/1117/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
+#./bin/MLP ./data/exp/paras.txt /data/cris.su/code/ch-routing-demo/data/china/nodes /data/cris.su/code/ch-routing-demo/data/china/links ./result/1117/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
-# ./bin/MLP ./data/paras_beijing.txt ./data/nodes_all ./data/links ./result/beijing/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
+ ./bin/MLP ./data/paras_beijing_1.txt ./data/nodes_all ./data/links ./result/beijing/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 echo "Finished"
