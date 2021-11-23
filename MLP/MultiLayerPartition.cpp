@@ -297,6 +297,10 @@ int main(int argc, char** argv) {
     if (thread_limit > hardware_threads / 2) {
         cout<<"Notice: input thread setting surpass 1/2 of the max capacity, which is  "<<hardware_threads / 2<<endl;
     }
+    if (thread_limit > hardware_threads) {
+        cout<<"Notice: input thread setting surpass the max capacity, which is  "<<hardware_threads<<endl;
+        exit(0);
+    }
 
     cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
