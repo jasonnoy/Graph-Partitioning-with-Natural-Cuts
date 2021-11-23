@@ -2119,7 +2119,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
 		bool * node_visited = new bool[this->contract_node_list.size()]();
-        bool * child_visited = new bool[this->contract_node_list.size()]();
 
 		NodeID max_comp_pos = 0;
 		NodeID i = 0;
@@ -2158,9 +2157,8 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 						NodeID target = this->contract_to[(*eit)->get_target()];
 						if( target == cnid )
 							continue;
-						if( !child_visited[target] && cut_edges.count( (*eit)->get_id() ) ){
+						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
-                            child_visited[target] = true;
                             continue;
 						}
 						if( node_visited[target] )
@@ -2208,9 +2206,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
             cout<<"some tree not searched\n";
 
         delete[] node_visited;
-        delete[] child_visited;
-        delete[] searched;
-
 		return max_comp_pos;
 }
 
@@ -2302,8 +2297,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 			if( comp_cnodes_to_pos[*chlit] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			} else {
-                if (!searched[comp_cnodes_to_pos[*chlit]])
-                    children_pos.push_back(comp_cnodes_to_pos[*chlit]);
+//                if (!searched[comp_cnodes_to_pos[*chlit]])
+                children_pos.push_back(comp_cnodes_to_pos[*chlit]);
             }
 		}
 //        if (children_pos.empty())
