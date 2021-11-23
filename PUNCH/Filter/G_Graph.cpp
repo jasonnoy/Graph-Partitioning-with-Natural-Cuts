@@ -1740,7 +1740,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
         for (int i = 0; i < component_tree.size(); i++)
             count += searched[i];
         if (count!=component_tree.size())
-            cout<<"some tree not searched\n"
+            cout<<"some tree not searched\n";
 		return max_comp_pos;
 }
 
