@@ -1820,7 +1820,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         int count = 0;
         for (int i = 0; i < searched.size(); i++)
             count += searched[i];
-        cout<<"remaining tree: "<<count<<"\r";
+        cout<<"remaining tree: "<<count<<"/"<<searched.size()<<"\r";
         searched[search_pos] = true;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
