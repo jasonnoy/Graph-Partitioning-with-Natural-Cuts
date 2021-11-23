@@ -239,13 +239,13 @@ void MultiLayerPartition::MLP() {
 //            thread_count += thread_pool_capacity;
 //        }
         // now there is enough thread space for the rest threads
-        for (int i = 0; i < thread_left; i++) {
-            ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
-        }
-        for (int i = 0; i < thread_left; i++){
-            ths[thread_count+i].join();
-            cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
-        }
+//        for (int i = 0; i < thread_left; i++) {
+//            ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+//        }
+//        for (int i = 0; i < thread_left; i++){
+//            ths[thread_count+i].join();
+//            cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
+//        }
 
         // option: 改写为不读取size
         infile.open(out_node_path);
