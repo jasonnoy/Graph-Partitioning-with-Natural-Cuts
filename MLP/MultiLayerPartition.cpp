@@ -18,7 +18,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
     process_count++;
     cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
     for (NodeID cell_id:thread_index) {
-        vector<NodeID> cell = cells[i];
+        vector<NodeID> cell = cells[cell_id];
         vector<bool> node_map(nodeNum, false); // for finding edges in cell
         for (NodeID nid : cell) {
             node_map[nid] = true;
