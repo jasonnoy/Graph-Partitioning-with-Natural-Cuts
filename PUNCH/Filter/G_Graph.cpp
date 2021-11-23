@@ -1829,9 +1829,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
 			else{
-                if (!searched[search_pos])
-				    children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
-			}
+                children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
 		}
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
@@ -1845,7 +1843,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
                 if (chl_id >= component_tree.size())
                     continue;
                 NodeID new_search_pos = chl_id;
-                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
+                if (!searched[new_search_pos])
+                    this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
             }
         } else {
             cout<<"search_pos oversize, skipping current linking process.\n";
