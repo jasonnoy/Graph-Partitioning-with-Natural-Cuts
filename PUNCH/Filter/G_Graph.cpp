@@ -1318,7 +1318,7 @@ NodeID G_Graph::next_center( bool* node_in_core ){
 			return -1u;
 
 //		random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-        srand((unsigned )time(NULL));
+//        srand((unsigned )time(NULL));
 		int random = (int)( rand() % remain_id.size() );
 
 		//DEBUG
@@ -2243,7 +2243,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 			//shrink further
 			if( component_tree[root_p].subtree_size <= 5 ){
 
-				if( component_tree[root_p].neighbor_id_in_parent != -1u && component_tree[root_p].subtree_size +
+				if( component_tree[root_p].subtree_size +
 					this->contract_node_list[component_tree[root_p].neighbor_id_in_parent].size()
 					<= sz_lim ){
 
@@ -2275,7 +2275,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched ){
-        searched[search_pos] = true;
+
 //        for (int i = 0; i < component_tree.size(); i++)
 //            count += searched[i];
 //        if (count == component_tree.size())
@@ -2289,9 +2289,10 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //                cout<<chlid<<" ";
 //            cout<<endl;
 //        }
-        list<NodeID> children_pos;
+        searched[search_pos] = true;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
+        list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 			if( comp_cnodes_to_pos[*chlit] == parent_pos ){
@@ -2309,8 +2310,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
         assert(search_pos < component_tree.size());
         for (NodeID chl_id : component_tree[search_pos].children){
             NodeID new_search_pos = chl_id;
-            if (!searched[new_search_pos])
-                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched);
+            this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched);
         }
 		return;
 }
