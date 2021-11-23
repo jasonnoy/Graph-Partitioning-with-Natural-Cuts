@@ -2194,23 +2194,17 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
 		}
-//        bool* child_pos = new bool[component_tree.size()]();
-//        for (NodeID i = 0; i < component_tree.size(); i++) {
-//            list<NodeID> children_pos;
-//            for (NodeID chlid : component_tree[i].children) {
-//                if (child_pos[comp_cnodes_to_pos[chlid]])
-//                    continue;
-//                child_pos[comp_cnodes_to_pos[chlid]] = true;
-//                children_pos.push_back( comp_cnodes_to_pos[chlid] );
-//            }
-//            component_tree[i].children = children_pos;
-//        }
 		//recursively link the tree
-        bool * searched = new bool[component_tree.size()]();
+        vector<bool> searched(component_tree.size(), false);
 //        vector<bool> searched(component_tree.size(), false);
         if (component_tree.size()) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
+        int count = 0;
+        for (int i = 0; i < component_tree.size(); i++)
+            count += searched[i];
+        if (count != component_tree.size())
+            cout<<"some tree not searched\n";
 
         delete[] node_visited;
         delete[] child_visited;
@@ -2284,13 +2278,12 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 }
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
-	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched ){
+	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched ){
         searched[search_pos] = true;
-        NodeID count = 0;
-        for (int i = 0; i < component_tree.size(); i++)
-            count += searched[i];
-        if (count == component_tree.size())
-            cout<<"searched all component trees.\n";
+//        for (int i = 0; i < component_tree.size(); i++)
+//            count += searched[i];
+//        if (count == component_tree.size())
+//            cout<<"searched all component trees.\n";
 //        cout<<search_pos<<" marked\r";
 //        if (parent_pos == 0) {
 //            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;

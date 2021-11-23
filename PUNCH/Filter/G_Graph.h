@@ -188,7 +188,7 @@ private:
 		NodeSize sz_lim );
 
 	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
-		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, bool* searched );
+		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched );
 
 	NodeID contract_cnodes( const list<NodeID>& cnode_list );
 
