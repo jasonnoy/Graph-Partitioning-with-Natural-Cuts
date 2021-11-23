@@ -1811,16 +1811,10 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched ){
 
-//        if (search_pos >= component_tree.size()){
-//            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
-//            cout<<"parent pos: "<<parent_pos<<"; max pos: "<<numeric_limits<NodeID>::max()<<endl;
-//            search_pos = component_tree.size() - 1;
-//            cout<<"redirecting search pos to "<<search_pos<<endl;
-//        }
-        int count = 0;
-        for (int i = 0; i < searched.size(); i++)
-            count += searched[i];
-        cout<<"remaining tree: "<<count<<"/"<<searched.size()<<"\r";
+//        int count = 0;
+//        for (int i = 0; i < searched.size(); i++)
+//            count += searched[i];
+//        cout<<"remaining tree: "<<count<<"/"<<searched.size()<<"\r";
         searched[search_pos] = true;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
@@ -1832,8 +1826,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
 			else{
-                if (!searched[comp_cnodes_to_pos[(*chlit)]])
-                    children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
+//                if (!searched[comp_cnodes_to_pos[(*chlit)]])
+                children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
             }
 		}
 //        if (children_pos.empty())
