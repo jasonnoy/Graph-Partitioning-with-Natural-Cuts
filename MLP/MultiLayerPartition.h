@@ -38,7 +38,7 @@ private:
     bool phantom;
 //    void dealCell(int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count);
 public:
-    const int ParaNum = 5;
+    const int ParaNum = 6;
     vector<vector<int>> parameters;
 
     MultiLayerPartition(const string pPath, const string oPath, const NodeID node_num, bool isPhantom):
