@@ -834,7 +834,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 			}
 			*cn_it = remain_edge_count;
 			if( remain_edge_count + 1 > degree_node.size() )
-				degree_node.resize( remain_edge_count + 2 );
+				degree_node.resize( remain_edge_count + 1 );
 			if( remain_edge_count )
 				degree_node[remain_edge_count].insert( nit->get_id() );
 		}
