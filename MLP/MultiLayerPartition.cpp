@@ -213,7 +213,7 @@ void MultiLayerPartition::MLP() {
         int extra_thread = l==getL()-1? 10 : 1;
 //        int extra_thread = thread_limit/current_occupied > 1 ? (thread_limit-2)/current_occupied : 1;
         cout<<"extra_thread: "<<extra_thread<<endl;
-        vector<vector<NodeID>> thread_index;
+        vector<vector<NodeID>> thread_index(thread_limit);
         for (NodeID i = 0 ; i < cells.size(); i++) {
             thread_index[i%thread_limit].push_back(i);
         }
