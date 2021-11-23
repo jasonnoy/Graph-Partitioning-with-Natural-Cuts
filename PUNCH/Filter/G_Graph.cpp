@@ -1736,8 +1736,11 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
                 exit(1);
             }
         }
-
-
+        int count = 0;
+        for (int i = 0; i < component_tree.size(); i++)
+            count += searched[i];
+        if (count!=component_tree.size())
+            cout<<"some tree not searched\n"
 		return max_comp_pos;
 }
 
@@ -1820,16 +1823,14 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-//            if (!comp_cnodes_to_pos.count(*chlit)){
-//                cout<<"key "<<*chlit<<" not exists\n";
-//                continue;
-//            }
 
 			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
 			else{
-                children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
+                if (!searched[comp_cnodes_to_pos[(*chlit)]])
+                    children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
+            }
 		}
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
@@ -1840,11 +1841,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         if (search_pos < component_tree.size()) {
             for (NodeID chl_id : component_tree[search_pos].children){
-                if (chl_id >= component_tree.size())
-                    continue;
                 NodeID new_search_pos = chl_id;
-                if (!searched[new_search_pos])
-                    this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
+                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched );
             }
         } else {
             cout<<"search_pos oversize, skipping current linking process.\n";
