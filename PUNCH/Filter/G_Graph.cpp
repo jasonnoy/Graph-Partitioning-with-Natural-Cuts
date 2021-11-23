@@ -1146,6 +1146,7 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap ){
 
 	NodeSize core_lim = sz_lim/DNCF;
+    cout<<"thread_cap="<<thread_cap<<endl;
 	
 	//dectect natural cuts C times
 	for( int t = 0; t < DNCC; t++ ){
