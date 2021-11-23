@@ -28,7 +28,7 @@ using namespace std;
 
 class MultiLayerPartition {
 private:
-    int L, U, C, FI, M, PS;
+    int L, U, Uf, C, FI, M, PS;
     void MLP();
     const string paraPath;
     const string outPath;

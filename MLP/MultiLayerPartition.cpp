@@ -15,7 +15,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
 
     if (process_count > thread_limit-1) {
         unique_lock<mutex> lck(m_lock);
@@ -43,7 +43,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
     }
 
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
-    Filter filter(U, C, FI, cell, cell_edges, anodes, aedges, extra_thread);
+    Filter filter(Uf, C, cell, cell_edges, anodes, aedges, extra_thread);
     cout<<"Running filter...";
     filter.runFilter();
     Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
@@ -141,11 +141,12 @@ void MultiLayerPartition::MLP() {
         //for test only!
         vector<NodeID> void_nodes;
         U = parameters[l][0];
-        C = parameters[l][1];
-        FI = parameters[l][2];
-        M = parameters[l][3];
-        PS = parameters[l][4]; // 暂时默认PS = sqrt(M)
-        cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
+        Uf = parameters[l][1];
+        C = parameters[l][2];
+        FI = parameters[l][3];
+        M = parameters[l][4];
+        PS = parameters[l][5]; // 暂时默认PS = sqrt(M)
+        cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", Uf="<<Uf<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
 //        if (phantom) {
 //            U = 32, C = 4, FI = 4, M = 4;
 //            l++;
@@ -224,7 +225,7 @@ void MultiLayerPartition::MLP() {
             for (int i = 0; i < thread_pool_capacity; i++) {
 //            ParallelPunch parallelPunch(this, l, void_nodes);
 //            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-                ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+                ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
             }
 
             for (int i = 0; i < thread_pool_capacity; i++){
@@ -236,7 +237,7 @@ void MultiLayerPartition::MLP() {
         }
         // now there is enough thread space for the rest threads
         for (int i = 0; i < thread_left; i++) {
-            ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, C, FI, M, L));
+            ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
         }
         for (int i = 0; i < thread_left; i++){
             ths[thread_count+i].join();
