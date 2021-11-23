@@ -295,8 +295,7 @@ int main(int argc, char** argv) {
     if (thread_limit <= 0)
         thread_limit = 1;
     if (thread_limit > hardware_threads / 2) {
-        cout<<"input thread setting surpass 1/2 of the max capacity, please enter an integer no bigger than "<<hardware_threads / 2<<endl;
-        exit(0);
+        cout<<"Notice: input thread setting surpass 1/2 of the max capacity, which is  "<<hardware_threads / 2<<endl;
     }
 
     cout<<"Dealing with layer 0...\n";
