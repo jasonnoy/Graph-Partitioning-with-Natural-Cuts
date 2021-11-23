@@ -210,18 +210,18 @@ void MultiLayerPartition::MLP() {
         cout<<"cur occ: "<<current_occupied<<endl;
         int thread_left = cells.size();
         int thread_count = 0;
-        int extra_thread = l==getL()-1? 10 : 1;
-//        int extra_thread = thread_limit/current_occupied > 1 ? (thread_limit-2)/current_occupied : 1;
+//        int extra_thread = l==getL()-1? 10 : 1;
+        int extra_thread = thread_limit/current_occupied > 1 ? (thread_limit-2)/current_occupied : 1;
         cout<<"extra_thread: "<<extra_thread<<endl;
-        vector<vector<NodeID>> thread_index(thread_limit);
+        vector<vector<NodeID>> thread_index(current_occupied);
         for (NodeID i = 0 ; i < cells.size(); i++) {
-            thread_index[i%thread_limit].push_back(i);
+            thread_index[i%current_occupied].push_back(i);
         }
-        for (int i = 0; i < thread_limit; i++)
+        for (int i = 0; i < current_occupied; i++)
             ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
-        for (int i = 0; i < thread_limit; i++){
+        for (int i = 0; i < current_occupied; i++){
             ths[i].join();
-            cout<<i<<"/"<<thread_limit<<" threads finished\n";
+            cout<<i<<"/"<<current_occupied<<" threads finished\n";
         }
 //
 //        while (thread_left > thread_pool_capacity) {
