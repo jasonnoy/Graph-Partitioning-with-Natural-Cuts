@@ -5,8 +5,7 @@
 #include "MultiLayerPartition.h"
 
 // Parallel global variables.
-condition_variable condition, file_condition;
-mutex m_lock, file_lock;
+mutex file_lock;
 const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
 atomic<int> process_count(0);
 
@@ -15,54 +14,48 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
-
-    if (process_count > thread_limit-1) {
-        unique_lock<mutex> lck(m_lock);
-        while (process_count > thread_limit)
-            condition.wait(lck);
-    }
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     process_count++;
-    cout<<"Parallel dealing Thread ID: "<<processId<<endl;
-    bool* node_map = new bool[nodeNum](); // for finding edges in cell
-    for (NodeID nid : cell) {
-        node_map[nid] = 1;
-    }
-//    cout<<"bit map finished\n";
-    vector<vector<NodeID>> cell_edges;
-    vector<vector<NodeID>> anodes;
-    vector<vector<NodeID>> aedges;
-
-    vector<vector<NodeID>> output_edges; // for ram storage
-
-    //filter inner edges inside cell.
-    for (vector<NodeID> edge : graph_edges) {
-        if (node_map[edge[0]] && node_map[edge[1]]) {
-            cell_edges.push_back(edge);
+    cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
+    for (NodeID cell_id:thread_index) {
+        vector<NodeID> cell = cells[i];
+        vector<bool> node_map(nodeNum, false); // for finding edges in cell
+        for (NodeID nid : cell) {
+            node_map[nid] = true;
         }
-    }
+//    cout<<"bit map finished\n";
+        vector<vector<NodeID>> cell_edges;
+        vector<vector<NodeID>> anodes;
+        vector<vector<NodeID>> aedges;
+
+        vector<vector<NodeID>> output_edges; // for ram storage
+
+        //filter inner edges inside cell.
+        for (vector<NodeID> edge : graph_edges) {
+            if (node_map[edge[0]] && node_map[edge[1]]) {
+                cell_edges.push_back(edge);
+            }
+        }
 
 //    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
-    Filter filter(Uf, C, cell, cell_edges, anodes, aedges, extra_thread);
-    cout<<"Running filter...";
-    filter.runFilter();
-    Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
-    cout<<"Running assembly...\n";
-    assembly.runAssembly();
+        Filter filter(Uf, C, cell, cell_edges, anodes, aedges, extra_thread);
+        cout<<"Running filter...";
+        filter.runFilter();
+        Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+        cout<<"Running assembly...\n";
+        assembly.runAssembly();
 //            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
 //            postProgress.runPostProgress();
-    bool need_contract = l == L - 1;
-    GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
-    unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
-    graphPrinter.write_MLP_result(cur_layer, false);
+        bool need_contract = l == L - 1;
+        GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
+        unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
+        graphPrinter.write_MLP_result(cur_layer, false);
 
 //    cout<<"Thread "<<processId<<" Print finished\n";
-    void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
-    cellCount += graphPrinter.nodes_result_size();
-    edgeCount += graphPrinter.cuts_result_size();
-    process_count--;
-    condition.notify_all();
-    delete [] node_map;
+        void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
+        cellCount += graphPrinter.nodes_result_size();
+        edgeCount += graphPrinter.cuts_result_size();
+    }
 }
 
 void MultiLayerPartition::MLP() {
@@ -217,24 +210,34 @@ void MultiLayerPartition::MLP() {
         cout<<"cur occ: "<<current_occupied<<endl;
         int thread_left = cells.size();
         int thread_count = 0;
-//        int extra_thread = 1;
         int extra_thread = l==getL()-1? 10 : 1;
 //        int extra_thread = thread_limit/current_occupied > 1 ? (thread_limit-2)/current_occupied : 1;
         cout<<"extra_thread: "<<extra_thread<<endl;
-        while (thread_left > thread_pool_capacity) {
-            for (int i = 0; i < thread_pool_capacity; i++) {
-//            ParallelPunch parallelPunch(this, l, void_nodes);
-//            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
-                ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
-            }
-
-            for (int i = 0; i < thread_pool_capacity; i++){
-                ths[thread_count+i].join();
-                cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
-            }
-            thread_left -= thread_pool_capacity;
-            thread_count += thread_pool_capacity;
+        vector<vector<NodeID>> thread_index;
+        for (NodeID i = 0 ; i < cells.size(); i++) {
+            thread_index[i%thread_limit].push_back(i);
         }
+        for (int i = 0; i < thread_limit; i++)
+            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+        for (int i = 0; i < thread_limit; i++){
+            ths[i].join();
+            cout<<i<<"/"<<thread_limit<<" threads finished\n";
+        }
+//
+//        while (thread_left > thread_pool_capacity) {
+//            for (int i = 0; i < thread_pool_capacity; i++) {
+////            ParallelPunch parallelPunch(this, l, void_nodes);
+////            ths.push_back(thread(&MultiLayerPartition::dealCell, this, l, cur_layer, cells[i], cellCount, edgeCount, void_nodes, process_count));
+//                ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+//            }
+//
+//            for (int i = 0; i < thread_pool_capacity; i++){
+//                ths[thread_count+i].join();
+//                cout<<thread_count+i<<"/"<<cells.size()<<" threads finished\n";
+//            }
+//            thread_left -= thread_pool_capacity;
+//            thread_count += thread_pool_capacity;
+//        }
         // now there is enough thread space for the rest threads
         for (int i = 0; i < thread_left; i++) {
             ths.push_back(thread(dealCell, thread_count+i, extra_thread, l, cur_layer, ref(cells[thread_count+i]), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
