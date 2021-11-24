@@ -1314,7 +1314,7 @@ NodeID G_Graph::next_center( bool* node_in_core ){
 			if( !node_in_core[i] )
 				remain_id.push_back(i);
 		}
-        cout<<"Remaining ids: "<<remain_id.size()<<"\r";
+        cout<<"Remaining ids: "<<remain_id.size()<<"/"<<node_list.size()<<"\r";
 		if( remain_id.empty() )
 			return -1u;
 
