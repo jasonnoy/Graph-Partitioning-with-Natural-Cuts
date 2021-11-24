@@ -123,7 +123,7 @@ public:
 
 	void cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim );
 
-    vector<NodeID>& get_sym_id(){return sym_id}
+    vector<NodeID>& get_sym_id(){return sym_id;}
 
 public:
 	//natural cuts parameters
