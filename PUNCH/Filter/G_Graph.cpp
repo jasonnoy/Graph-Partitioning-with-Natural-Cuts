@@ -680,7 +680,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void parallel_cnt_two_cuts(vector<G_Node>& node_list, vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, vector<vector<EdgeID>>& edge_classes, NodeSize sz_lim, vector<vector<NodeID>>& comp_to_delete) {
+void parallel_cnt_two_cuts(const vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, const vector<G_Edge>& edge_list, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, NodeSize sz_lim, vector<vector<NodeID>>& comp_to_delete) {
 
     for(auto ecit = edge_classes.begin() + 1; ecit != edge_classes.end(); ecit++){ //deal with one edge class
 
