@@ -1206,10 +1206,12 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
         int loop_cnt = 0;
 		while( true ){
             time(&time1);
-            cout<<"loop no."<<loop_cnt++<<endl;
+            if (loop_cnt < 10)
+                cout<<"loop no."<<loop_cnt++<<endl;
 			nc = this->next_center( node_in_core );
             time(&time2);
-            cout<<"single next center time: "<<time2-time1<<"s\n";
+            if (loop_cnt < 10)
+                cout<<"single next center time: "<<time2-time1<<"s\n";
 			if( nc == -1u ) //0xffffffff )
 				break;
 
@@ -1277,7 +1279,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int
                 small_loop_count++;
 			}//end while
             time(&time3);
-            cout<<"find nc_queue spent "<<nc_count<<", "<<time3-time2<<"s\n";
+            if (loop_cnt < 10)
+                cout<<"find nc_queue spent "<<nc_count<<", "<<time3-time2<<"s\n";
             auto bfs_end = chrono::steady_clock::now();
             auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
             bfs_timer += bfs_duration.count();
