@@ -34,6 +34,7 @@ void Filter::contract_tiny_cuts(){
     printf("done! There are %zu edge (%.1f%%) in tree.\n", ten, ten*100.0/edge_in_fi.size());
 
     cout<<"find edge classes...\n";
+    time(&start);
     vector< vector<EdgeID> > edge_equl_cls;
     gGraph.two_cuts_edge_class( edge_in_fi, edge_equl_cls ); //edge_equl_cls[0] is the class of 1-cut
 
@@ -42,6 +43,8 @@ void Filter::contract_tiny_cuts(){
     gGraph.cnt_two_cuts( edge_equl_cls, Uf );
     printf("Done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     /* we assume that 1-cut has nothing to do with 2-cut, so the first can be added
     /* after the third and second pass. Here we use the algorith same as dectecting
@@ -51,15 +54,21 @@ void Filter::contract_tiny_cuts(){
     //edge_equl_cls[0] is the class of 1-cut
     cout<<"contract one cuts...\n";
     cout<<"size of 1-cut: "<<edge_equl_cls[0].size()<<endl;
+    time(&start);
     gGraph.cnt_one_cuts( edge_equl_cls[0], Uf );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     cout<<"contract two-degree-node paths...\n";
     //second pass: contract 2-degree-node paths
+    time(&start);
     gGraph.cnt_two_degree_path( Uf );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     return;
 }
