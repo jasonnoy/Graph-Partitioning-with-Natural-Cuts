@@ -129,7 +129,7 @@ public:
 	//natural cuts parameters
 	unsigned int DNCC;
 	unsigned int DNCF;
-    static int thread_cap = 1;
+    int thread_cap = 1;
 
 private:
 	//basic
