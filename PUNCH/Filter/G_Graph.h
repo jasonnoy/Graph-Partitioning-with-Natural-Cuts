@@ -123,12 +123,13 @@ public:
 
 	void cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim );
 
-    vector<NodeID>& get_sym_id(){return sym_id};
+    vector<NodeID>& get_sym_id(){return sym_id}
 
 public:
 	//natural cuts parameters
 	unsigned int DNCC;
 	unsigned int DNCF;
+    static int thread_cap = 1;
 
 private:
 	//basic
@@ -136,7 +137,6 @@ private:
 	vector<G_Edge> edge_list;
 	//record symmetric edge id
 	vector<NodeID> sym_id;
-    int thread_cap = 1;
 
 	//deal with node contraction
 	vector<NodeID> contract_to;
