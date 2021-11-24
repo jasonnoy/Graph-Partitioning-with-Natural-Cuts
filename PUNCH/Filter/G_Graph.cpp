@@ -668,7 +668,7 @@ void G_Graph::two_cuts_edge_class( vector<bool>& edge_in_fi,
 	return;
 }
 
-void static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list ){
+NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list ){
 
     NodeSize total_size = 0;
     vector<NodeID>::const_iterator nit = n_list.begin();
@@ -730,7 +730,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, vector<NodeID>& sym_edge_i
             stacks[di].pop_back();
 
             if( node_visited[n] ) continue;
-            static_mark_node_vis( n, node_visited );
+            static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
 
             component[di].push_back( n ); //record the node id consisting of the compnent
 
