@@ -680,7 +680,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, NodeSize sz_lim, vector<vector<NodeID>>& comp_to_delete) {
+void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, NodeSize sz_lim, vector<vector<NodeID>>& comp_to_delete, mutex& m_lock) {
 
     for(auto ecit = edge_classes.begin() + 1; ecit != edge_classes.end(); ecit++){ //deal with one edge class
 
@@ -771,8 +771,12 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             // then process next edge class
             if( stacks[di].empty() ){
 
-                if( static_cal_node_size( component[di], contract_to, contract_node_list ) <= sz_lim )
+                if( static_cal_node_size( component[di], contract_to, contract_node_list ) <= sz_lim ) {
+                    unique_lock<mutex> lock(m_lock);
                     comp_to_delete.push_back( component[di] );
+                    lock.unlock();
+                }
+
                 component[di].clear();
 
                 comp_cnt++;
@@ -803,9 +807,10 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 
         vector<vector<NodeID>> comp_to_delete;
         vector<thread> ths;
+        mutex m_lock;
 
         for (int i = 0; i < thread_num; i++)
-            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), sz_lim, ref(comp_to_delete)));
+            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), sz_lim, ref(comp_to_delete), ref(m_lock)));
         for (int i = 0; i < thread_num; i++)
             ths[i].join();
         for (auto comp : comp_to_delete)
