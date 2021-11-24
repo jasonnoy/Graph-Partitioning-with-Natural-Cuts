@@ -680,6 +680,60 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
+void static_contract_nodes(const vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to) {
+    if( node_list.size() <= 1 ) //do nothing
+        return;
+
+    NodeID new_node_id = 0;
+    if( !del_cnt_node.empty() ){
+        new_node_id = del_cnt_node.back();
+        del_cnt_node.pop_back();
+    }
+    else{
+        new_node_id = contract_node_list.size();
+        vector<NodeID> new_node;
+        contract_node_list.push_back( new_node );
+    }
+
+    //set<NodeID> cntr_id_list;
+    vector<NodeID>::const_iterator nit = node_list.begin();
+    for(; nit != node_list.end(); nit++ ){
+
+        NodeID cnid = contract_to[*nit];
+
+        //if( cnid ){
+
+        //whether this contracted node has been processed before
+        //if( cntr_id_list.count( cnid ) ){
+        //	continue;
+        //}
+        //cntr_id_list.insert( cnid );
+
+        //In case 2012-12-07 Now, I think this is impossible, so remove it
+        //if( cnid == new_node_id )
+        //	continue;
+
+        vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
+        for(; cnit != contract_node_list[cnid].end(); cnit++ ){
+
+            contract_to[*cnit] = new_node_id;
+            contract_node_list[new_node_id].push_back( *cnit );
+        }
+
+        //delete this contracted node
+        contract_node_list[cnid].clear();
+        //do not waste time on managing memory
+        //this->contract_node_list[cnid].shrink_to_fit();
+        del_cnt_node.push_back( cnid );
+
+        //}
+        /*else{
+            contract_to[*nit] = new_node_id;
+            this->contract_node_list[new_node_id].push_back( *nit );
+        }*/
+    }//end for all new nodes
+}
+
 void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, NodeSize sz_lim, vector<vector<NodeID>>& comp_to_delete, mutex& m_lock) {
 
     for(auto ecit = edge_classes.begin() + 1; ecit != edge_classes.end(); ecit++){ //deal with one edge class
@@ -814,7 +868,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         for (int i = 0; i < thread_num; i++)
             ths[i].join();
         for (auto comp : comp_to_delete)
-            contract_nodes(comp);
+            static_contract_nodes(ref(comp), ref(del_cnt_node), ref(contract_node_list), ref(contract_to));
 //
 //
 //		vector< vector<EdgeID> >::const_iterator ecit = edge_classes.begin() + 1;
