@@ -114,7 +114,7 @@ public:
 
 	void cnt_two_degree_path( NodeSize sz_lim );
 
-	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim, const int thread_cap = 1 );
+	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim );
 
 	void cnt_natural_cuts( bool natural_cuts[] );
 
@@ -122,6 +122,8 @@ public:
 	void convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<NodeID>>& aedges );
 
 	void cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim );
+
+    vector<NodeID>& get_sym_id(){return sym_id};
 
 public:
 	//natural cuts parameters
@@ -134,6 +136,7 @@ private:
 	vector<G_Edge> edge_list;
 	//record symmetric edge id
 	vector<NodeID> sym_id;
+    int thread_cap = 1;
 
 	//deal with node contraction
 	vector<NodeID> contract_to;
