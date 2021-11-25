@@ -183,6 +183,8 @@ private:
 
 	void contract_nodes( const deque<NodeID>& node_list );
 
+    void fisher_shuffle(vector<NodeID>& node_list);
+
 	NodeID build_component_tree( const vector<EdgeID>& one_cut_edges,
 		vector<edge_cncted_comp>& component_tree );
 

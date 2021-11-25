@@ -1336,6 +1336,15 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 		return total_size;
 }
 
+void G_Graph::fisher_shuffle(vector<NodeID>& node_list) {
+    for (NodeID i = node_list.size()-1; i >= 0; i--){
+        NodeID randId = rand()%i;
+        NodeID temp = node_list[randId];
+        node_list[randId] = node_list[i];
+        node_list[i] = temp;
+    }
+}
+
 void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 	NodeSize core_lim = sz_lim/DNCF;
