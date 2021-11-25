@@ -1337,7 +1337,7 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 }
 
 void G_Graph::fisher_shuffle(vector<NodeID>& node_list) {
-    for (NodeID i = node_list.size()-1; i >= 0; i--){
+    for (NodeID i = node_list.size()-1; i > 0; i--){
         NodeID randId = rand()%i;
         NodeID temp = node_list[randId];
         node_list[randId] = node_list[i];
