@@ -1348,7 +1348,7 @@ void G_Graph::fisher_shuffle(vector<NodeID>& node_list) {
 void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 	NodeSize core_lim = sz_lim/DNCF;
-    cout<<"thread_cap="<<thread_cap<<endl;
+    cout<<"core limit: "<<core_lim<<", C:"<<DNCC<<endl;
 	
 	//dectect natural cuts C times
     bool need_timer = true;
@@ -1357,15 +1357,16 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
-        time(&start);
+        auto shuffle_start = chrono::steady_clock::now();
         vector<NodeID> shuffle_nodes(node_list.size());
         for (NodeID nid = 0; nid < node_list.size(); nid++)
             shuffle_nodes[nid] = nid;
         fisher_shuffle(shuffle_nodes);
-        time(&mid);
-        if (need_timer) {
-            cout<<"shuffle time cost: "<<mid-start<<"s\n";
-        }
+        auto shuffle_end = chrono::steady_clock::now();
+        auto shuffle_duration = chrono::duration_cast<chrono::milliseconds>(shuffle_end - shuffle_start);
+        if (need_timer)
+            cout<<"single shuffle time cost: "<<shuffle_duration.count()<<"ms\n";
+
 
         NodeID shuffle_index = 0;
         vector<bool> node_in_core(node_list.size(), false);
@@ -1533,6 +1534,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             cout<<"compute natural cut time: "<<cnc_duration.count()<<"ms\n";
             need_timer = false;
         }
+
 //        for (int i = 0; i < cores.size(); i++)
 //            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
 
