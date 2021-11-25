@@ -1351,15 +1351,23 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
     cout<<"thread_cap="<<thread_cap<<endl;
 	
 	//dectect natural cuts C times
+    bool need_timer = true;
+    time_t start, mid, end;
 	for( int t = 0; t < DNCC; t++ ){
 
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
-
+        time(&start);
         vector<NodeID> shuffle_nodes(node_list.size());
         for (NodeID nid = 0; nid < node_list.size(); nid++)
             shuffle_nodes[nid] = nid;
-        fisher_shuffle(shuffle_nodes);
+        fisher_shuffle(shuffle_nodes);n
+        time(&mid);
+        if (need_timer) {
+            cout<<"shuffle time cost: "<<mid-start<<"s\n";
+            need_timer = false;
+        }
+
         NodeID shuffle_index = 0;
         vector<bool> node_in_core(node_list.size(), false);
 //		bool * node_in_core = NULL;
@@ -1411,13 +1419,19 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
         int loop_cnt = 0;
 		while( true ){
+            loop_cnt++;
 
 //            if (loop_cnt < 10){
 //                time(&time1);
 //                cout<<"loop no."<<loop_cnt++<<endl;
 //            }
-
+            auto bfs_start = chrono::steady_clock::now();
 			nc = this->next_center( shuffle_nodes, node_in_core, shuffle_index );
+            auto bfs_end = chrono::steady_clock::now();
+            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+            int time_cost = bfs_duration.count();
+            if (loop_cnt == 1)
+                cout<<"single next center time cost: "<<time_cost<<"ms\n";
 
 //            if (loop_cnt < 10){
 //                time(&time2);
@@ -1442,7 +1456,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 			bool first_always_add = true;
 
-            auto bfs_start = chrono::steady_clock::now();
+
 			NodeSize total_size = 0;
             time(&time2);
             int nc_count = 0;
@@ -1496,15 +1510,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 //                cout<<"find nc_queue spent "<<nc_count<<", "<<time3-time2<<"s\n";
 //            }
 
-            auto bfs_end = chrono::steady_clock::now();
-            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
-            bfs_timer += bfs_duration.count();
-            // if () milli timer.
-            auto nc_start = chrono::steady_clock::now();
-//            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-            auto nc_end = chrono::steady_clock::now();
-            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
-            nc_timer += nc_duration.count();
 
             big_loop_count++;
             cores.emplace_back(core);
@@ -1514,9 +1519,16 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             thread_index.resize(thread_cap);
             for (NodeID i = 0; i < cores.size(); i++)
                 thread_index[i%thread_cap].push_back(i);
-
+            bool mark = true;
             for (int i = 0; i < thread_cap; i++) {
+                auto cnc_start = chrono::steady_clock::now();
                 threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
+                auto cnc_end = chrono::steady_clock::now();
+                auto cnc_duration = chrono::duration_cast<chrono::milliseconds>(cnc_end - cnc_start);
+                if (mark) {
+                    cout<<"single compute natural cut time: "<<cnc_duration.count()<<"ms\n";
+                    mark = false;
+                }
             }
             for (int i = 0; i < thread_cap; i++) {
                 threads[i].join();
