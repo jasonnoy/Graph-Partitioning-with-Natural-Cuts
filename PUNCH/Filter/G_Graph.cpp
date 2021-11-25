@@ -1533,7 +1533,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 }
 
 NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_in_core, NodeID& index ){
-        while(!node_in_core[shuffle_nodes[index]]) {
+        while(node_in_core[shuffle_nodes[index]]) {
             index++;
         }
         node_in_core[index] = true;
