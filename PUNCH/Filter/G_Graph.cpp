@@ -1348,7 +1348,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		//srand((unsigned int)time(NULL)); //every time different:: no need
 
         vector<NodeID> shuffle_nodes(node_list.size());
-        for (NodeID nid = 0; i < node_list.size(); nid++)
+        for (NodeID nid = 0; nid < node_list.size(); nid++)
             shuffle_nodes[nid] = nid;
         fisher_shuffle(shuffle_nodes);
         NodeID shuffle_index = 0;
