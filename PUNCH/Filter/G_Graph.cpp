@@ -1365,7 +1365,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
         time(&mid);
         if (need_timer) {
             cout<<"shuffle time cost: "<<mid-start<<"s\n";
-            need_timer = false;
         }
 
         NodeID shuffle_index = 0;
@@ -1417,21 +1416,16 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 		NodeID nc = 0;
         time_t time1, time2, time3;
 
-        int loop_cnt = 0;
+        auto bfs_start = chrono::steady_clock::now();
 		while( true ){
-            loop_cnt++;
 
 //            if (loop_cnt < 10){
 //                time(&time1);
 //                cout<<"loop no."<<loop_cnt++<<endl;
 //            }
-            auto bfs_start = chrono::steady_clock::now();
+
 			nc = this->next_center( shuffle_nodes, node_in_core, shuffle_index );
-            auto bfs_end = chrono::steady_clock::now();
-            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
-            int time_cost = bfs_duration.count();
-            if (loop_cnt == 1)
-                cout<<"single next center time cost: "<<time_cost<<"ms\n";
+
 
 //            if (loop_cnt < 10){
 //                time(&time2);
@@ -1515,24 +1509,30 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             cores.emplace_back(core);
             between_nodes_vec.emplace_back(between_nodes);
 		}
+        auto bfs_end = chrono::steady_clock::now();
+        auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+        int time_cost = bfs_duration.count();
+        if (need_timer) {
+            cout<<"search center time cost: "<<time_cost<<"ms\n";
+        }
+
+        auto cnc_start = chrono::steady_clock::now();
         vector<vector<int>> thread_index;
-            thread_index.resize(thread_cap);
-            for (NodeID i = 0; i < cores.size(); i++)
-                thread_index[i%thread_cap].push_back(i);
-            bool mark = true;
-            for (int i = 0; i < thread_cap; i++) {
-                auto cnc_start = chrono::steady_clock::now();
-                threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
-                auto cnc_end = chrono::steady_clock::now();
-                auto cnc_duration = chrono::duration_cast<chrono::milliseconds>(cnc_end - cnc_start);
-                if (mark) {
-                    cout<<"single compute natural cut time: "<<cnc_duration.count()<<"ms\n";
-                    mark = false;
-                }
-            }
-            for (int i = 0; i < thread_cap; i++) {
-                threads[i].join();
-            }
+        thread_index.resize(thread_cap);
+        for (NodeID i = 0; i < cores.size(); i++)
+            thread_index[i%thread_cap].push_back(i);
+        for (int i = 0; i < thread_cap; i++) {
+            threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
+        }
+        for (int i = 0; i < thread_cap; i++) {
+            threads[i].join();
+        }
+        auto cnc_end = chrono::steady_clock::now();
+        auto cnc_duration = chrono::duration_cast<chrono::milliseconds>(cnc_end - cnc_start);
+        if (need_timer) {
+            cout<<"compute natural cut time: "<<cnc_duration.count()<<"ms\n";
+            need_timer = false;
+        }
 //        for (int i = 0; i < cores.size(); i++)
 //            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
 
