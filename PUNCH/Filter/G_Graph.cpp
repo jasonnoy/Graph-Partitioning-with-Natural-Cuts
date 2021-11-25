@@ -1352,7 +1352,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             shuffle_nodes[nid] = nid;
         fisher_shuffle(shuffle_nodes);
         NodeID shuffle_index = 0;
-        vector<bool> node_in_core(node_list.size, false);
+        vector<bool> node_in_core(node_list.size(), false);
 //		bool * node_in_core = NULL;
 //		node_in_core = new bool[this->node_list.size()];
 //		check_new( node_in_core, "find natural cuts: node in core");
