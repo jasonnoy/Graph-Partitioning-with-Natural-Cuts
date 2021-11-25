@@ -170,7 +170,7 @@ private:
 
 	NodeSize cal_comp_size( const list<NodeID>& cnode_list );
 
-	NodeID next_center( bool* node_in_core );
+	NodeID next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_in_core, NodeID& index );
 
 	void mark_node_vis( NodeID nid, bool * mark_list );
 

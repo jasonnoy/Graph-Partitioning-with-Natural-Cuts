@@ -4,6 +4,7 @@
 #include<vector>
 #include<time.h>
 #include<assert.h>
+#include<stdlib.h>
 using namespace std;
 
 //debug
@@ -36,5 +37,13 @@ typedef unsigned long long Bits;
 //#define FI 2 //each pair reoptimize fail times limit
 //#define M  4 //multistart and combination number of iteration
 
+void fisher_shuffle(vector<NodeID>& node_list) {
+    for (NodeID i = node_list.size()-1; i >= 0; i--){
+        NodeID randId = rand()%i;
+        NodeID temp = node_list[randId];
+        node_list[randId] = node_list[i];
+        node_list[i] = temp;
+    }
+}
 
 #endif //COMMON_H

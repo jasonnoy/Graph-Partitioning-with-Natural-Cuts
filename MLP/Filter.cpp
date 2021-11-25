@@ -81,7 +81,11 @@ void Filter::contract_natural_cuts(){
     natural_cuts = new bool[ gGraph.get_edge_list().size() ];
 //    if( !natural_cuts ){ printf("ERROR bad alloc: natural_cuts!\n"); exit(0); }
     memset( natural_cuts, false, gGraph.get_edge_list().size() );
+    time_t start, end;
+    time(&start);
     gGraph.find_natural_cuts( natural_cuts, U );
+    time(&end);
+    cout<<"find natural cut time cost: "<<end-start<<"s\n";
 
     NodeID ten = 0;
     for( int i = 0; i < gGraph.get_edge_list().size(); i++ ){
@@ -92,9 +96,12 @@ void Filter::contract_natural_cuts(){
            ten, ten*100.0/gGraph.get_edge_list().size());
 
     cout<<"contract natural cuts...\n";
+    time(&start);
     gGraph.cnt_natural_cuts( natural_cuts );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Contract natural cut time cost: "<<end-start<<"s\n"<<endl;
 
     delete[] natural_cuts;
 
@@ -110,13 +117,20 @@ void Filter::convert_and_output(){
 }
 
 void Filter::runFilter() {
-    time_t start, end;
-    start = time(&start);
+    time_t start, mid, end;
+    time(&start);
     read_in_graph();
+    time(&mid);
+    cout<<"Filter read graph time cost: "<<mid-start<<"s\n";
     contract_tiny_cuts();
+    time(&end);
+    cout<<"contract tiny cuts time cost: "<<end-mid<<"s\n";
     contract_natural_cuts();
+    time(&mid);
+    cout<<"contract natural cuts time cost: "<<mid-end<<"s\n";
     convert_and_output();
     end = time(&end);
+    cout<<"convert time cost: "<<end-mid<<"s\n";
     int time_cost = end - start;
     cout<<"filter run time: "<<time_cost<<"s.\n";
 }

@@ -1346,8 +1346,10 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
-
-        bool* node_in_core = new bool[this->node_list.size()]();
+        vector<NodeID> shuffle_nodes(node_list);
+        fisher_shuffle(shuffle_nodes);
+        NodeID shuffle_index = 0;
+        vector<bool> node_in_core(node_list.size, false);
 //		bool * node_in_core = NULL;
 //		node_in_core = new bool[this->node_list.size()];
 //		check_new( node_in_core, "find natural cuts: node in core");
@@ -1403,7 +1405,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
                 cout<<"loop no."<<loop_cnt++<<endl;
             }
 
-			nc = this->next_center( node_in_core );
+			nc = this->next_center( shuffle_nodes, node_in_core, shuffle_index );
 
             if (loop_cnt < 10){
                 time(&time2);
@@ -1492,7 +1494,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
             nc_timer += nc_duration.count();
 
-			delete[] node_visited;
             big_loop_count++;
             cores.emplace_back(core);
             between_nodes_vec.emplace_back(between_nodes);
@@ -1514,32 +1515,22 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 //        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
 //        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
-		delete[] node_in_core;
 
 	}
 	return;
 }
 
-NodeID G_Graph::next_center( bool* node_in_core ){
+NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_in_core, NodeID& index ){
+        while(!node_in_core[shuffle_nodes[index]]) {
+            index++;
+        }
+        node_in_core[index] = true;
 
-		vector<NodeID> remain_id;
-		remain_id.reserve( this->node_list.size() );
-		for(int i = 0; i < this->node_list.size(); i++){
-			if( !node_in_core[i] )
-				remain_id.push_back(i);
-		}
-        cout<<"Remaining ids: "<<remain_id.size()<<"/"<<node_list.size()<<"\r";
-		if( remain_id.empty() )
+        cout<<"Searching centers: "<<index<<"/"<<node_in_core.size()<<"\r";
+		if( index == node_in_core.size() )
 			return -1u;
 
-//		random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-//        srand((unsigned )time(NULL));
-		int random = (int)( rand() % remain_id.size() );
-
-		//DEBUG
-		//random = 0;
-
-		return remain_id[random];
+		return shuffle_nodes[index];
 }
 
 void G_Graph::mark_node_vis( NodeID nid, bool * mark_list ){
