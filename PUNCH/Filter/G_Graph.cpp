@@ -352,9 +352,9 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
     NodeID nc = 0;
     while( true ){
 
-        nc = this->next_center( node_in_core );
-        if( nc == -1u ) //0xffffffff )
-            break;
+//        nc = this->next_center( node_in_core );
+//        if( nc == -1u ) //0xffffffff )
+//            break;
 
         bool* node_visited = new bool[this->node_list.size()]();
 
@@ -1346,7 +1346,10 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
-        vector<NodeID> shuffle_nodes(node_list);
+
+        vector<NodeID> shuffle_nodes(node_list.size());
+        for (NodeID nid = 0; i < node_list.size(); nid++)
+            shuffle_nodes[nid] = nid;
         fisher_shuffle(shuffle_nodes);
         NodeID shuffle_index = 0;
         vector<bool> node_in_core(node_list.size, false);
