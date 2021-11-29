@@ -1516,7 +1516,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
         auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
         int time_cost = bfs_duration.count();
         if (need_timer) {
-            cout<<"search center time cost: "<<time_cost<<"ms\n";
+            cout<<"\nsearch center time cost: "<<time_cost<<"ms\n";
         }
 
         auto cnc_start = chrono::steady_clock::now();
