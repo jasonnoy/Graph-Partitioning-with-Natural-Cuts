@@ -33,6 +33,8 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
 
         //filter inner edges inside cell.
         for (vector<NodeID> edge : graph_edges) {
+            if (edge[0]>=nodeNum || edge[1]>=nodeNum)
+                cout<<"nid1: "<<edge[0]<<", nid2: "<<edge[1]<<endl;
             if (node_map[edge[0]] && node_map[edge[1]]) {
                 cell_edges.push_back(edge);
             }
