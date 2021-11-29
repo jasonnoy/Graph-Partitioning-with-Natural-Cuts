@@ -1509,6 +1509,8 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             big_loop_count++;
             cores.emplace_back(core);
             between_nodes_vec.emplace_back(between_nodes);
+
+            delete[] node_visited;
 		}
         auto bfs_end = chrono::steady_clock::now();
         auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
