@@ -1553,7 +1553,9 @@ NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_i
             index++;
         }
 
-        cout<<"Searching centers: "<<index<<"/"<<node_in_core.size()<<"\r";
+        int percent = index*1000/node_in_core;
+        if (!percent%10)
+            cout<<"Searching centers: "<<percent/10<<"%\r";
 		if( index == node_in_core.size() )
 			return -1u;
 
