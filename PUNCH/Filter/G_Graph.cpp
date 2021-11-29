@@ -483,7 +483,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
 
 
-//    std::vector<link_info_t> links;
+//    std::vector<navi::base::link_info_t> links;
 //    fs.open(gr_path, std::ios::binary);
 //    if (!fs.is_open()) {
 //        cout<<"gr_file open failed!\n";
@@ -492,7 +492,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //    fs.read((char *)&count, sizeof(uint32_t));
 //    links.resize(count);
 //    this->edge_list.reserve(2 * count + 1);
-//    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+//    fs.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
 //    counter = 0;
 //    auto edge_iter = links.begin();
 //    for (; edge_iter != links.end(); edge_iter++) {

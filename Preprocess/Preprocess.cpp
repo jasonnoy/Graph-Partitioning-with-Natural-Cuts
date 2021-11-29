@@ -45,7 +45,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
 
     // preprocess edges
     cout<<"preprocess edges...\n";
-    std::vector<link_info_t> links;
+    std::vector<navi::base::link_info_t> links;
     fs.open(gr_graph, ios::binary);
     if (!fs.is_open()) {
         cout<<"gr_file open failed!\n";
@@ -58,7 +58,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     }
     fs.read((char *)&count, sizeof(uint32_t));
     links.resize(count);
-    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+    fs.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
     counter = 0;
     auto edge_iter = links.begin();
     for (; edge_iter != links.end(); edge_iter++) {

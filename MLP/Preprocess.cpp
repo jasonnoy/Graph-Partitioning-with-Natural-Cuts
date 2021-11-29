@@ -42,7 +42,7 @@ void Preprocess::preprocess() {
 
 
     // read in edges
-    std::vector<link_info_t> links;
+    std::vector<navi::base::link_info_t> links;
     infile.open(sw_link_path, std::ios::binary);
     if (!infile.is_open()) {
         cout<<"gr_file open failed!\n";
@@ -58,7 +58,7 @@ void Preprocess::preprocess() {
     edgeNum = count;
     cout<<"There are "<<count<<" edges in layer 0\n";
     links.resize(count);
-    infile.read((char *)&links[0], sizeof(link_info_t) * count);
+    infile.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
     auto edge_iter = links.begin();
     outfile<<count * 2<<endl;
     for (; edge_iter != links.end(); edge_iter++) {
