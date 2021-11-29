@@ -42,14 +42,14 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
     ifstream infile;
     infile.open(node_path, ios::binary);
 
-    vector<node_info_t> nodes;
+    vector<navi::base::node_info_t> nodes;
     NodeID count;
     infile.read((char*)&count, sizeof(uint32_t));
     if (count != node_num) {
         cout<<"count != code_num\n";
     }
     nodes.resize(node_num);
-    infile.read((char *)&nodes[0], sizeof(node_info_t) * node_num);
+    infile.read((char *)&nodes[0], sizeof(navi::base::node_info_t) * node_num);
     infile.close();
     infile.clear(ios::goodbit);
 

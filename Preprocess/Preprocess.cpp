@@ -10,7 +10,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
 
     co_out_path.insert( co_out_path.begin(), out_path.begin(), out_path.end() );
     gr_out_path.insert( gr_out_path.begin(), out_path.begin(), out_path.end() );
-    vector<node_info_t> nodes;
+    vector<navi::base::node_info_t> nodes;
     ifstream fs;
     fs.open(co_path, ios::binary);
     if (!fs.is_open()) {
@@ -27,7 +27,7 @@ void preprocess(string co_path, string gr_graph, string out_path) {
     fs.read((char *)&count, sizeof(uint32_t));
     os<<count<<endl;
     nodes.resize(count);
-    fs.read((char *)&nodes[0], sizeof(node_info_t) * count);
+    fs.read((char *)&nodes[0], sizeof(navi::base::node_info_t) * count);
     unsigned int counter = 0;
     auto node_iter = nodes.begin();
     for (; node_iter != nodes.end(); node_iter++) {

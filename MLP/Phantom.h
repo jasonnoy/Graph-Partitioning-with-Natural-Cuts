@@ -6,6 +6,7 @@
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_PHANTOM_H
 
 #include "../Common/common.h"
+#include "../Common/sw_basetypes.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -41,7 +42,7 @@ public:
         }
         nodeNum = count;
 
-        infile.read((char *)&sw_nodes[0], sizeof(node_info_t) * node_num);
+        infile.read((char *)&sw_nodes[0], sizeof(navi::base::node_info_t) * node_num);
         infile.close();
         infile.clear(ios::goodbit);
 
