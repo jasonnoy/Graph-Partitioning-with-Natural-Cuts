@@ -1469,6 +1469,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 
 			//pool item is ready
+            cout<<"use_combine: "<<use_combine<<" iter: "<<iter<<" sqrt: "<<(NodeID)ceil(sqrt((double)M))<<endl;
 			if( !this->use_combine || iter < (NodeID)ceil(sqrt((double)M)) ){
 				pool.push_back( pi );
 			}
@@ -1489,8 +1490,8 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
                 time(&time2);
 				VERBOSE(printf("done!\n");)
                 cout<<"replace pool time cost: "<<time2-time3<<"s\n";
-                cout<<"combine & replace single iter time cost: "<<time2-time1<<"s\n";
 			}
+            cout<<"combine & replace single iter time cost: "<<time2-time1<<"s\n";
 		}
 
 		EdgeWeight min_weight = numeric_limits<EdgeWeight>::max();
