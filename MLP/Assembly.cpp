@@ -23,16 +23,19 @@ void Assembly::write_result(){
 }
 
 void Assembly::runAssembly() {
-    clock_t start, end;
-    start = clock();
+    time_t start, mid, end;
+    time(&start);
     a_graph.FI = this->FI;
     a_graph.M = this->M;
     a_graph.use_combine = this->COMBINE;
     read_a_graph();
+    time(&mid);
+    cout<<"assembly read graph time: "<<mid-start<<"s\n";
     multistart_and_combination();
     cout<<"Assembly phase done\n";
+
 //    write_result();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Assembly run time: "<<time<<"s\n";
+    time(&end);
+
+    cout<<"Assembly run time: "<<end-start<<"s\n";
 }
