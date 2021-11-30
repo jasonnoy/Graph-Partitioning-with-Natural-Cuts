@@ -50,6 +50,6 @@ g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.c
 
 #./bin/MLP ./data/paras.txt /data/map_data/rp_2.0/normal/2021_11_25_21_07_41/all/all/nodes /data/map_data/rp_2.0/normal/2021_11_25_21_07_41/all/all/links ./result/ 48 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
- ./bin/MLP ./data/paras_beijing.txt ./data/nodes_all ./data/links ./result/beijing/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
+ ./bin/MLP ./data/paras_single_beijing.txt ./data/nodes_all ./data/links ./result/beijing/ 32 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 echo "Finished"
