@@ -715,7 +715,8 @@ void static_contract_nodes(const vector<NodeID>& node_list, vector<NodeID>& del_
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
-
+            if (*cnit>contract_to.size())
+                cout<<"*cnit: "<<*cnit<<endl;
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
