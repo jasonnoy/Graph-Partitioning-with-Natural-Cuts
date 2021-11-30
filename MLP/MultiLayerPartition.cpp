@@ -44,7 +44,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
         cout<<"Running filter...";
         filter.runFilter();
-        Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+        Assembly assembly(U, FI, M, true, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
         cout<<"Running assembly...\n";
         assembly.runAssembly();
 //            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);

@@ -11,7 +11,7 @@ class Assembly {
 private:
     int FI = 16;
     int M = 1;
-    bool COMBINE = false;
+    bool COMBINE = true;
     bool PHANTOM;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
