@@ -813,9 +813,9 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                         continue;
                     }
 
-                    if( node_visited[(*trit)->get_target()] )
+                    if( node_visited[trit.get_target()] )
                         continue;
-                    stacks[di].push_back( (*trit)->get_target() );
+                    stacks[di].push_back( trit.get_target() );
                 }
             }
 
