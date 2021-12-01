@@ -796,6 +796,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             }
 
             //if( this->contract_to[n] ){ //node is contracted
+            lock.lock();
             NodeID m = contract_to[n];
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
@@ -826,6 +827,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                     stacks[di].push_back( trit->get_target() );
                 }
             }
+            lock.unlock();
 
             // if an stack is empty, one component has been found
             // contract it. If k-1 components have been contracted,
