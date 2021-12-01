@@ -59,9 +59,8 @@ void Preprocess::preprocess() {
     cout<<"There are "<<count<<" edges in layer 0\n";
     links.resize(count);
     infile.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
-    auto edge_iter = links.begin();
     outfile<<count * 2<<endl;
-    for (; edge_iter != links.end(); edge_iter++) {
+    for (auto edge_iter = links.begin(); edge_iter != links.end(); edge_iter++) {
         outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" ";
         outfile<<edge_iter->end_node_id<<" "<<edge_iter->start_node_id<<" ";
 //        outfile<<edge_iter->start_node_id<<" "<<edge_iter->end_node_id<<" "<<edge_iter->forward_res_weigh<<" "; //目前假设weight为1

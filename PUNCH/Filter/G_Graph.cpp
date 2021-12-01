@@ -470,6 +470,8 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     edge_list.reserve(edges.size());
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
+        if (edge[0] > node_list.size() || edge[1] > node_list.size())
+            cout<<"oversize start: "<<edge[0]<<", end: "<<edge[1]<<endl;
         G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], counter++);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
