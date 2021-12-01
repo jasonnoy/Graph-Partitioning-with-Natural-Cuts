@@ -682,7 +682,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(const vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to) {
+void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
@@ -717,8 +717,6 @@ void static_contract_nodes(const vector<NodeID>& node_list, vector<NodeID>& del_
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
-            if (*cnit>contract_to.size())
-                cout<<"*cnit: "<<*cnit<<endl;
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
@@ -802,6 +800,8 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
+                if (*nit>node_list.size())
+                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<endl;
                 for(auto trit : node_list[*nit].get_adj_list()) {
                     //whether this edge is closed
                     if( class_edge_visited.count(trit->get_id()) ){
