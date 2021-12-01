@@ -83,9 +83,9 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         outfile.clear(ios::goodbit);
     }
 }
-void AdaptivePrinter::print_final_result() {
+void AdaptivePrinter::print_final_result(const string timestamp) {
     string filtered_nodes_path = out_path + "result_nodes.txt";
-    string result_path = out_path + "node_partitions.txt";
+    string result_path = out_path + "node_partitions" + timestamp + ".txt";
 
     ofstream outfile, outfile2;
     outfile.open(result_path);
@@ -96,6 +96,7 @@ void AdaptivePrinter::print_final_result() {
         outfile<<num<<"\n";
     }
 
+    outfile<<node_num<<endl;
 
     vector<NodeID> filtered_nodes;
     for (NodeID nid = 0; nid < node_num; nid++) {

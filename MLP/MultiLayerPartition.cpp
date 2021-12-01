@@ -280,12 +280,13 @@ void MultiLayerPartition::MLP() {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 6) {
+    if (argc != 7) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
         printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
-        printf("<arg4> number of thread, must be an positive integer\n");
+        printf("<arg5> number of thread, must be an positive integer\n");
+        printf("<arg6> timestamp needed\n");
         exit(0);
     }
     time_t start, end;
@@ -295,6 +296,7 @@ int main(int argc, char** argv) {
     string edgePath(argv[3]);
     string outPath(argv[4]);
     thread_limit = stoi(argv[5]);
+    string timestamp(argv[6]);
     if (thread_limit <= 0)
         thread_limit = 1;
     if (thread_limit > hardware_threads / 2) {
@@ -305,22 +307,22 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
-    cout<<"Dealing with layer 0...\n";
-    Preprocess preprocess(nodePath, edgePath, outPath);
-    preprocess.runPreprocess();
-    end = time(&end);
-    long time_cost = end - start;
-    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
-
-
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-    mlp.generateMLP();
+//    cout<<"Dealing with layer 0...\n";
+//    Preprocess preprocess(nodePath, edgePath, outPath);
+//    preprocess.runPreprocess();
+//    end = time(&end);
+//    long time_cost = end - start;
+//    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
+//
+//
+//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+//    mlp.generateMLP();
 
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
     AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
     adaptivePrinter.filter_result();
-    adaptivePrinter.print_final_result();
+    adaptivePrinter.print_final_result(timestamp);
 //    adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
     end = time(&end);

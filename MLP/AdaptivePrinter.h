@@ -25,7 +25,7 @@ private:
 
 public:
     AdaptivePrinter(const string o_path, const int l, const NodeID n_num): out_path(o_path), layer(l), node_num(n_num){cell_nums.resize(l);}
-    void print_final_result();
+    void print_final_result(const string timestamp);
     void print_result_for_show(const string node_path, const string edge_path);
     void filter_result();
 };
