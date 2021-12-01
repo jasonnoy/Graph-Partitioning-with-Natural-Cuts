@@ -320,7 +320,7 @@ int main(int argc, char** argv) {
 
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
-    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+    AdaptivePrinter adaptivePrinter(outPath, 5, preprocess.getNodeNum());
     adaptivePrinter.filter_result();
     adaptivePrinter.print_final_result(timestamp);
 //    adaptivePrinter.print_result_for_show(nodePath, edgePath);
