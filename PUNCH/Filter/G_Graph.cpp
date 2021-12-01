@@ -797,10 +797,10 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
 
-                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
-                        node_list[*nit].get_adj_list().begin();
-                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
-
+//                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
+//                        node_list[*nit].get_adj_list().begin();
+//                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
+                for(auto trit : node_list[*nit].get_adj_list()) {
                     //whether this edge is closed
                     if( class_edge_visited.count((*trit)->get_id()) ){
                         //mark next traverse edge
