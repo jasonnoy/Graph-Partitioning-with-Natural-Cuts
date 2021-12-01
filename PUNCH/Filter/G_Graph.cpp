@@ -783,7 +783,10 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             stacks[di].pop_back();
 
             if( node_visited[n] ) continue;
+
+            unique_lock<mutex> lock(m_lock);
             static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
+            lock.unlock();
 
             component[di].push_back( n ); //record the node id consisting of the compnent
 
@@ -828,12 +831,11 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             // contract it. If k-1 components have been contracted,
             // then process next edge class
             if( stacks[di].empty() ){
-
+                lock.lock();
                 if( static_cal_node_size( component[di], contract_to, contract_node_list ) <= sz_lim ) {
-                    unique_lock<mutex> lock(m_lock);
                     static_contract_nodes(ref(component[di]), ref(del_cnt_node), ref(contract_node_list), ref(contract_to));
-                    lock.unlock();
                 }
+                lock.unlock();
 
                 component[di].clear();
 
