@@ -802,11 +802,11 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
                 for(auto trit : node_list[*nit].get_adj_list()) {
                     //whether this edge is closed
-                    if( class_edge_visited.count((*trit)->get_id()) ){
+                    if( class_edge_visited.count(trit.get_id()) ){
                         //mark next traverse edge
-                        if( !class_edge_visited[(*trit)->get_id()] ){
+                        if( !class_edge_visited[trit.get_id()] ){
                             //the edge has not been visited
-                            neid[di] = (*trit)->get_id();
+                            neid[di] = trit.get_id();
                             class_edge_visited[ neid[di] ] = true;
                             class_edge_visited[sym_edge_id[neid[di]]] = true;
                         }
