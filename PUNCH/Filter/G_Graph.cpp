@@ -800,8 +800,11 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
-                if (*nit>node_list.size())
-                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<endl;
+                if (*nit>node_list.size()){
+                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
+                    exit(1);
+                }
+
                 for(auto trit : node_list[*nit].get_adj_list()) {
                     //whether this edge is closed
                     if( class_edge_visited.count(trit->get_id()) ){
