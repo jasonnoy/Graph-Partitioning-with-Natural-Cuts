@@ -53,6 +53,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
         unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
         graphPrinter.write_MLP_result(cur_layer, false);
+        void_cells = graphPrinter.get_void_cells();
 
 //    cout<<"Thread "<<processId<<" Print finished\n";
 //        void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());

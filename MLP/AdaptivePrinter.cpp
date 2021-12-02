@@ -31,6 +31,7 @@ void AdaptivePrinter::filter_result(vector<vector<NodeID>>& void_cells) {
                 node_parti[nid][l-1] = cell_count;
             }
         }
+        cout<<"void cells size: "<<void_cells.size()<<endl;
         for (int i = 0; i < void_cells.size(); i++) {
             for (auto vid : void_cells[i]) {
                 node_parti[vid][l-1] = cell_nums[l-1] + i;
