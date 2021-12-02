@@ -28,6 +28,7 @@ private:
     vector<vector<NodeID>> result_nodes;
     vector<vector<NodeID>> result_edges;
     vector<vector<NodeID>> result_cuts;
+    vector<vector<NodeID>> void_cells;
     const string out_path;
     vector<NodeID> contract_to;
     vector<NodeID> cell_void_nodes;
@@ -45,6 +46,7 @@ public:
     NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
     vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}
+    vector<vector<NodeID>>& get_void_cells(){return void_cells;}
 };
 
 

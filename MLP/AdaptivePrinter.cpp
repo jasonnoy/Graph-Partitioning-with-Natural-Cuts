@@ -31,9 +31,14 @@ void AdaptivePrinter::filter_result() {
                 node_parti[nid][l-1] = cell_count;
             }
         }
-        for (NodeID vid : void_nodes) {
-            node_parti[vid][l-1] = -1;
+        for (int i = 0; i < void_cells.size(); i++) {
+            for (auto vid : void_cells[i]) {
+                node_parti[vid][l-1] = cell_nums[l-1] + i;
+            }
         }
+//        for (NodeID vid : void_nodes) {
+//            node_parti[vid][l-1] = -1;
+//        }
     }
     // filter edges.
 }

@@ -129,11 +129,7 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
-        for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
-            if (*node_iter >= cell_nodes.size())
-                cout<<"oversize vid: "<<*node_iter<<endl;
-            cell_void_nodes.push_back(*node_iter);
-        }
+        void_cells.push_back(*cell_iter);
         cell_iter = result_nodes.erase(cell_iter);
 //        cell_void_nodes.insert(cell_void_nodes.end(), cell_iter->begin(), cell_iter->end());
         contracted_cell_count++;

@@ -176,13 +176,13 @@ void MultiLayerPartition::MLP() {
         int voidSize = 0;
         atomic<int> cellCount(0);
         atomic<int> edgeCount(0);
-        infile>>voidSize;
-        cout<<"current layer has "<<voidSize<<" void nodes.\n";
-        for (NodeID i = 0; i < voidSize; i++) {
-            NodeID vid;
-            infile>>vid;
-            void_nodes.push_back(i);
-        }
+//        infile>>voidSize;
+//        cout<<"current layer has "<<voidSize<<" void nodes.\n";
+//        for (NodeID i = 0; i < voidSize; i++) {
+//            NodeID vid;
+//            infile>>vid;
+//            void_nodes.push_back(i);
+//        }
         infile>>count;
         cout<<"current layer has "<<count<<" cells.\n";
         vector<vector<NodeID>> cells;
@@ -258,10 +258,10 @@ void MultiLayerPartition::MLP() {
         infile.clear(ios::goodbit);
 
         outfile.open(out_node_path);
-        outfile<<void_nodes.size()<<" ";
-        for (NodeID vid : void_nodes) {
-            outfile<<vid<<" ";
-        }
+//        outfile<<void_nodes.size()<<" ";
+//        for (NodeID vid : void_nodes) {
+//            outfile<<vid<<" ";
+//        }
         outfile<<"\n"<<cellCount<<"\n"<<buffer;
         outfile.close();
         outfile.clear(ios::goodbit);
