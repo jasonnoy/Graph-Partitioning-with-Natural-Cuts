@@ -97,7 +97,6 @@ void AdaptivePrinter::print_final_result(const string timestamp) {
     outfile2.open(filtered_nodes_path);
 
     outfile<<layer<<endl;
-    cout<<"final cell num: "<<cell_nums<<endl;
     for (int num : cell_nums) {
         outfile<<num<<"\n";
     }
