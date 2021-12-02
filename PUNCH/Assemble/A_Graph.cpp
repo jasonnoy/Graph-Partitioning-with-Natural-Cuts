@@ -107,9 +107,12 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 		this->contract_to.resize( this->node_list.size() );
 		for( NodeID i = 0; i < this->node_list.size(); i++ )
 			contract_to[i] = i;
-		this->contract_node_list.resize( this->node_list.size() );
-		for( NodeID i = 0; i < this->node_list.size(); i++ )
-			this->contract_node_list[i].push_back( i );
+		this->contract_node_list.reserve( 2*this->node_list.size() );
+		for( NodeID i = 0; i < this->node_list.size(); i++ ){
+            vector<NodeID> cnt_list = {i};
+            this->contract_node_list.push_back( cnt_list );
+        }
+
         cout<<"Initial contraction done!\n";
 }
 
