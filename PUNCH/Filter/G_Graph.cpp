@@ -682,20 +682,23 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to) {
+void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
     NodeID new_node_id = 0;
-    if( !del_cnt_node.empty() ){
-        new_node_id = del_cnt_node.back();
-        del_cnt_node.pop_back();
-    }
-    else{
-        new_node_id = contract_node_list.size();
-        vector<NodeID> new_node;
-        contract_node_list.push_back( new_node );
-    }
+//    if( !del_cnt_node.empty() ){
+//        new_node_id = del_cnt_node.back();
+//        del_cnt_node.pop_back();
+//    }
+//    else{
+    unique_lock<mutex> lock(m_lock);
+    new_node_id = contract_node_list.size();
+    vector<NodeID> new_node;
+    contract_node_list.push_back( new_node );
+    lock.unlock();
+
+//    }
 
     //set<NodeID> cntr_id_list;
     vector<NodeID>::const_iterator nit = node_list.begin();
@@ -722,7 +725,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         }
 
         //delete this contracted node
-        contract_node_list[cnid].clear();
+//        contract_node_list[cnid].clear();
         //do not waste time on managing memory
         //this->contract_node_list[cnid].shrink_to_fit();
         del_cnt_node.push_back( cnid );
@@ -784,9 +787,9 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 
             if( node_visited[n] ) continue;
 
-            unique_lock<mutex> lock(m_lock);
+//            unique_lock<mutex> lock(m_lock);
             static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
-            lock.unlock();
+//            lock.unlock();
 
             component[di].push_back( n ); //record the node id consisting of the compnent
 
@@ -796,7 +799,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             }
 
             //if( this->contract_to[n] ){ //node is contracted
-            lock.lock();
+
             NodeID m = contract_to[n];
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
@@ -827,17 +830,17 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                     stacks[di].push_back( trit->get_target() );
                 }
             }
-            lock.unlock();
+//            lock.unlock();
 
             // if an stack is empty, one component has been found
             // contract it. If k-1 components have been contracted,
             // then process next edge class
             if( stacks[di].empty() ){
-                lock.lock();
+//                lock.lock();
                 if( static_cal_node_size( component[di], contract_to, contract_node_list ) <= sz_lim ) {
-                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), ref(contract_node_list), ref(contract_to));
+                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), ref(contract_node_list), ref(contract_to), ref(m_lock));
                 }
-                lock.unlock();
+//                lock.unlock();
 
                 component[di].clear();
 

@@ -44,7 +44,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
         cout<<"Running filter...";
         filter.runFilter();
-        Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false); // ttodo: convert file into bin type, delete outpath intake
+        Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false);
         cout<<"Running assembly...\n";
         assembly.runAssembly();
 //            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
@@ -124,10 +124,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-        if (l + 1 > 1) {
-            cout<<"not target, skip...\n";
-            continue;
-        }
+//        if (l + 1 > 1) {
+//            cout<<"not target, skip...\n";
+//            continue;
+//        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
