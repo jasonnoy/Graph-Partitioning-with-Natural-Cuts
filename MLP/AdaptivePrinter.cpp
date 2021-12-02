@@ -9,15 +9,15 @@ void AdaptivePrinter::filter_result(vector<vector<NodeID>>& void_cells) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
         ifstream infile;
         infile.open(layer_node_path);
-        int void_size;
-        infile>>void_size;
-        vector<NodeID> void_nodes;
-        void_nodes.reserve(void_size);
-        for (int i = 0; i < void_size; i++) {
-            NodeID vid;
-            infile>>vid;
-            void_nodes.push_back(vid);
-        }
+//        int void_size;
+//        infile>>void_size;
+//        vector<NodeID> void_nodes;
+//        void_nodes.reserve(void_size);
+//        for (int i = 0; i < void_size; i++) {
+//            NodeID vid;
+//            infile>>vid;
+//            void_nodes.push_back(vid);
+//        }
         infile>>cell_nums[l-1];
         vector<int> temp(layer);
         node_parti.resize(node_num + void_size, temp);
