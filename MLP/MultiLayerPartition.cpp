@@ -14,7 +14,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vecto<vector<NodeID>>& void_cells, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     process_count++;
     cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
     for (NodeID cell_id:thread_index) {
@@ -55,7 +55,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         graphPrinter.write_MLP_result(cur_layer, false);
 
 //    cout<<"Thread "<<processId<<" Print finished\n";
-        void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
+//        void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
         cellCount += graphPrinter.nodes_result_size();
         edgeCount += graphPrinter.cuts_result_size();
     }
@@ -222,7 +222,7 @@ void MultiLayerPartition::MLP() {
             thread_index[i%current_occupied].push_back(i);
         }
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_nodes), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_cells), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
@@ -313,16 +313,16 @@ int main(int argc, char** argv) {
     preprocess.runPreprocess();
 //    end = time(&end);
     long time_cost = end - start;
-//    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
-//
-//
-//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-//    mlp.generateMLP();
+    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
+
+
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    mlp.generateMLP();
 
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
     AdaptivePrinter adaptivePrinter(outPath, 5, preprocess.getNodeNum());
-    adaptivePrinter.filter_result();
+    adaptivePrinter.filter_result(mlp.get_void_cells());
     adaptivePrinter.print_final_result(timestamp);
 //    adaptivePrinter.print_result_for_show(nodePath, edgePath);
 

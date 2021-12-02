@@ -34,6 +34,7 @@ private:
     const string outPath;
     const NodeID nodeNum;
     vector<vector<NodeID>> graph_edges;
+    vector<vector<NodeID>> void_cells;
 //    static void dealCell(int l, string cur_layer, vector<NodeID>& cell, atomic<int>& cell_count, atomic<int> &edge_count, vector<NodeID>& void_nodes, atomic<int>& process_count);
     bool phantom;
 //    void dealCell(int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count);
@@ -49,6 +50,7 @@ public:
     }
     int getL(){return L;}
     void setL(int l){L = l;}
+    vector<vector<NodeID>>& get_void_cells() {return void_cells;}
 };
 
 #endif //GRAPH_PARTITIONING_WITH_NATURAL_CUTS_MULTILAYERPARTITION_H

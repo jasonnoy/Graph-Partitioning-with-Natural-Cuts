@@ -21,14 +21,13 @@ private:
     const NodeID node_num;
     vector<vector<int>> node_parti;
     vector<vector<NodeID>> phantom_nodes;
-    vector<vector<NodeID>>& void_cells;
     void read_phantom_nodes();
 
 public:
-    AdaptivePrinter(const string o_path, const int l, const NodeID n_num, vector<vector<NodeID>>& voidCells): out_path(o_path), layer(l), node_num(n_num), void_cells(voidCells){cell_nums.resize(l);}
+    AdaptivePrinter(const string o_path, const int l, const NodeID n_num, vector<vector<NodeID>>& voidCells): out_path(o_path), layer(l), node_num(n_num){cell_nums.resize(l);}
     void print_final_result(const string timestamp);
     void print_result_for_show(const string node_path, const string edge_path);
-    void filter_result();
+    void filter_result(vector<vector<NodeID>>& void_cells);
 };
 
 

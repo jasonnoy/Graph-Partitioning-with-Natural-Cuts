@@ -3,7 +3,7 @@
 //
 
 #include "AdaptivePrinter.h"
-void AdaptivePrinter::filter_result() {
+void AdaptivePrinter::filter_result(vector<vector<NodeID>>& void_cells) {
     cout<<"\n";
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
