@@ -1151,15 +1151,15 @@ void G_Graph::contract_nodes( const vector<NodeID>& node_list ){
 			return;
 
 		NodeID new_node_id = 0;
-		if( !this->del_cnt_node.empty() ){
-			new_node_id = this->del_cnt_node.back();
-			this->del_cnt_node.pop_back();
-		}
-		else{
-			new_node_id = this->contract_node_list.size();
-			vector<NodeID> new_node;
-			this->contract_node_list.push_back( new_node );
-		}
+//		if( !this->del_cnt_node.empty() ){
+//			new_node_id = this->del_cnt_node.back();
+//			this->del_cnt_node.pop_back();
+//		}
+//		else{
+        new_node_id = this->contract_node_list.size();
+        vector<NodeID> new_node;
+        this->contract_node_list.push_back( new_node );
+//		}
 
 		//set<NodeID> cntr_id_list;
 		vector<NodeID>::const_iterator nit = node_list.begin();
@@ -1187,7 +1187,7 @@ void G_Graph::contract_nodes( const vector<NodeID>& node_list ){
 			}
 
 			//delete this contracted node
-			this->contract_node_list[cnid].clear();
+//			this->contract_node_list[cnid].clear();
 			//do not waste time on managing memory
 			//this->contract_node_list[cnid].shrink_to_fit();
 			del_cnt_node.push_back( cnid );
@@ -1207,15 +1207,15 @@ NodeID G_Graph::contract_cnodes( const list<NodeID>& node_list ){
 			return node_list.front();
 
 		NodeID new_node_id = 0;
-		if( !this->del_cnt_node.empty() ){
-			new_node_id = this->del_cnt_node.back();
-			this->del_cnt_node.pop_back();
-		}
-		else{
-			new_node_id = this->contract_node_list.size();
-			vector<NodeID> new_node;
-			this->contract_node_list.push_back( new_node );
-		}
+//		if( !this->del_cnt_node.empty() ){
+//			new_node_id = this->del_cnt_node.back();
+//			this->del_cnt_node.pop_back();
+//		}
+//		else{
+        new_node_id = this->contract_node_list.size();
+        vector<NodeID> new_node;
+        this->contract_node_list.push_back( new_node );
+//		}
 
 		//set<NodeID> cntr_id_list;
 		list<NodeID>::const_iterator nit = node_list.begin();
@@ -1231,7 +1231,7 @@ NodeID G_Graph::contract_cnodes( const list<NodeID>& node_list ){
 			}
 
 			//delete this contracted node
-			this->contract_node_list[cnid].clear();
+//			this->contract_node_list[cnid].clear();
 			del_cnt_node.push_back( cnid );
 
 		}//end for all new nodes
