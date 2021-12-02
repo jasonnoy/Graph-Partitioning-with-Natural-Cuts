@@ -312,9 +312,8 @@ int main(int argc, char** argv) {
 //    cout<<"Dealing with layer 0...\n";
     Preprocess preprocess(nodePath, edgePath, outPath);
     preprocess.runPreprocess();
-//    end = time(&end);
-    long time_cost = end - start;
-    cout<<"Preprocess run time: "<<time_cost<<"s.\n";
+    end = time(&end);
+    cout<<"Preprocess run time: "<<end-start<<"s.\n";
 
 
     MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
