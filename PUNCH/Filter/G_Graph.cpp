@@ -425,6 +425,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in node
     node_list.reserve(nodes.size());
+    del_cnt_node.reserve(2*nodes.size());
     // use relative node id for punch, map real nid for output
     NodeID id = 0;
     map<NodeID , NodeID> real_to_nid;
