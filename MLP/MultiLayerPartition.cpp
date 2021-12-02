@@ -14,7 +14,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vecto<vector<NodeID>>& void_cells, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     process_count++;
     cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
     for (NodeID cell_id:thread_index) {
