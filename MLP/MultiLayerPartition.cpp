@@ -328,6 +328,5 @@ int main(int argc, char** argv) {
 //    adaptivePrinter.print_result_for_show(nodePath, edgePath);
 
     end = time(&end);
-    time_cost = end - start;
-    cout<<"MLP run time: "<<time_cost<<"s.\n";
+    cout<<"MLP run time: "<<end-start<<"s.\n";
 }
