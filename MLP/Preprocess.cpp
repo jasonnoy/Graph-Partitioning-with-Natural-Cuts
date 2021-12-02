@@ -26,7 +26,7 @@ void Preprocess::preprocess() {
         exit(1);
     }
 
-    outfile<<"0\n"; // empty void nodes
+//    outfile<<"0\n"; // empty void nodes
     uint32_t count;
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
