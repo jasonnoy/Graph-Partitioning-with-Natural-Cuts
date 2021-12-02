@@ -37,14 +37,14 @@ void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
     outfile.clear(ios::goodbit);
     cout<<"Done\n";
 
-    outfile.open(out_cut_path, ios::app);
-    cout<<"Printing cuts of layer "<<layer<<" cut size: "<<result_cuts.size()<<endl;
-    for (auto cut_iter = result_cuts.begin(); cut_iter != result_cuts.end(); cut_iter++) {
-        outfile<<cut_iter->at(0)<<" "<<cut_iter->at(1)<<endl;
-    }
-    outfile.close();
-    outfile.clear(ios::goodbit);
-    cout<<"Done\n";
+//    outfile.open(out_cut_path, ios::app);
+//    cout<<"Printing cuts of layer "<<layer<<" cut size: "<<result_cuts.size()<<endl;
+//    for (auto cut_iter = result_cuts.begin(); cut_iter != result_cuts.end(); cut_iter++) {
+//        outfile<<cut_iter->at(0)<<" "<<cut_iter->at(1)<<endl;
+//    }
+//    outfile.close();
+//    outfile.clear(ios::goodbit);
+//    cout<<"Done\n";
 
 //    outfile.open(out_edge_path, ios::app);
 //    cout<<"Printing edges of layer "<<layer<<endl;
