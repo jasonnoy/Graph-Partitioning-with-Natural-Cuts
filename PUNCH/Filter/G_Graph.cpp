@@ -891,7 +891,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         cout<<"eqv class num: "<<edge_classes.size()<<endl;
         int thread_num = edge_classes.size() < thread_cap ? edge_classes.size() : thread_cap;
         vector<vector<NodeID>> thread_index(thread_num);
-        for (NodeID i = 0; i < edge_classes.size(); i++)
+        for (NodeID i = 1; i < edge_classes.size(); i++)
             thread_index[i%thread_num].push_back(i);
 
         vector<thread> ths;
