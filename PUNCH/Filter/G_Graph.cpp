@@ -29,8 +29,8 @@ void static_mark_node_vis( NodeID nid, vector<bool>& mark_list, const vector<Nod
     bool cid_in = false;
     for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
         if (*nit > mark_list.size()) {
-            cout<<"cid: "<<cid<<", nid: "<<nid<<endl;
-            cout<<"cont node list [cid] empty: "<<contract_node_list[cid].empty()<<endl;
+            cout<<"*nit: "<<(*nit)<<", cid: "<<cid<<", nid: "<<nid<<endl;
+            cout<<"cont node list [cid] size: "<<contract_node_list[cid].size()<<endl;
         }
 
         mark_list[*nit] = true;
