@@ -125,7 +125,7 @@ void GraphPrinter::contract_iso_cells() {
     int contracted_cell_count = 0;
     auto cell_iter = result_nodes.begin();
     while( cell_iter != result_nodes.end() ) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
+        if (cell_iter->size() > U/10 || cell_iter->size() > 1000) {
             cell_iter++;
             continue;
         }
