@@ -734,12 +734,12 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         //In case 2012-12-07 Now, I think this is impossible, so remove it
         //if( cnid == new_node_id )
         //	continue;
-
+        if (cnid == new_node_id)
+            continue;
 
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
-
             if (contract_record[cnid]){
                 cout<<"multi contraction found: "<<cnid<<endl;
                 exit(-1);
