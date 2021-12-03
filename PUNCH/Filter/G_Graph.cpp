@@ -744,7 +744,8 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
 void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock, set<NodeID>& contract_record) {
 
     for(NodeID i : index ){ //deal with one edge class
-        cout<<"nnt list size: "<<contract_node_list.size()<<" cap: "<<contract_node_list.capacity()<<endl;
+        if (contract_node_list.size()>=contract_node_list.capacity())
+            cout<<"cnt list oversize\n";
         vector<NodeID> edge_class_eid = edge_classes[i];
         if( edge_class_eid.size() < 4 ) // needs two edges for a pair of 2-cuts edge
             continue;
