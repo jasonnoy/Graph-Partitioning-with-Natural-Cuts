@@ -889,6 +889,20 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 
 		//edge_classes[0] is the class of 1-cut
         cout<<"eqv class num: "<<edge_classes.size()<<endl;
+        vector<set<NodeID>> sets;
+        for (int i = 1; i < edge_classes.size(); i++) {
+            set<NodeID> set(edge_classes[i].begin(), edge_classes[i].end());
+            sets.push_back(set);
+        }
+        set<NodeID> inter;
+        for (int i = 0; i < sets.size();i++) {
+            for (int j = i + 1; j < sets.size(); j++) {
+                set_intersection(sets[i].begin(), sets[i].end(), sets[j].begin(), sets[j].end(), inter, inter.end());
+            }
+            assert(inter.empty());
+            cout<<"checking "<<i<<"/"<<sets.size()<<"\r";
+        }
+
         int thread_num = edge_classes.size() < thread_cap ? edge_classes.size() : thread_cap;
         vector<vector<NodeID>> thread_index(thread_num);
         for (NodeID i = 1; i < edge_classes.size(); i++)
