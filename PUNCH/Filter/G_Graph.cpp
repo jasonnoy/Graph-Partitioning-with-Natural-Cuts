@@ -687,7 +687,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, set<NodeID>& contract_record) {
+void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
@@ -730,7 +730,12 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         //In case 2012-12-07 Now, I think this is impossible, so remove it
         //if( cnid == new_node_id )
         //	continue;
+        if (contract_record[cnid]){
+            cout<<"multi contraction found: "<<cnid<<endl;
+            exit(-1);
+        }
 
+        contract_record[cnid] = true;
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
             if (*cnit > contract_to.size()) {
@@ -758,7 +763,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
     }//end for all new nodes
 }
 
-void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock, set<NodeID>& contract_record) {
+void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock, vector<bool>& contract_record) {
 
     for(NodeID i : index ){ //deal with one edge class
         vector<NodeID> edge_class_eid = edge_classes[i];
@@ -927,7 +932,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         vector<thread> ths;
         mutex m_lock;
 
-        set<NodeID> contract_record;
+        vector<vool> contract_record(2*node_list.size(), false);
 //        thread_num = 1;
         cout<<"2 cut thread num: "<<thread_num<<endl;
         for (int i = 0; i < thread_num; i++)
