@@ -831,8 +831,8 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
                 if (*nit>node_list.size()){
-                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
                     cout<<"cap: "<<contract_node_list.capacity()<<endl;
+                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
                     exit(1);
                 }
 
