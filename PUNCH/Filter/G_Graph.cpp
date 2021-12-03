@@ -544,9 +544,11 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     this->contract_to.resize( this->node_list.size() );
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
-    this->contract_node_list.resize( 10*this->node_list.size() );
-    for( NodeID i = 0; i < this->node_list.size(); i++ )
-        this->contract_node_list[i].push_back( i );
+    this->contract_node_list.reserve( 2*this->node_list.size() );
+    for( NodeID i = 0; i < this->node_list.size(); i++ ){
+        vector<NodeID> new_list = {i};
+        contract_node_list.push_back(new_list);
+    }
     cout<<"initial contraction done\n";
 }
 
