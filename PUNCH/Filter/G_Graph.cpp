@@ -723,7 +723,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
             if (contract_record.count(*cnit))
                 cout<<"multi contraction found\n";
-            contract_record.push_back(*cnit);
+            contract_record.insert(*cnit);
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
