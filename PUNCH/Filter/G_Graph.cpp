@@ -544,7 +544,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     this->contract_to.resize( this->node_list.size() );
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
-    this->contract_node_list.resize( this->node_list.size() );
+    this->contract_node_list.resize( 2*this->node_list.size() );
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         this->contract_node_list[i].push_back( i );
     cout<<"initial contraction done\n";
@@ -745,8 +745,6 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 
     for(NodeID i : index ){ //deal with one edge class
         cout<<"nnt list size: "<<contract_node_list.size()<<" cap: "<<contract_node_list.capacity()<<endl;
-        if (contract_node_list.size() >= 2*node_list.size())
-            cout<<"cnt list surpass 2*nodelist size\n";
         vector<NodeID> edge_class_eid = edge_classes[i];
         if( edge_class_eid.size() < 4 ) // needs two edges for a pair of 2-cuts edge
             continue;
