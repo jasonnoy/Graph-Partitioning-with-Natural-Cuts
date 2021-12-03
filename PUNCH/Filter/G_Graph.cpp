@@ -807,7 +807,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             NodeID m = contract_to[n];
             if (contract_record.count(m))
                 cout<<"multi contract found\n";
-            contract_record.insert(m);
+            contract_record.push_back(m);
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
 
