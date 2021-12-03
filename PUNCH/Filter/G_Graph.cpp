@@ -721,9 +721,9 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
-            if (contract_record.count(*cnit))
-                cout<<"multi contraction found\n";
-            contract_record.push_back(*cnit);
+//            if (contract_record.count(*cnit))
+//                cout<<"multi contraction found\n";
+//            contract_record.push_back(*cnit);
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
@@ -805,6 +805,9 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             //if( this->contract_to[n] ){ //node is contracted
 
             NodeID m = contract_to[n];
+            if (contract_record.count(m))
+                cout<<"multi contract found\n";
+            contract_record.insert(m);
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
 
