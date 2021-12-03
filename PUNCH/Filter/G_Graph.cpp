@@ -895,10 +895,10 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 //            sets.push_back(set);
 //        }
         vector<bool> intersection(node_list.size(), false);
-        for (auto edge_cls : edge_classes) {
-            for (NodeID nid : edge_cls) {
+        for (int i = 1; i < edge_classes.size(); i++) {
+            for (NodeID nid : edge_classes[i]) {
                 if (intersection[nid]) {
-                    cout<<"intersection found: "<<nid<<endl;
+                    cout<<"intersection found: "<<nid<<"class id: "<<i<<endl;
                     exit(-1);
                 }
                 intersection[nid] = true;
