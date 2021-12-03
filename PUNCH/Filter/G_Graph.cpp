@@ -544,7 +544,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     this->contract_to.resize( this->node_list.size() );
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
-    this->contract_node_list.reserve( 2*this->node_list.size() > 100? 2*this->node_list.size() : 100 );
+    this->contract_node_list.reserve( 2*this->node_list.size() > 10000 ? 2*this->node_list.size() : 10000 );
     for( NodeID i = 0; i < this->node_list.size(); i++ ){
         vector<NodeID> new_list = {i};
         contract_node_list.push_back(new_list);

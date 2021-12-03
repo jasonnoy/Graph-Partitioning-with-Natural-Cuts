@@ -228,6 +228,7 @@ void MultiLayerPartition::MLP() {
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
         }
+        process_count = 0;
 //
 //        while (thread_left > thread_pool_capacity) {
 //            for (int i = 0; i < thread_pool_capacity; i++) {
