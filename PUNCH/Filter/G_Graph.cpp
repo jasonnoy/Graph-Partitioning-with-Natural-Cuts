@@ -838,8 +838,8 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             // then process next edge class
             if( stacks[di].empty() ){
 //                lock.lock();
-                if( static_cal_node_size( component[di], contract_to, contract_node_list ) <= sz_lim ) {
-                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), ref(contract_node_list), ref(contract_to), ref(m_lock));
+                if( static_cal_node_size( ref(component[di]), contract_to, contract_node_list ) <= sz_lim ) {
+                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), contract_node_list, contract_to, m_lock);
                 }
 //                lock.unlock();
 
@@ -873,122 +873,122 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 
         vector<thread> ths;
         mutex m_lock;
+
+        for (int i = 0; i < thread_num; i++)
+            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock)));
+        for (int i = 0; i < thread_num; i++)
+            ths[i].join();
 //
-//        for (int i = 0; i < thread_num; i++)
-//            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock)));
-//        for (int i = 0; i < thread_num; i++)
-//            ths[i].join();
 //
-
-		vector< vector<EdgeID> >::const_iterator ecit = edge_classes.begin() + 1;
-
-		for(; ecit != edge_classes.end(); ecit++){ //deal with one edge class
-
-			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
-				continue;
-
-			NodeID comp_lim = ecit->size()/2 - 1; // k - number of connected components
-
-			//close edges in this class
-			//and initially mark class edges unvisited
-			map<NodeID, bool> class_edge_visited;
-			vector<EdgeID>::const_iterator eit = ecit->begin();
-			for(; eit != ecit->end(); eit++){
-				//edge_closed[*eit] = true;
-				class_edge_visited[*eit] = false;
-			}
-
-			//start from first edge
-			EdgeID eid = ecit->at(0);
-			class_edge_visited[eid] = true;
-			class_edge_visited[this->sym_edge_id(eid)] = true;
-
-			//initially put start nodes
-			vector<bool> node_visited( this->node_list.size(), false );
-			vector< vector<NodeID> > stacks;
-			stacks.resize( 2 );
-			stacks[0].push_back( this->edge_list[eid].get_source() );
-			stacks[1].push_back( this->edge_list[eid].get_target() );
-
-			//find small components to contract
-			NodeID di = 1;
-			vector< vector<NodeID> > component;
-			component.resize( 2 );
-			EdgeID neid[2] = {0,0};
-			NodeID comp_cnt = 0;
-			while( !stacks[0].empty() && !stacks[1].empty() ){
-
-				/*
-				 * do not use while( true ) because since the edge
-				 * can be contained by a already visited and contracted
-				 * component
-				 */
-
-				di = 1 - di; //switch direction
-
-				NodeID n = stacks[di].back();
-				stacks[di].pop_back();
-
-				if( node_visited[n] ) continue;
-				this->mark_node_vis( n, node_visited );
-
-				component[di].push_back( n ); //record the node id consisting of the compnent
-
-				if( comp_lim == 1 ){
-					if( component[di].size() > sz_lim && component[1-di].size() > sz_lim )
-						break;
-				}
-
-				//if( this->contract_to[n] ){ //node is contracted
-				NodeID m = this->contract_to[n];
-				vector<NodeID>::const_iterator nit = this->contract_node_list[m].begin();
-				for(; nit != this->contract_node_list[m].end(); nit++){
-
-					vector<G_Edge*>::const_iterator trit = // all target nodes iterator
-						this->node_list[*nit].get_adj_list().begin();
-					for(; trit != this->node_list[*nit].get_adj_list().end(); trit++){
-
-						//whether this edge is closed
-						if( class_edge_visited.count((*trit)->get_id()) ){
-							//mark next traverse edge
-							if( !class_edge_visited[(*trit)->get_id()] ){
-								//the edge has not been visited
-								neid[di] = (*trit)->get_id();
-								class_edge_visited[ neid[di] ] = true;
-								class_edge_visited[this->sym_edge_id(neid[di])] = true;
-							}
-							continue;
-						}
-
-						if( node_visited[(*trit)->get_target()] )
-							continue;
-						stacks[di].push_back( (*trit)->get_target() );
-					}
-				}
-
-				// if an stack is empty, one component has been found
-				// contract it. If k-1 components have been contracted,
-				// then process next edge class
-				if( stacks[di].empty() ){
-
-					if( this->cal_node_size( component[di] ) <= sz_lim )
-						this->contract_nodes( component[di] );
-					component[di].clear();
-
-					comp_cnt++;
-					if( comp_cnt >= comp_lim ){
-						//stacks[0].clear();
-						//stacks[1].clear();
-						break; //next edge class
-					}
-					//else next component
-					stacks[di].push_back( this->edge_list[ neid[di] ].get_target() );
-					//continue;
-				}
-
-			}//end while
-		}//end for all edge classes
-		return;
+//		vector< vector<EdgeID> >::const_iterator ecit = edge_classes.begin() + 1;
+//
+//		for(; ecit != edge_classes.end(); ecit++){ //deal with one edge class
+//
+//			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
+//				continue;
+//
+//			NodeID comp_lim = ecit->size()/2 - 1; // k - number of connected components
+//
+//			//close edges in this class
+//			//and initially mark class edges unvisited
+//			map<NodeID, bool> class_edge_visited;
+//			vector<EdgeID>::const_iterator eit = ecit->begin();
+//			for(; eit != ecit->end(); eit++){
+//				//edge_closed[*eit] = true;
+//				class_edge_visited[*eit] = false;
+//			}
+//
+//			//start from first edge
+//			EdgeID eid = ecit->at(0);
+//			class_edge_visited[eid] = true;
+//			class_edge_visited[this->sym_edge_id(eid)] = true;
+//
+//			//initially put start nodes
+//			vector<bool> node_visited( this->node_list.size(), false );
+//			vector< vector<NodeID> > stacks;
+//			stacks.resize( 2 );
+//			stacks[0].push_back( this->edge_list[eid].get_source() );
+//			stacks[1].push_back( this->edge_list[eid].get_target() );
+//
+//			//find small components to contract
+//			NodeID di = 1;
+//			vector< vector<NodeID> > component;
+//			component.resize( 2 );
+//			EdgeID neid[2] = {0,0};
+//			NodeID comp_cnt = 0;
+//			while( !stacks[0].empty() && !stacks[1].empty() ){
+//
+//				/*
+//				 * do not use while( true ) because since the edge
+//				 * can be contained by a already visited and contracted
+//				 * component
+//				 */
+//
+//				di = 1 - di; //switch direction
+//
+//				NodeID n = stacks[di].back();
+//				stacks[di].pop_back();
+//
+//				if( node_visited[n] ) continue;
+//				this->mark_node_vis( n, node_visited );
+//
+//				component[di].push_back( n ); //record the node id consisting of the compnent
+//
+//				if( comp_lim == 1 ){
+//					if( component[di].size() > sz_lim && component[1-di].size() > sz_lim )
+//						break;
+//				}
+//
+//				//if( this->contract_to[n] ){ //node is contracted
+//				NodeID m = this->contract_to[n];
+//				vector<NodeID>::const_iterator nit = this->contract_node_list[m].begin();
+//				for(; nit != this->contract_node_list[m].end(); nit++){
+//
+//					vector<G_Edge*>::const_iterator trit = // all target nodes iterator
+//						this->node_list[*nit].get_adj_list().begin();
+//					for(; trit != this->node_list[*nit].get_adj_list().end(); trit++){
+//
+//						//whether this edge is closed
+//						if( class_edge_visited.count((*trit)->get_id()) ){
+//							//mark next traverse edge
+//							if( !class_edge_visited[(*trit)->get_id()] ){
+//								//the edge has not been visited
+//								neid[di] = (*trit)->get_id();
+//								class_edge_visited[ neid[di] ] = true;
+//								class_edge_visited[this->sym_edge_id(neid[di])] = true;
+//							}
+//							continue;
+//						}
+//
+//						if( node_visited[(*trit)->get_target()] )
+//							continue;
+//						stacks[di].push_back( (*trit)->get_target() );
+//					}
+//				}
+//
+//				// if an stack is empty, one component has been found
+//				// contract it. If k-1 components have been contracted,
+//				// then process next edge class
+//				if( stacks[di].empty() ){
+//
+//					if( this->cal_node_size( component[di] ) <= sz_lim )
+//						this->contract_nodes( component[di] );
+//					component[di].clear();
+//
+//					comp_cnt++;
+//					if( comp_cnt >= comp_lim ){
+//						//stacks[0].clear();
+//						//stacks[1].clear();
+//						break; //next edge class
+//					}
+//					//else next component
+//					stacks[di].push_back( this->edge_list[ neid[di] ].get_target() );
+//					//continue;
+//				}
+//
+//			}//end while
+//		}//end for all edge classes
+//		return;
 }
 
 void G_Graph::fill_b_bits( vector<bool>& edge_removed, 
