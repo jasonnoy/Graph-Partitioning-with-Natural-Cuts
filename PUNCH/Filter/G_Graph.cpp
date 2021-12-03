@@ -932,7 +932,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         vector<thread> ths;
         mutex m_lock;
 
-        vector<vool> contract_record(2*node_list.size(), false);
+        vector<bool> contract_record(2*node_list.size(), false);
 //        thread_num = 1;
         cout<<"2 cut thread num: "<<thread_num<<endl;
         for (int i = 0; i < thread_num; i++)
