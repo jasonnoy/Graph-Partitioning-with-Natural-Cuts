@@ -740,6 +740,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
             if (*cnit > contract_to.size()) {
                 cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<endl;
+                cout<<"cnid contracted: "<<contract_record[cnid]<<endl;
                 cout<<"cnid: "<<cnid<<", *nit: "<<*nit<<endl;
             }
             contract_to[*cnit] = new_node_id;
@@ -837,6 +838,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
                 if (*nit>node_list.size()){
                     cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<endl;
+                    cout<<"m contracted: "<<contract_record[m]<<endl;
                     cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
                     exit(1);
                 }
