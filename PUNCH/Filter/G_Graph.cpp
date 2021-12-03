@@ -897,7 +897,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         set<NodeID> inter;
         for (int i = 0; i < sets.size();i++) {
             for (int j = i + 1; j < sets.size(); j++) {
-                set_intersection(sets[i].begin(), sets[i].end(), sets[j].begin(), sets[j].end(), inter, inter.end());
+                set_intersection(sets[i].begin(), sets[i].end(), sets[j].begin(), sets[j].end(), inserter(inter, inter.begin()));
             }
             assert(inter.empty());
             cout<<"checking "<<i<<"/"<<sets.size()<<"\r";
