@@ -943,6 +943,14 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         vector<bool> contract_record(2*node_list.size(), false);
 //        thread_num = 1;
         cout<<"2 cut thread num: "<<thread_num<<endl;
+        for (auto list:contract_node_list) {
+            for (NodeID nid:list) {
+                if (nid > node_list.size()){
+                    cout<<"nid oversize\n";
+                    exit(-1);
+                }
+            }
+        }
         for (int i = 0; i < thread_num; i++)
             ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock), ref(contract_record)));
         for (int i = 0; i < thread_num; i++)
