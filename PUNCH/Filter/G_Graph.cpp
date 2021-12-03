@@ -739,7 +739,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
             if (*cnit == 9072) {
-                cout<<"new nid: "<<new_node_id<<" origin cnid: "<<cnit<<endl;
+                cout<<"new nid: "<<new_node_id<<" origin cnid: "<<cnid<<endl;
             }
         }
 
