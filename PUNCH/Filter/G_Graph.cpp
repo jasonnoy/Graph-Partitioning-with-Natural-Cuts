@@ -840,6 +840,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                     cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<endl;
                     cout<<"m contracted: "<<contract_record[m]<<endl;
                     cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
+                    cout<<"list size: "<<contract_node_list[m].size()<<endl;
                     exit(1);
                 }
 
