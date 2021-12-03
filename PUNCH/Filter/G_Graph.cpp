@@ -733,22 +733,24 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         //In case 2012-12-07 Now, I think this is impossible, so remove it
         //if( cnid == new_node_id )
         //	continue;
-        if (contract_record[cnid]){
-            cout<<"multi contraction found: "<<cnid<<endl;
-            exit(-1);
-        }
 
-        contract_record[cnid] = true;
+
+
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
+            if (contract_record[cnid]){
+                cout<<"multi contraction found: "<<cnid<<endl;
+                exit(-1);
+            }
             if (*cnit > contract_to.size()) {
                 cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<endl;
                 cout<<"cnid contracted: "<<contract_record[cnid]<<endl;
-                cout<<"*cint: "<<(*cnit)<<"cnid: "<<cnid<<", *nit: "<<*nit<<", new id: "<<new_node_id<<endl;
+                cout<<"*cint: "<<(*cnit)<<", cnid: "<<cnid<<", *nit: "<<*nit<<", new id: "<<new_node_id<<endl;
             }
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
+        contract_record[cnid] = true;
 
         //delete this contracted node
         contract_node_list[cnid].clear();
