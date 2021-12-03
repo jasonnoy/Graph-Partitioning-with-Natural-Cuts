@@ -683,7 +683,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock) {
+void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, list<NodeID>& contract_record) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
@@ -710,9 +710,9 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         //if( cnid ){
 
         //whether this contracted node has been processed before
-        //if( cntr_id_list.count( cnid ) ){
-        //	continue;
-        //}
+//        if( contract_node_list. ){
+//        	continue;
+//        }
         //cntr_id_list.insert( cnid );
 
         //In case 2012-12-07 Now, I think this is impossible, so remove it
@@ -721,6 +721,9 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
+            if (contract_record.count(*cnit))
+                cout<<"multi contraction found\n";
+            contract_record.push_back(*cnit);
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
         }
@@ -739,7 +742,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
     }//end for all new nodes
 }
 
-void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock) {
+void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock, list<NodeID>& contract_record) {
 
     for(NodeID i : index ){ //deal with one edge class
         vector<NodeID> edge_class_eid = edge_classes[i];
@@ -839,7 +842,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             if( stacks[di].empty() ){
 //                lock.lock();
                 if( static_cal_node_size( ref(component[di]), contract_to, contract_node_list ) <= sz_lim ) {
-                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), contract_node_list, contract_to, m_lock);
+                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), contract_node_list, contract_to, m_lock, contract_record);
                 }
 //                lock.unlock();
 
@@ -874,8 +877,10 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
         vector<thread> ths;
         mutex m_lock;
 
+        list<NodeID> contract_record(node_list.size());
+
         for (int i = 0; i < thread_num; i++)
-            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock)));
+            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock), ref(contract_record)));
         for (int i = 0; i < thread_num; i++)
             ths[i].join();
 //
