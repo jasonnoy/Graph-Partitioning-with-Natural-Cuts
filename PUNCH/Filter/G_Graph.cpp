@@ -738,6 +738,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
 
         vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
         for(; cnit != contract_node_list[cnid].end(); cnit++ ){
+
             if (contract_record[cnid]){
                 cout<<"multi contraction found: "<<cnid<<endl;
                 exit(-1);
@@ -746,6 +747,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
                 cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<endl;
                 cout<<"cnid contracted: "<<contract_record[cnid]<<endl;
                 cout<<"*cint: "<<(*cnit)<<", cnid: "<<cnid<<", *nit: "<<*nit<<", new id: "<<new_node_id<<endl;
+                exit(-1);
             }
             contract_to[*cnit] = new_node_id;
             contract_node_list[new_node_id].push_back( *cnit );
