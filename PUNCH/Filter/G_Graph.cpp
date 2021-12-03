@@ -712,11 +712,11 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         //if( cnid ){
 
         //whether this contracted node has been processed before
-        if (contract_record.count(cnid)) {
-            cout<<"multi contraction found\n";
-            continue;
-        }
-        contract_record.insert(cnid);
+//        if (contract_record.count(cnid)) {
+//            cout<<"multi contraction found\n";
+//            continue;
+//        }
+//        contract_record.insert(cnid);
         //cntr_id_list.insert( cnid );
 
         //In case 2012-12-07 Now, I think this is impossible, so remove it
