@@ -550,6 +550,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
     this->contract_node_list.reserve( 2*this->node_list.size() > 10000 ? 2*this->node_list.size() : 10000 );
+    cout<<"cnt node list add: "<<&contract_node_list<<endl;
     for( NodeID i = 0; i < this->node_list.size(); i++ ){
         vector<NodeID> new_list = {i};
         contract_node_list.push_back(new_list);
@@ -744,7 +745,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
                 exit(-1);
             }
             if (*cnit > contract_to.size()) {
-                cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<endl;
+                cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<", add:"<<&contract_node_list<<endl;
                 cout<<"cnid contracted: "<<contract_record[cnid]<<endl;
                 cout<<"*cint: "<<(*cnit)<<", cnid: "<<cnid<<", *nit: "<<*nit<<", new id: "<<new_node_id<<endl;
                 exit(-1);
@@ -841,7 +842,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
                 if (*nit>node_list.size()){
-                    cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<endl;
+                    cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<", add: "<<&contract_node_list<<endl;
                     cout<<"m contracted: "<<contract_record[m]<<endl;
                     cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
                     cout<<"list size: "<<contract_node_list[m].size()<<endl;
