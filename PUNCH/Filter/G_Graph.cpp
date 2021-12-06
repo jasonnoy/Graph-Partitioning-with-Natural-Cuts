@@ -730,10 +730,10 @@ void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_no
         //In case 2012-12-07 Now, I think this is impossible, so remove it
         //if( cnid == new_node_id )
         //	continue;
-        if (cnid == new_node_id) {
-            cout<<"cnid=new_id\n";
-            continue;
-        }
+//        if (cnid == new_node_id) {
+//            cout<<"cnid=new_id\n";
+//            continue;
+//        }
 
 
 //
