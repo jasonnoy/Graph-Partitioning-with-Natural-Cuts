@@ -2514,14 +2514,14 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		//recursively link the tree
         vector<bool> searched(component_tree.size(), false);
 //        vector<bool> searched(component_tree.size(), false);
-        if (component_tree.size()) {
+        if (component_tree.size() > 1) {
                 this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
-        int count = 0;
-        for (int i = 0; i < component_tree.size(); i++)
-            count += searched[i];
-        if (count != component_tree.size())
-            cout<<"some tree not searched\n";
+//        int count = 0;
+//        for (int i = 0; i < component_tree.size(); i++)
+//            count += searched[i];
+//        if (count != component_tree.size())
+//            cout<<"some tree not searched\n";
 		return max_comp_pos;
 }
 
@@ -2611,7 +2611,6 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
             cout<<"multi searched\n";
         if (search_pos > component_tree.size())
             cout<<"search pos: "<<search_pos<<", comp pos: "<<comp_cnodes_to_pos[search_pos]<<endl;
-        vector<bool> tree_record(component_tree.size(), false);
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
         list<NodeID> children_pos;
