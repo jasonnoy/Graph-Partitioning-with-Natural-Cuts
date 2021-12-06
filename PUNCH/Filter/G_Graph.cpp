@@ -718,6 +718,7 @@ void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_no
 //    }
 
     //set<NodeID> cntr_id_list;
+    bool pass_first = true;
     vector<NodeID>::const_iterator nit = node_list.begin();
     for(; nit != node_list.end(); nit++ ){
 
@@ -765,6 +766,10 @@ void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_no
         contract_node_list[cnid].clear();
         //do not waste time on managing memory
         //this->contract_node_list[cnid].shrink_to_fit();
+        if (pass_first) {
+            pass_first = false;
+            continue;
+        }
         del_cnt_node++;
 
         //}
