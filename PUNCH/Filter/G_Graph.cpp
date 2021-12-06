@@ -27,14 +27,15 @@ void static_mark_node_vis( NodeID nid, vector<bool>& mark_list, const vector<Nod
     //if( cid ){ //have been contracted
 //    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
     bool cid_in = false;
-    for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
-        if (*nit > mark_list.size()) {
-            cout<<"*nit: "<<(*nit)<<", cid: "<<cid<<", nid: "<<nid<<endl;
+//    for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
+    for (NodeID nit : contract_node_list[cid]) {
+        if (nit > mark_list.size()) {
+            cout<<"*nit: "<<(nit)<<", cid: "<<cid<<", nid: "<<nid<<endl;
             cout<<"cont node list [cid] size: "<<contract_node_list[cid].size()<<endl;
         }
 
-        mark_list[*nit] = true;
-        if (*nit == cid)
+        mark_list[nit] = true;
+        if (nit == cid)
             cid_in = true;
     }
 //    if (!cid_in)
@@ -825,7 +826,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 
             unique_lock<mutex> lock(m_lock);
             static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
-
+            lock.unlock();
             component[di].push_back( n ); //record the node id consisting of the compnent
 
             if( comp_lim == 1 ){
@@ -874,7 +875,6 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                     stacks[di].push_back( trit->get_target() );
                 }
             }
-            lock.unlock();
 
             // if an stack is empty, one component has been found
             // contract it. If k-1 components have been contracted,
