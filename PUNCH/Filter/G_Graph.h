@@ -144,6 +144,7 @@ private:
 	vector< vector<NodeID> > contract_node_list;
 	vector<NodeID> del_cnt_node; //record delelte contracted nodes, 
 								 //also available contract slots
+    atomic<NodeID> temp_cnt = 0;
 
 	//////////////////////////main Internal Methods////////////////////////////
 

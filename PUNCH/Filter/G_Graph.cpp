@@ -960,7 +960,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
             }
         }
         for (int i = 0; i < thread_num; i++)
-            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(del_cnt_node), ref(m_lock), ref(contract_record)));
+            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(temp_cnt), ref(m_lock), ref(contract_record)));
         for (int i = 0; i < thread_num; i++)
             ths[i].join();
 //
