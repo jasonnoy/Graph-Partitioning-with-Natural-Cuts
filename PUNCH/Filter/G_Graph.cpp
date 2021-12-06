@@ -2613,16 +2613,19 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         for (NodeID chlit : component_tree[search_pos].children) {
-            NodeID chl_pos = searched[search_pos] ? chlit : comp_cnodes_to_pos[chlit];
+            NodeID chl_pos = comp_cnodes_to_pos[chlit];
 			if( chl_pos == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
 			}
             else {
-                if (!searched[search_pos])
+                if (!searched[chl_pos]) {
                     children_pos.push_back(chl_pos);
+                    searched[chl_pos] = true;
+                }
+
             }
 		}
-        searched[search_pos] = true;
+//        searched[search_pos] = true;
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
