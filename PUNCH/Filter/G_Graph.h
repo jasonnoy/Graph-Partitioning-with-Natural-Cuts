@@ -128,6 +128,8 @@ public:
 
     vector<NodeID>& get_sym_id(){return sym_id;}
 
+    NodeSize get_del_node_num() {return temp_cnt.load();}
+
 public:
 	//natural cuts parameters
 	unsigned int DNCC;

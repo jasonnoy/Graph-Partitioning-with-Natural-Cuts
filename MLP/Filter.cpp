@@ -41,8 +41,8 @@ void Filter::contract_tiny_cuts(){
     cout<<"Done. Contract two cuts...\n";
     //handle each class, cut gGraph to components and contract small ones
     gGraph.cnt_two_cuts( edge_equl_cls, Uf );
-    printf("Done! Contract %u nodes (%.1f%%)\n", gGraph.temp_cnt.load(),
-           gGraph.temp_cnt.load()*100.0/gGraph.get_node_list().size());
+    printf("Done! Contract %u nodes (%.1f%%)\n", gGraph.get_del_node_num(),
+           gGraph.get_del_node_num()*100.0/gGraph.get_node_list().size());
     time(&end);
     cout<<"Time cost: "<<end-start<<"s\n";
 
