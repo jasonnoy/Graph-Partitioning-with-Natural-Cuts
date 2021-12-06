@@ -2607,6 +2607,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //                cout<<chlid<<" ";
 //            cout<<endl;
 //        }
+        vector<bool> tree_record(component_tree.size(), false);
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
         list<NodeID> children_pos;
@@ -2618,9 +2619,9 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
 			}
             else {
-                if (!searched[chl_pos]) {
+                if (!tree_record[chl_pos]) {
                     children_pos.push_back(chl_pos);
-                    searched[chl_pos] = true;
+                    tree_record[chl_pos] = true;
                 }
 
             }
