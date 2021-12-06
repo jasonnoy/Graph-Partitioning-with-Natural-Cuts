@@ -44,6 +44,7 @@ class G_Graph{
 public:
 	
 	G_Graph(unsigned int c, unsigned int f):DNCC(c), DNCF(f){
+        temp_cnt(0);
 	}
 
     G_Graph() {
@@ -144,7 +145,7 @@ private:
 	vector< vector<NodeID> > contract_node_list;
 	vector<NodeID> del_cnt_node; //record delelte contracted nodes, 
 								 //also available contract slots
-    atomic<NodeID> temp_cnt = 0;
+    atomic<NodeID> temp_cnt;
 
 	//////////////////////////main Internal Methods////////////////////////////
 
