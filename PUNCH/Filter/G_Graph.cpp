@@ -709,7 +709,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
     }
 
     new_node_id = contract_node_list.size();
-    vector<NodeID> new_node;
+    vector<NodeID> new_node(100);
     contract_node_list.push_back( new_node );
     lock.unlock();
 
@@ -835,8 +835,9 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
             //if( this->contract_to[n] ){ //node is contracted
 
             NodeID m = contract_to[n];
-//            if (contract_record.count(m))
-//                cout<<"multi contract found\n";
+            if (contract_record.count(m))
+                cout<<"multi contract found\n";
+            NodeID * ptr = &contract_node_list[m];
 //            contract_record.push_back(m);
             vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
             for(; nit != contract_node_list[m].end(); nit++){
@@ -844,6 +845,8 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 //                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
+                if (ptr != &contract_node_list[m])
+                    cout<<"add changed\n";
                 if (*nit>node_list.size()){
                     cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<", add: "<<&contract_node_list<<endl;
                     cout<<"m contracted: "<<contract_record[m]<<endl;
