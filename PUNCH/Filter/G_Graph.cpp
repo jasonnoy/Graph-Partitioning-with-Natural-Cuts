@@ -730,10 +730,10 @@ void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_no
         //In case 2012-12-07 Now, I think this is impossible, so remove it
         //if( cnid == new_node_id )
         //	continue;
-//        if (cnid == new_node_id) {
-//            cout<<"cnid=new_id\n";
+        if (cnid == new_node_id) {
+            cout<<"cnid=new_id\n";
 //            continue;
-//        }
+        }
 
 
 //
@@ -2616,7 +2616,7 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
             else {
-                if (!searched[comp_cnodes_to_pos[*chlit]])
+//                if (!searched[comp_cnodes_to_pos[*chlit]])
                     children_pos.push_back(comp_cnodes_to_pos[*chlit]);
             }
 		}
