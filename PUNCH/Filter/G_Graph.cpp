@@ -2607,21 +2607,20 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //                cout<<chlid<<" ";
 //            cout<<endl;
 //        }
-        search_pos = comp_cnodes_to_pos[search_pos];
-        searched[search_pos] = true;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-//        list<NodeID> children_pos;
+        list<NodeID> children_pos;
 		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 		for(; chlit != component_tree[search_pos].children.end(); chlit++){
 			if( comp_cnodes_to_pos[*chlit] == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = *chlit;
 			}
-//            else {
-//                if (!searched[comp_cnodes_to_pos[*chlit]])
-//                    children_pos.push_back(comp_cnodes_to_pos[*chlit]);
-//            }
+            else {
+                if (!searched[comp_cnodes_to_pos[*chlit]])
+                    children_pos.push_back(comp_cnodes_to_pos[*chlit]);
+            }
 		}
+        searched[search_pos] = true;
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
