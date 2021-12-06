@@ -14,23 +14,29 @@
 #include <thread>
 #include <mutex>
 #include <chrono>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
 
 using namespace std;
 
 #include "../../Common/Utility.h"
+#include "../../Common/common.h"
 #include "../../Common/sw_basetypes.h"
 #include "../Assemble/A_Graph.h"
 
 #include "G_Node.h"
 #include "Edge_sort.h"
 #include "PushRelabel.h"
+#include <assert.h>
 
 struct edge_cncted_comp{
 
 	list<NodeID> component; //here the node ID is the contracted node ID
 	list<NodeID> children; //the node ID is actually NodeID, position of its children
 	NodeID parent; //the node ID is actually NodeID, position of its parent
-	NodeID neighbor_id_in_parent;
+	NodeID neighbor_id_in_parent = -1u;
 	NodeSize subtree_size; //zero means the tree node is removed or merged with parent
 };
 
@@ -39,6 +45,7 @@ class G_Graph{
 public:
 	
 	G_Graph(unsigned int c, unsigned int f):DNCC(c), DNCF(f){
+        atomic_init(&temp_cnt, (NodeID)0);
 	}
 
     G_Graph() {
@@ -110,7 +117,7 @@ public:
 
 	void cnt_two_degree_path( NodeSize sz_lim );
 
-	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim);
+	void find_natural_cuts( bool natural_cuts[], NodeSize sz_lim );
 
 	void cnt_natural_cuts( bool natural_cuts[] );
 
@@ -119,10 +126,15 @@ public:
 
 	void cnt_one_cuts( const vector<EdgeID>& one_cut_edges, NodeSize sz_lim );
 
+    vector<NodeID>& get_sym_id(){return sym_id;}
+
+    NodeSize get_del_node_num() {return temp_cnt.load();}
+
 public:
 	//natural cuts parameters
 	unsigned int DNCC;
 	unsigned int DNCF;
+    int thread_cap = 1;
 
 private:
 	//basic
@@ -136,6 +148,7 @@ private:
 	vector< vector<NodeID> > contract_node_list;
 	vector<NodeID> del_cnt_node; //record delelte contracted nodes, 
 								 //also available contract slots
+    atomic<NodeID> temp_cnt;
 
 	//////////////////////////main Internal Methods////////////////////////////
 
@@ -155,13 +168,15 @@ private:
 
 	void contract_nodes( NodeID m, NodeID n );
 
+	void compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim);
+
 	unsigned int node_degree( NodeID n );
 
 	NodeSize cal_node_size( const vector<NodeID>& node_list );
 
 	NodeSize cal_comp_size( const list<NodeID>& cnode_list );
 
-	NodeID next_center( bool node_in_core[] );
+	NodeID next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_in_core, NodeID& index );
 
 	void mark_node_vis( NodeID nid, bool * mark_list );
 
@@ -173,6 +188,8 @@ private:
 
 	void contract_nodes( const deque<NodeID>& node_list );
 
+    void fisher_shuffle(vector<NodeID>& node_list);
+
 	NodeID build_component_tree( const vector<EdgeID>& one_cut_edges,
 		vector<edge_cncted_comp>& component_tree );
 
@@ -182,7 +199,7 @@ private:
 		NodeSize sz_lim );
 
 	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
-		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos );
+		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched );
 
 	NodeID contract_cnodes( const list<NodeID>& cnode_list );
 

@@ -3,24 +3,24 @@
 //
 
 #include "AdaptivePrinter.h"
-void AdaptivePrinter::filter_result() {
+void AdaptivePrinter::filter_result(vector<vector<NodeID>>& void_cells) {
     cout<<"\n";
     for (int l = 1; l <= layer; l++) {
         string layer_node_path = out_path + "layer" + to_string(l) + "_nodes.txt";
         ifstream infile;
         infile.open(layer_node_path);
-        int void_size;
-        infile>>void_size;
-        vector<NodeID> void_nodes;
-        void_nodes.reserve(void_size);
-        for (int i = 0; i < void_size; i++) {
-            NodeID vid;
-            infile>>vid;
-            void_nodes.push_back(vid);
-        }
+//        int void_size;
+//        infile>>void_size;
+//        vector<NodeID> void_nodes;
+//        void_nodes.reserve(void_size);
+//        for (int i = 0; i < void_size; i++) {
+//            NodeID vid;
+//            infile>>vid;
+//            void_nodes.push_back(vid);
+//        }
         infile>>cell_nums[l-1];
         vector<int> temp(layer);
-        node_parti.resize(node_num + void_size, temp);
+        node_parti.resize(node_num, temp);
         cout<<"layer "<<to_string(l)<<" has "<<cell_nums[l-1]<<" cells.\n";
         for (int cell_count = 0; cell_count < cell_nums[l-1]; cell_count++) {
             int node_size;
@@ -31,9 +31,15 @@ void AdaptivePrinter::filter_result() {
                 node_parti[nid][l-1] = cell_count;
             }
         }
-        for (NodeID vid : void_nodes) {
-            node_parti[vid][l-1] = -1;
+        cout<<"void cells size: "<<void_cells.size()<<endl;
+        for (int i = 0; i < void_cells.size(); i++) {
+            for (auto vid : void_cells[i]) {
+                node_parti[vid][l-1] = cell_nums[l-1] + i;
+            }
         }
+//        for (NodeID vid : void_nodes) {
+//            node_parti[vid][l-1] = -1;
+//        }
     }
     // filter edges.
 }
@@ -42,14 +48,14 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
     ifstream infile;
     infile.open(node_path, ios::binary);
 
-    vector<node_info_t> nodes;
+    vector<navi::base::node_info_t> nodes;
     NodeID count;
     infile.read((char*)&count, sizeof(uint32_t));
     if (count != node_num) {
         cout<<"count != code_num\n";
     }
     nodes.resize(node_num);
-    infile.read((char *)&nodes[0], sizeof(node_info_t) * node_num);
+    infile.read((char *)&nodes[0], sizeof(navi::base::node_info_t) * node_num);
     infile.close();
     infile.clear(ios::goodbit);
 
@@ -83,9 +89,9 @@ void AdaptivePrinter::print_result_for_show(const string node_path, const string
         outfile.clear(ios::goodbit);
     }
 }
-void AdaptivePrinter::print_final_result() {
+void AdaptivePrinter::print_final_result(const string timestamp) {
     string filtered_nodes_path = out_path + "result_nodes.txt";
-    string result_path = out_path + "node_partitions.txt";
+    string result_path = out_path + "node_partitions" + timestamp + ".txt";
 
     ofstream outfile, outfile2;
     outfile.open(result_path);
@@ -96,6 +102,7 @@ void AdaptivePrinter::print_final_result() {
         outfile<<num<<"\n";
     }
 
+    outfile<<node_num<<endl;
 
     vector<NodeID> filtered_nodes;
     for (NodeID nid = 0; nid < node_num; nid++) {

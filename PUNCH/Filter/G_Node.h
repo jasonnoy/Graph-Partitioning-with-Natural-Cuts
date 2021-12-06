@@ -12,7 +12,6 @@ using namespace std;
 class G_Node{
 
 public:
-
 	~G_Node(){
 	}
 	G_Node(NodeID id): nid(id){
@@ -26,15 +25,14 @@ public:
 //        return this->geo_info;
 //    }
 
-	vector<G_Edge*> &get_adj_list(){
-		return this->adj_list;
-	}
+    vector<G_Edge*> &get_adj_list() {
+        return this->adj_list;
+    }
 
 private:
-
 	const NodeID nid;
 	//map< NodeID, G_Edge* > adj_list;
-	vector<G_Edge*> adj_list;
+    vector<G_Edge*> adj_list;
 	//NodeSize sz;
 };
 

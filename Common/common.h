@@ -4,6 +4,7 @@
 #include<vector>
 #include<time.h>
 #include<assert.h>
+#include<stdlib.h>
 using namespace std;
 
 //debug
@@ -35,6 +36,5 @@ typedef unsigned long long Bits;
 //#define DNCF 10 //detect natrual cuts f, which sets the core size relative to the ring
 //#define FI 2 //each pair reoptimize fail times limit
 //#define M  4 //multistart and combination number of iteration
-
 
 #endif //COMMON_H

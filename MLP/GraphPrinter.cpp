@@ -37,14 +37,14 @@ void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
     outfile.clear(ios::goodbit);
     cout<<"Done\n";
 
-    outfile.open(out_cut_path, ios::app);
-    cout<<"Printing cuts of layer "<<layer<<" cut size: "<<result_cuts.size()<<endl;
-    for (auto cut_iter = result_cuts.begin(); cut_iter != result_cuts.end(); cut_iter++) {
-        outfile<<cut_iter->at(0)<<" "<<cut_iter->at(1)<<endl;
-    }
-    outfile.close();
-    outfile.clear(ios::goodbit);
-    cout<<"Done\n";
+//    outfile.open(out_cut_path, ios::app);
+//    cout<<"Printing cuts of layer "<<layer<<" cut size: "<<result_cuts.size()<<endl;
+//    for (auto cut_iter = result_cuts.begin(); cut_iter != result_cuts.end(); cut_iter++) {
+//        outfile<<cut_iter->at(0)<<" "<<cut_iter->at(1)<<endl;
+//    }
+//    outfile.close();
+//    outfile.clear(ios::goodbit);
+//    cout<<"Done\n";
 
 //    outfile.open(out_edge_path, ios::app);
 //    cout<<"Printing edges of layer "<<layer<<endl;
@@ -125,15 +125,11 @@ void GraphPrinter::contract_iso_cells() {
     int contracted_cell_count = 0;
     auto cell_iter = result_nodes.begin();
     while( cell_iter != result_nodes.end() ) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 100) {
+        if (cell_iter->size() > U/10 || cell_iter->size() > 1000) {
             cell_iter++;
             continue;
         }
-        for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
-            if (*node_iter >= cell_nodes.size())
-                cout<<"oversize vid: "<<*node_iter<<endl;
-            cell_void_nodes.push_back(*node_iter);
-        }
+        void_cells.push_back(*cell_iter);
         cell_iter = result_nodes.erase(cell_iter);
 //        cell_void_nodes.insert(cell_void_nodes.end(), cell_iter->begin(), cell_iter->end());
         contracted_cell_count++;
@@ -194,7 +190,7 @@ void GraphPrinter::MLP_result() {
 }
 
 void GraphPrinter::filter_edges() {
-    bool* edge_map = new bool[cell_nodes.size()]();
+    vector<bool> edge_map(cell_nodes.size(), false);
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
             edge_map[*nit] = 1;
@@ -209,7 +205,6 @@ void GraphPrinter::filter_edges() {
             result_cuts.push_back(edge);
         }
     }
-    delete [] edge_map;
 }
 
 void GraphPrinter::fill_contracts() {

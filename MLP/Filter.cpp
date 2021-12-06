@@ -34,14 +34,17 @@ void Filter::contract_tiny_cuts(){
     printf("done! There are %zu edge (%.1f%%) in tree.\n", ten, ten*100.0/edge_in_fi.size());
 
     cout<<"find edge classes...\n";
+    time(&start);
     vector< vector<EdgeID> > edge_equl_cls;
     gGraph.two_cuts_edge_class( edge_in_fi, edge_equl_cls ); //edge_equl_cls[0] is the class of 1-cut
 
     cout<<"Done. Contract two cuts...\n";
     //handle each class, cut gGraph to components and contract small ones
-    gGraph.cnt_two_cuts( edge_equl_cls, U );
-    printf("Done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
-           gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    gGraph.cnt_two_cuts( edge_equl_cls, Uf );
+    printf("Done! Contract %u nodes (%.1f%%)\n", gGraph.get_del_node_num(),
+           gGraph.get_del_node_num()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     /* we assume that 1-cut has nothing to do with 2-cut, so the first can be added
     /* after the third and second pass. Here we use the algorith same as dectecting
@@ -51,28 +54,38 @@ void Filter::contract_tiny_cuts(){
     //edge_equl_cls[0] is the class of 1-cut
     cout<<"contract one cuts...\n";
     cout<<"size of 1-cut: "<<edge_equl_cls[0].size()<<endl;
-    gGraph.cnt_one_cuts( edge_equl_cls[0], U );
+    time(&start);
+    gGraph.cnt_one_cuts( edge_equl_cls[0], Uf );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     cout<<"contract two-degree-node paths...\n";
     //second pass: contract 2-degree-node paths
-    gGraph.cnt_two_degree_path( U );
+    time(&start);
+    gGraph.cnt_two_degree_path( Uf );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Time cost: "<<end-start<<"s\n";
 
     return;
 }
 
 void Filter::contract_natural_cuts(){
-
+    cout<<"thread_cap: "<<thread_cap<<endl;
     cout<<"find all natural cuts...\n";
     //vector<bool> natural_cuts( graph.get_edge_list().size(), false );
     bool * natural_cuts = NULL;
     natural_cuts = new bool[ gGraph.get_edge_list().size() ];
 //    if( !natural_cuts ){ printf("ERROR bad alloc: natural_cuts!\n"); exit(0); }
     memset( natural_cuts, false, gGraph.get_edge_list().size() );
+    time_t start, end;
+    time(&start);
     gGraph.find_natural_cuts( natural_cuts, U );
+    time(&end);
+    cout<<"find natural cut time cost: "<<end-start<<"s\n";
 
     NodeID ten = 0;
     for( int i = 0; i < gGraph.get_edge_list().size(); i++ ){
@@ -83,9 +96,12 @@ void Filter::contract_natural_cuts(){
            ten, ten*100.0/gGraph.get_edge_list().size());
 
     cout<<"contract natural cuts...\n";
+    time(&start);
     gGraph.cnt_natural_cuts( natural_cuts );
     printf("done! Contract %lu nodes (%.1f%%)\n", gGraph.get_del_node().size(),
            gGraph.get_del_node().size()*100.0/gGraph.get_node_list().size());
+    time(&end);
+    cout<<"Contract natural cut time cost: "<<end-start<<"s\n"<<endl;
 
     delete[] natural_cuts;
 
@@ -101,13 +117,20 @@ void Filter::convert_and_output(){
 }
 
 void Filter::runFilter() {
-    clock_t start, end;
-    start = clock();
+    time_t start, mid, end;
+    time(&start);
     read_in_graph();
+    time(&mid);
+    cout<<"Filter read graph time cost: "<<mid-start<<"s\n";
     contract_tiny_cuts();
+    time(&end);
+    cout<<"contract tiny cuts time cost: "<<end-mid<<"s\n";
     contract_natural_cuts();
+    time(&mid);
+    cout<<"contract natural cuts time cost: "<<mid-end<<"s\n";
     convert_and_output();
-    end = clock();
-    int time = (end - start) / CLOCKS_PER_SEC;
-    cout<<"Filter run time: "<<time<<"s.\n";
+    end = time(&end);
+    cout<<"convert time cost: "<<end-mid<<"s\n";
+    int time_cost = end - start;
+    cout<<"filter run time: "<<time_cost<<"s.\n";
 }

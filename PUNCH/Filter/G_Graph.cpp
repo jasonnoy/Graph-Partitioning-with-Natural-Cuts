@@ -1,11 +1,430 @@
 #include "G_Graph.h"
+///////////////////////parallel methods///////////////////////////
+vector<NodeID> next_centers( bool*node_in_core, const NodeID node_num, const int rand_num ) {
+    vector<NodeID> remain_id;
+    remain_id.reserve( node_num );
+    for(int i = 0; i < node_num; i++){
+        if( !node_in_core[i] )
+            remain_id.push_back(i);
+    }
+//    if (remain_id.size() * 100 / node_num)
+//        cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_num<<"%\r";
+//    else
+    cout<<"Remaining ids: "<<remain_id.size()<<"\r";
+    vector<NodeID> res;
 
+    //random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
+    for (int i = 0; i < rand_num && i < remain_id.size(); i++) {
+        int random = (int)( rand() % remain_id.size() );
+        res.push_back(remain_id[random]);
+    }
+
+    return res;
+}
+
+void static_mark_node_vis( NodeID nid, vector<bool>& mark_list, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list) {
+    NodeID cid = contract_to[nid];
+    //if( cid ){ //have been contracted
+//    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
+    bool cid_in = false;
+//    for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
+    for (NodeID nit : contract_node_list[cid]) {
+        if (nit > mark_list.size()) {
+            cout<<"*nit: "<<(nit)<<", cid: "<<cid<<", nid: "<<nid<<endl;
+            cout<<"cont node list [cid] size: "<<contract_node_list[cid].size()<<endl;
+        }
+
+        mark_list[nit] = true;
+        if (nit == cid)
+            cid_in = true;
+    }
+//    if (!cid_in)
+//        cout<<cid<<"didnt mark\n";
+    return;
+}
+
+void static_mark_node_vis( NodeID nid, bool* mark_list, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list) {
+    NodeID cid = contract_to[nid];
+    //if( cid ){ //have been contracted
+//    vector<NodeID>::const_iterator nit = contract_node_list[cid].begin();
+    bool cid_in = false;
+    for(auto nit = contract_node_list[cid].begin(); nit != contract_node_list[cid].end(); nit++) {
+        mark_list[*nit] = true;
+        if (*nit == cid)
+            cid_in = true;
+    }
+//    if (!cid_in)
+//        cout<<cid<<"didnt mark\n";
+    return;
+}
+
+void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * natural_cuts, vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, vector<vector<NodeID>>& contract_node_list, vector<G_Node>& node_list, vector<NodeID>& contract_to ){
+    for (int i : index) {
+
+        deque<NodeID>& core = cores[i];
+        vector<NodeID>& between_nodes = between_nodes_vec[i];
+        //core and between_nodes form the tree T
+        PushRelabel pr( between_nodes.size() + 1 );
+        NodeID neighborID = between_nodes.size();
+
+        map<NodeID, NodeID> old_to_new;
+        { //to destroy temp variable
+            //map: old id --> new id
+            vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
+            NodeID new_id = 1;
+            for(; nit != between_nodes.end(); nit++, new_id++ ){
+                old_to_new[ *nit ] = new_id;
+            }
+            deque<NodeID>::const_iterator cit = core.begin();
+            for(; cit != core.end(); cit++ ){
+                old_to_new[ *cit ] = 0 ; //new index of core is 0
+            }
+
+            // map: target --> weight
+            map<NodeID, EdgeWeight> accumulate_wet;
+
+            //first, handle core, which contains contracted node id
+            //node_visited[0] = true; //core id is 0
+            cit = core.begin();
+            for(; cit != core.end(); cit++ ){
+
+                vector<NodeID>::const_iterator cnit =
+                        contract_node_list[ *cit ].begin();
+                for(; cnit != contract_node_list[ *cit ].end(); cnit++){
+
+                    vector<G_Edge*>::const_iterator eit =
+                            node_list[ *cnit ].get_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                        NodeID new_tid = 0;
+                        if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                            new_tid = old_to_new[contract_to[(*eit)->get_target()]];
+                        }
+                        else{
+                            new_tid = neighborID;
+                        }
+                        if( new_tid > 0 ){
+                            if( accumulate_wet.count( new_tid ) )
+                                accumulate_wet[new_tid]++;
+                            else
+                                accumulate_wet[new_tid] = 1;
+                        }
+                    }
+                }//for all node in the contracted node
+
+            }//for all contracted node in core
+            map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+            for(; i_eit != accumulate_wet.end(); i_eit++){
+                pr.AddEdge( 0, i_eit->first, i_eit->second );
+                //////////////////newly added/////////////////
+                pr.AddEdge( i_eit->first, 0, i_eit->second );
+            }
+
+            //second, handle between nodes
+            nit = between_nodes.begin() + 1;
+            NodeID new_sid = 1;
+            for(; nit != between_nodes.end(); nit++, new_sid++){
+
+                accumulate_wet.clear();
+
+                vector<NodeID>::const_iterator cnit =
+                        contract_node_list[ *nit ].begin();
+                for(; cnit != contract_node_list[ *nit ].end(); cnit++){
+
+                    vector<G_Edge*>::const_iterator eit =
+                            node_list[ *cnit ].get_adj_list().begin();
+                    for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                        NodeID new_tid = 0;
+                        if( old_to_new.count( contract_to[(*eit)->get_target()] ) ){
+                            new_tid = old_to_new[contract_to[(*eit)->get_target()]];
+                        }
+                        else{
+                            new_tid = neighborID;
+                        }
+                        if( new_tid > new_sid ){
+                            if( accumulate_wet.count( new_tid ) )
+                                accumulate_wet[new_tid]++;
+                            else
+                                accumulate_wet[new_tid] = 1;
+                        }
+                    }
+                }//for all contracted nodes
+
+                i_eit = accumulate_wet.begin();//i = new_sid
+                for(; i_eit != accumulate_wet.end(); i_eit++){
+                    pr.AddEdge( new_sid, i_eit->first, i_eit->second );
+                    //////////////////newly added/////////////////
+                    pr.AddEdge( i_eit->first, new_sid, i_eit->second );
+                }
+            }//for all between nodes
+
+            pr.GetMaxFlow( 0, neighborID );
+        }
+
+        //mark natural cuts
+
+        //record node sets of S, every other node is in T
+        set<NodeID> nc_source( core.begin(), core.end() );
+
+        //TODO: change to vector
+        vector<bool> node_visited(between_nodes.size()+1, false);
+        node_visited[0] = true;
+        node_visited[neighborID] = true;
+
+        deque<NodeID> nc_que;
+        nc_que.push_back( 0 ); //start from 0
+
+        while( !nc_que.empty() ){
+
+            NodeID n = nc_que.front();
+            nc_que.pop_front();
+
+            //if( node_visited[ n ] ) continue;
+            //node_visited[n] = true;
+
+            if( n ){
+                //between_nodes can work as new_to_old
+                nc_source.insert( between_nodes[n] );
+            }
+
+            vector<Edge>::const_iterator eit = pr.G[n].begin();
+            for(; eit != pr.G[n].end(); eit++){
+
+                if( node_visited[ eit->to ] )
+                    continue;
+
+                //if( eit->cap == 0 || eit->cap > eit->flow ){
+                //if( eit->cap != 0 && eit->cap > eit->flow ){
+                if( eit->cap > eit->flow ){
+                    nc_que.push_back( eit->to );
+                    node_visited[ eit->to ] = true;
+                }
+            }
+        }
+
+        set<NodeID>::const_iterator sr_it = nc_source.begin();
+        for(; sr_it != nc_source.end(); sr_it++){
+
+            NodeID cid = *sr_it;
+            vector<NodeID>::const_iterator cnit =
+                    contract_node_list[ cid ].begin();
+            for(; cnit != contract_node_list[cid].end(); cnit++){
+
+                vector<G_Edge*>::const_iterator eit =
+                        node_list[ *cnit ].get_adj_list().begin();
+                for(; eit != node_list[ *cnit ].get_adj_list().end(); eit++){
+
+                    NodeID target = contract_to[ (*eit)->get_target() ];
+                    if( nc_source.count( target ) )
+                        continue;//else
+
+                    /////////////////////have a try//////////////////////
+                    NodeID pr_s = old_to_new[cid];
+                    NodeID pr_t = old_to_new[target];
+                    bool satr = true;
+                    vector<Edge>::const_iterator pr_eit = pr.G[pr_s].begin();
+                    for(; pr_eit != pr.G[pr_s].end(); pr_eit++){
+
+                        if( pr_eit->to == pr_t ){
+                            //if( eit->cap == 0 || eit->cap > eit->flow ){
+                            if( pr_eit->cap > pr_eit->flow ){
+                                satr = false;
+                            }
+                            break;
+                        }
+                    }
+                    if( !satr )
+                        continue;
+                    /////////////////////////////////////////////////////
+//                    unique_lock<mutex> lock(m_lock);
+                    natural_cuts[ (*eit)->get_id() ] = true;
+//                    lock.unlock();
+                    ///////////////////have a try//////////////////////
+                    //natural_cuts[ this->sym_edge_id( (*eit)->get_id() ) ] = true;
+                    ///////////////////////////////////////////////////
+                }//for all edges from this contracted node
+            }//for all contracted nodes
+        }//for all nodes in S
+    }
+}
+//void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
+//    bool* node_visited = new bool[node_num]();
+//
+//    deque<NodeID> core; //core and between_nodes all contain the contracted id
+//    vector<NodeID> between_nodes;
+//    between_nodes.reserve( sz_lim );
+//    //between nodes: to calculate s-t cut, new id is the index
+//    //old id is the content, and index 0 is reserved for core
+//    between_nodes.push_back( 0 );
+//    unique_lock<mutex> lock(m_lock);
+//    while (node_in_core[centers.back()]) {
+//        centers.pop_back();
+//        if (centers.empty())
+//            centers = next_centers(node_in_core, node_list.size(), 100);
+//    }
+//    NodeID nc = centers.back();
+//    centers.pop_back();
+//
+////    cout<<"parallel_find_natural_cuts\n";
+//    if (node_in_core[nc]) {
+//        cout<<"already in core\n";
+//        return;
+//    }
+//
+//    deque<NodeID> nc_queue;
+//    nc_queue.push_back( nc );
+//
+//    static_mark_node_vis( nc, node_visited, contract_to, contract_node_list );
+//    lock.unlock();
+//
+//    bool first_always_add = true;
+//
+//    auto bfs_start = chrono::steady_clock::now();
+//    NodeSize total_size = 0;
+//    while( !nc_queue.empty() ){
+//
+//        NodeID n = nc_queue.front();
+//        nc_queue.pop_front();
+//
+//        /*if( node_visited[n] ) continue;
+//        this->mark_node_vis( n, node_visited );*/
+//
+//        NodeID cid = contract_to[n];
+//        if (contract_node_list[cid].size() > sz_lim)
+//            cout<<"comp size > limit\n";
+//        if (!contract_node_list[cid].size())
+//            cout<<cid<<" contract list size = 0\n";
+//
+//        total_size += contract_node_list[cid].size();
+//        if( total_size > sz_lim ){
+//            // Go to natural cut process
+//            break;
+//        }
+//
+//        if( total_size <= core_lim || first_always_add ){
+//            //record the contracted node id
+//            if (node_in_core[cid]) {
+//                continue;
+//            }
+//            lock.lock();
+//            core.push_back( cid );
+//            static_mark_node_vis( n, node_in_core, contract_to, contract_node_list );
+//            lock.unlock();
+//
+//            first_always_add = false;
+//        }
+//        else{
+//
+//            between_nodes.push_back( cid );
+//        }
+//
+////        vector<NodeID>::const_iterator cnit = contract_node_list[cid].begin();
+//        for(auto cnit = contract_node_list[cid].begin(); cnit != contract_node_list[cid].end(); cnit++){
+//
+//            vector<G_Edge*>::const_iterator eit =
+//                    node_list[*cnit].get_const_adj_list().begin();
+//            for(; eit != node_list[*cnit].get_const_adj_list().end(); eit++){
+//
+//                if( node_visited[(*eit)->get_target()] )
+//                    continue;
+//
+//                nc_queue.push_back( (*eit)->get_target() );
+//                static_mark_node_vis( (*eit)->get_target(), node_visited, contract_to, contract_node_list );
+//
+//            }//end for all targets
+//        }//end for all original nodes in the contracted node
+//    }//end while
+////    auto bfs_end = chrono::steady_clock::now();
+////    auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+////    bfs_timer += bfs_duration.count();
+////    // if () milli timer.
+////    auto nc_start = chrono::steady_clock::now();
+////    this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
+//    parallel_compute_natural_cuts( natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to );
+////            parallel_compute_natural_cuts(natural_cuts, core, between_nodes, contract_node_list, node_list, contract_to); // for test
+////    auto nc_end = chrono::steady_clock::now();
+////    auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
+////    nc_timer += nc_duration.count();
+//}
 ///////////////////////public methods///////////////////////////
 
+void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID>>& between_nodes_vec, bool* node_in_core, const NodeSize sz_lim){
+    NodeID nc = 0;
+    while( true ){
+
+//        nc = this->next_center( node_in_core );
+//        if( nc == -1u ) //0xffffffff )
+//            break;
+        vector<bool> node_visited(node_list.size(), false);
+
+        deque<NodeID> core; //core and between_nodes all contain the contracted id
+        vector<NodeID> between_nodes;
+        between_nodes.reserve( sz_lim );
+        //between nodes: to calculate s-t cut, new id is the index
+        //old id is the content, and index 0 is reserved for core
+        between_nodes.push_back( 0 );
+
+        deque<NodeID> nc_queue;
+        nc_queue.push_back( nc );
+        this->mark_node_vis( nc, node_visited );
+
+        bool first_always_add = true;
+
+        auto bfs_start = chrono::steady_clock::now();
+        NodeSize total_size = 0;
+        while( !nc_queue.empty() ){
+
+            NodeID n = nc_queue.front();
+            nc_queue.pop_front();
+
+            /*if( node_visited[n] ) continue;
+            this->mark_node_vis( n, node_visited );*/
+
+            NodeID cid = this->contract_to[n];
+
+            total_size += this->contract_node_list[cid].size();
+            if( total_size > sz_lim ){
+                // Go to natural cut process
+                break;
+            }
+            if( total_size <= sz_lim || first_always_add ){
+
+                //record the contracted node id
+                core.push_back( cid );
+                this->mark_node_vis( n, node_in_core );
+                first_always_add = false;
+            }
+            else{
+
+                between_nodes.push_back( cid );
+            }
+
+            vector<NodeID>::const_iterator cnit = this->contract_node_list[cid].begin();
+            for(; cnit != this->contract_node_list[cid].end(); cnit++){
+
+                vector<G_Edge*>::const_iterator eit =
+                        this->node_list[*cnit].get_adj_list().begin();
+                for(; eit != this->node_list[*cnit].get_adj_list().end(); eit++){
+
+                    if( node_visited[(*eit)->get_target()] )
+                        continue;
+
+                    nc_queue.push_back( (*eit)->get_target() );
+                    this->mark_node_vis( (*eit)->get_target(), node_visited );
+
+                }//end for all targets
+            }//end for all original nodes in the contracted node
+        }//end while
+        cores.push_back(core);
+        between_nodes_vec.push_back(between_nodes);
+    }
+}
 void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
 
     // read in node
     node_list.reserve(nodes.size());
+    del_cnt_node.reserve(2*nodes.size());
     // use relative node id for punch, map real nid for output
     NodeID id = 0;
     map<NodeID , NodeID> real_to_nid;
@@ -51,6 +470,8 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     edge_list.reserve(edges.size());
     NodeID counter = 0;
     for (vector<NodeID>edge : edges) {
+        if (real_to_nid[edge[0]] > node_list.size() || real_to_nid[edge[1]] > node_list.size())
+            cout<<"oversize start: "<<edge[0]<<", end: "<<edge[1]<<endl;
         G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], counter++);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
@@ -64,7 +485,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
 
 
-//    std::vector<link_info_t> links;
+//    std::vector<navi::base::link_info_t> links;
 //    fs.open(gr_path, std::ios::binary);
 //    if (!fs.is_open()) {
 //        cout<<"gr_file open failed!\n";
@@ -73,7 +494,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //    fs.read((char *)&count, sizeof(uint32_t));
 //    links.resize(count);
 //    this->edge_list.reserve(2 * count + 1);
-//    fs.read((char *)&links[0], sizeof(link_info_t) * count);
+//    fs.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
 //    counter = 0;
 //    auto edge_iter = links.begin();
 //    for (; edge_iter != links.end(); edge_iter++) {
@@ -122,9 +543,12 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     this->contract_to.resize( this->node_list.size() );
     for( NodeID i = 0; i < this->node_list.size(); i++ )
         contract_to[i] = i;
-    this->contract_node_list.resize( this->node_list.size() );
-    for( NodeID i = 0; i < this->node_list.size(); i++ )
-        this->contract_node_list[i].push_back( i );
+    this->contract_node_list.reserve( 2*this->node_list.size() > 10000 ? 2*this->node_list.size() : 10000 );
+    cout<<"cnt node list add: "<<&contract_node_list<<endl;
+    for( NodeID i = 0; i < this->node_list.size(); i++ ){
+        vector<NodeID> new_list = {i};
+        contract_node_list.push_back(new_list);
+    }
     cout<<"initial contraction done\n";
 }
 
@@ -249,121 +673,405 @@ void G_Graph::two_cuts_edge_class( vector<bool>& edge_in_fi,
 	return;
 }
 
+NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list ){
+
+    NodeSize total_size = 0;
+    vector<NodeID>::const_iterator nit = n_list.begin();
+    for(; nit != n_list.end(); nit++){
+
+        NodeID cid = contract_to[*nit];
+        total_size += contract_node_list[cid].size();
+    }
+    return total_size;
+}
+
+void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
+    if( node_list.size() <= 1 ) //do nothing
+        return;
+
+    NodeID new_node_id = 0;
+//    if( !del_cnt_node.empty() ){
+//        new_node_id = del_cnt_node.back();
+//        del_cnt_node.pop_back();
+//    }
+//    else{
+
+    unique_lock<mutex> lock(m_lock);
+    if (contract_node_list.size()>=contract_node_list.capacity()){
+        cout<<"cnt list oversize: "<<contract_node_list.size()<<" : "<<contract_node_list.capacity()<<endl;
+        exit(-1);
+    }
+
+    new_node_id = contract_node_list.size();
+    vector<NodeID> new_node;
+    new_node.reserve(10000);
+    contract_node_list.push_back( new_node );
+    lock.unlock();
+
+//    }
+
+    //set<NodeID> cntr_id_list;
+    bool pass_first = true;
+    vector<NodeID>::const_iterator nit = node_list.begin();
+    for(; nit != node_list.end(); nit++ ){
+
+        NodeID cnid = contract_to[*nit];
+
+        //if( cnid ){
+
+        //whether this contracted node has been processed before
+//        if (contract_record.count(cnid)) {
+//            cout<<"multi contraction found\n";
+//            continue;
+//        }
+//        contract_record.insert(cnid);
+        //cntr_id_list.insert( cnid );
+
+        //In case 2012-12-07 Now, I think this is impossible, so remove it
+        //if( cnid == new_node_id )
+        //	continue;
+        if (cnid == new_node_id) {
+            cout<<"cnid=new_id\n";
+//            continue;
+        }
+
+
+//
+//        vector<NodeID>::const_iterator cnit = contract_node_list[cnid].begin();
+//        for(; cnit != contract_node_list[cnid].end(); cnit++ ){
+        for (NodeID cnit : contract_node_list[cnid]) {
+            if (contract_record[cnid]){
+                cout<<"multi contraction found: "<<cnid<<endl;
+                exit(-1);
+            }
+            if (cnit > contract_to.size()) {
+                cout<<"size: "<<contract_node_list.size()<<", cap: "<<contract_node_list.capacity()<<", add:"<<&contract_node_list<<endl;
+                cout<<"cnid contracted: "<<contract_record[cnid]<<endl;
+                cout<<"*cint: "<<(cnit)<<", cnid: "<<cnid<<", *nit: "<<*nit<<", new id: "<<new_node_id<<endl;
+                exit(-1);
+            }
+            contract_to[cnit] = new_node_id;
+            contract_node_list[new_node_id].push_back( cnit );
+        }
+        contract_record[cnid] = true;
+
+        //delete this contracted node
+        contract_node_list[cnid].clear();
+        //do not waste time on managing memory
+        //this->contract_node_list[cnid].shrink_to_fit();
+        if (pass_first) {
+            pass_first = false;
+            continue;
+        }
+        del_cnt_node++;
+
+        //}
+        /*else{
+            contract_to[*nit] = new_node_id;
+            this->contract_node_list[new_node_id].push_back( *nit );
+        }*/
+    }//end for all new nodes
+}
+
+void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, atomic<NodeID>& del_cnt_node, mutex& m_lock, vector<bool>& contract_record) {
+
+    for(NodeID i : index ){ //deal with one edge class
+        vector<NodeID> edge_class_eid = edge_classes[i];
+        if( edge_class_eid.size() < 4 ) // needs two edges for a pair of 2-cuts edge
+            continue;
+
+        NodeID comp_lim = edge_class_eid.size()/2 - 1; // k - number of connected components
+
+        //close edges in this class
+        //and initially mark class edges unvisited
+        map<NodeID, bool> class_edge_visited;
+        for (NodeID eid:edge_class_eid)
+                class_edge_visited[eid] = false; //edge_closed[*eit] = true;
+
+
+        //start from first edge
+        EdgeID eid = edge_class_eid[0];
+        class_edge_visited[eid] = true;
+        class_edge_visited[sym_edge_id[eid]] = true;
+
+        //initially put start nodes
+        vector<bool> node_visited( node_list.size(), false );
+        vector< vector<NodeID> > stacks;
+        stacks.resize( 2 );
+        stacks[0].push_back( edge_list[eid].get_source() );
+        stacks[1].push_back( edge_list[eid].get_target() );
+
+        //find small components to contract
+        NodeID di = 1;
+        vector< vector<NodeID> > component;
+        component.resize( 2 );
+        EdgeID neid[2] = {0,0};
+        NodeID comp_cnt = 0;
+        while( !stacks[0].empty() && !stacks[1].empty() ){
+
+            /*
+             * do not use while( true ) because since the edge
+             * can be contained by a already visited and contracted
+             * component
+             */
+
+            di = 1 - di; //switch direction
+
+            NodeID n = stacks[di].back();
+            stacks[di].pop_back();
+
+            if( node_visited[n] ) continue;
+
+//            unique_lock<mutex> lock(m_lock);
+            static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
+//            lock.unlock();
+            component[di].push_back( n ); //record the node id consisting of the compnent
+
+            if( comp_lim == 1 ){
+                if( component[di].size() > sz_lim && component[1-di].size() > sz_lim )
+                    break;
+            }
+
+            //if( this->contract_to[n] ){ //node is contracted
+
+            NodeID m = contract_to[n];
+            if (contract_record[m])
+                cout<<"multi contract found\n";
+            vector<NodeID> * ptr = &contract_node_list[m];
+//            contract_record.push_back(m);
+//            vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
+//            for(; nit != contract_node_list[m].end(); nit++){
+            for (NodeID nit : contract_node_list[m]) {
+
+//                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
+//                        node_list[*nit].get_adj_list().begin();
+//                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
+                if (ptr != &contract_node_list[m])
+                    cout<<"add changed\n";
+                if (nit>node_list.size()){
+                    cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<", add: "<<&contract_node_list<<endl;
+                    cout<<"m contracted: "<<contract_record[m]<<endl;
+                    cout<<"*nit: "<<(nit)<<" m: "<<m<<", n:"<<n<<endl;
+                    cout<<"list size: "<<contract_node_list[m].size()<<endl;
+                    exit(1);
+                }
+
+                for(auto trit : node_list[nit].get_adj_list()) {
+                    //whether this edge is closed
+                    if( class_edge_visited.count(trit->get_id()) ){
+                        //mark next traverse edge
+                        if( !class_edge_visited[trit->get_id()] ){
+                            //the edge has not been visited
+                            neid[di] = trit->get_id();
+                            class_edge_visited[ neid[di] ] = true;
+                            class_edge_visited[sym_edge_id[neid[di]]] = true;
+                        }
+                        continue;
+                    }
+
+                    if( node_visited[trit->get_target()] )
+                        continue;
+                    stacks[di].push_back( trit->get_target() );
+                }
+            }
+
+            // if an stack is empty, one component has been found
+            // contract it. If k-1 components have been contracted,
+            // then process next edge class
+            if( stacks[di].empty() ){
+//                lock.lock();
+                if( static_cal_node_size( ref(component[di]), contract_to, contract_node_list ) <= sz_lim ) {
+                    static_contract_nodes(ref(component[di]), ref(del_cnt_node), contract_node_list, contract_to, m_lock, contract_record);
+                }
+//                lock.unlock();
+
+                component[di].clear();
+
+                comp_cnt++;
+                if( comp_cnt >= comp_lim ){
+                    //stacks[0].clear();
+                    //stacks[1].clear();
+                    break; //next edge class
+                }
+                //else next component
+                stacks[di].push_back( edge_list[ neid[di] ].get_target() );
+                //continue;
+            }
+
+        }//end while
+    }//end for all edge classes
+}
 void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 	NodeSize sz_lim ){
 
 		//vector<bool> edge_closed( this->edge_list.size(), false );
 
 		//edge_classes[0] is the class of 1-cut
-		vector< vector<EdgeID> >::const_iterator ecit = edge_classes.begin() + 1;
-		
-		for(; ecit != edge_classes.end(); ecit++){ //deal with one edge class
+        cout<<"eqv class num: "<<edge_classes.size()<<endl;
+        vector<set<NodeID>> sets;
+//        for (int i = 1; i < edge_classes.size(); i++) {
+//            set<NodeID> set(edge_classes[i].begin(), edge_classes[i].end());
+//            sets.push_back(set);
+//        }
+        vector<bool> intersection(edge_list.size(), false);
+//        cout<<"edge class size: "<<endl;
+        for (int i = 1; i < edge_classes.size(); i++) {
+//            cout<<edge_classes[i].size()<<endl;
+            for (NodeID eid : edge_classes[i]) {
+                if (eid >= edge_list.size()){
+                    cout<<"oversize eid: "<<eid<<", edge list size: "<<edge_list.size()<<endl;
+                }
+                if (intersection[eid]) {
+                    cout<<"intersection found: "<<eid<<"class id: "<<i<<endl;
+                    exit(-1);
+                }
+                intersection[eid] = true;
+            }
+        }
 
-			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
-				continue;
+//        set<NodeID> inter;
+//        for (int i = 0; i < sets.size();i++) {
+//            for (int j = i + 1; j < sets.size(); j++) {
+//                set_intersection(sets[i].begin(), sets[i].end(), sets[j].begin(), sets[j].end(), inserter(inter, inter.begin()));
+//            }
+//            assert(inter.empty());
+//            cout<<"checking "<<i<<"/"<<sets.size()<<"\r";
+//        }
 
-			NodeID comp_lim = ecit->size()/2 - 1; // k - number of connected components
+        int thread_num = edge_classes.size() < thread_cap ? edge_classes.size() : thread_cap;
+        vector<vector<NodeID>> thread_index(thread_num);
+        for (NodeID i = 1; i < edge_classes.size(); i++)
+            thread_index[i%thread_num].push_back(i);
 
-			//close edges in this class
-			//and initially mark class edges unvisited
-			map<NodeID, bool> class_edge_visited;
-			vector<EdgeID>::const_iterator eit = ecit->begin();
-			for(; eit != ecit->end(); eit++){
-				//edge_closed[*eit] = true;
-				class_edge_visited[*eit] = false;
-			}
+        vector<thread> ths;
+        mutex m_lock;
 
-			//start from first edge
-			EdgeID eid = ecit->at(0); 
-			class_edge_visited[eid] = true;
-			class_edge_visited[this->sym_edge_id(eid)] = true;
-
-			//initially put start nodes
-			vector<bool> node_visited( this->node_list.size(), false );
-			vector< vector<NodeID> > stacks;
-			stacks.resize( 2 );
-			stacks[0].push_back( this->edge_list[eid].get_source() );
-			stacks[1].push_back( this->edge_list[eid].get_target() );
-
-			//find small components to contract
-			NodeID di = 1;
-			vector< vector<NodeID> > component;
-			component.resize( 2 );
-			EdgeID neid[2] = {0,0};
-			NodeID comp_cnt = 0;
-			while( !stacks[0].empty() && !stacks[1].empty() ){
-
-				/*
-				 * do not use while( true ) because since the edge 
-				 * can be contained by a already visited and contracted
-				 * component
-				 */
-
-				di = 1 - di; //switch direction
-
-				NodeID n = stacks[di].back();
-				stacks[di].pop_back();
-
-				if( node_visited[n] ) continue;
-				this->mark_node_vis( n, node_visited );
-
-				component[di].push_back( n ); //record the node id consisting of the compnent
-
-				if( comp_lim == 1 ){
-					if( component[di].size() > sz_lim && component[1-di].size() > sz_lim )
-						break;
-				}
-
-				//if( this->contract_to[n] ){ //node is contracted
-				NodeID m = this->contract_to[n];
-				vector<NodeID>::const_iterator nit = this->contract_node_list[m].begin();
-				for(; nit != this->contract_node_list[m].end(); nit++){
-
-					vector<G_Edge*>::const_iterator trit = // all target nodes iterator
-						this->node_list[*nit].get_adj_list().begin();
-					for(; trit != this->node_list[*nit].get_adj_list().end(); trit++){
-
-						//whether this edge is closed
-						if( class_edge_visited.count((*trit)->get_id()) ){
-							//mark next traverse edge
-							if( !class_edge_visited[(*trit)->get_id()] ){
-								//the edge has not been visited
-								neid[di] = (*trit)->get_id();
-								class_edge_visited[ neid[di] ] = true;
-								class_edge_visited[this->sym_edge_id(neid[di])] = true;
-							}
-							continue;
-						}
-
-						if( node_visited[(*trit)->get_target()] )
-							continue;
-						stacks[di].push_back( (*trit)->get_target() );
-					}
-				}
-
-				// if an stack is empty, one component has been found
-				// contract it. If k-1 components have been contracted,
-				// then process next edge class
-				if( stacks[di].empty() ){
-
-					if( this->cal_node_size( component[di] ) <= sz_lim )
-						this->contract_nodes( component[di] );
-					component[di].clear();
-					
-					comp_cnt++;
-					if( comp_cnt >= comp_lim ){
-						//stacks[0].clear();
-						//stacks[1].clear();
-						break; //next edge class
-					}
-					//else next component
-					stacks[di].push_back( this->edge_list[ neid[di] ].get_target() );
-					//continue;
-				}
-
-			}//end while
-		}//end for all edge classes
-		return;
+        vector<bool> contract_record(2*node_list.size(), false);
+//        thread_num = 1;
+        cout<<"2 cut thread num: "<<thread_num<<endl;
+        for (auto list:contract_node_list) {
+            for (NodeID nid:list) {
+                if (nid > node_list.size()){
+                    cout<<"nid oversize\n";
+                    exit(-1);
+                }
+            }
+        }
+        for (int i = 0; i < thread_num; i++)
+            ths.push_back(thread(parallel_cnt_two_cuts, ref(node_list), ref(this->get_sym_id()), ref(edge_list), ref(contract_to), ref(contract_node_list), ref(edge_classes), ref(thread_index[i]), sz_lim, ref(temp_cnt), ref(m_lock), ref(contract_record)));
+        for (int i = 0; i < thread_num; i++)
+            ths[i].join();
+//
+//
+//		vector< vector<EdgeID> >::const_iterator ecit = edge_classes.begin() + 1;
+//
+//		for(; ecit != edge_classes.end(); ecit++){ //deal with one edge class
+//
+//			if( ecit->size() < 4 ) // needs two edges for a pair of 2-cuts edge
+//				continue;
+//
+//			NodeID comp_lim = ecit->size()/2 - 1; // k - number of connected components
+//
+//			//close edges in this class
+//			//and initially mark class edges unvisited
+//			map<NodeID, bool> class_edge_visited;
+//			vector<EdgeID>::const_iterator eit = ecit->begin();
+//			for(; eit != ecit->end(); eit++){
+//				//edge_closed[*eit] = true;
+//				class_edge_visited[*eit] = false;
+//			}
+//
+//			//start from first edge
+//			EdgeID eid = ecit->at(0);
+//			class_edge_visited[eid] = true;
+//			class_edge_visited[this->sym_edge_id(eid)] = true;
+//
+//			//initially put start nodes
+//			vector<bool> node_visited( this->node_list.size(), false );
+//			vector< vector<NodeID> > stacks;
+//			stacks.resize( 2 );
+//			stacks[0].push_back( this->edge_list[eid].get_source() );
+//			stacks[1].push_back( this->edge_list[eid].get_target() );
+//
+//			//find small components to contract
+//			NodeID di = 1;
+//			vector< vector<NodeID> > component;
+//			component.resize( 2 );
+//			EdgeID neid[2] = {0,0};
+//			NodeID comp_cnt = 0;
+//			while( !stacks[0].empty() && !stacks[1].empty() ){
+//
+//				/*
+//				 * do not use while( true ) because since the edge
+//				 * can be contained by a already visited and contracted
+//				 * component
+//				 */
+//
+//				di = 1 - di; //switch direction
+//
+//				NodeID n = stacks[di].back();
+//				stacks[di].pop_back();
+//
+//				if( node_visited[n] ) continue;
+//				this->mark_node_vis( n, node_visited );
+//
+//				component[di].push_back( n ); //record the node id consisting of the compnent
+//
+//				if( comp_lim == 1 ){
+//					if( component[di].size() > sz_lim && component[1-di].size() > sz_lim )
+//						break;
+//				}
+//
+//				//if( this->contract_to[n] ){ //node is contracted
+//				NodeID m = this->contract_to[n];
+//				vector<NodeID>::const_iterator nit = this->contract_node_list[m].begin();
+//				for(; nit != this->contract_node_list[m].end(); nit++){
+//
+//					vector<G_Edge*>::const_iterator trit = // all target nodes iterator
+//						this->node_list[*nit].get_adj_list().begin();
+//					for(; trit != this->node_list[*nit].get_adj_list().end(); trit++){
+//
+//						//whether this edge is closed
+//						if( class_edge_visited.count((*trit)->get_id()) ){
+//							//mark next traverse edge
+//							if( !class_edge_visited[(*trit)->get_id()] ){
+//								//the edge has not been visited
+//								neid[di] = (*trit)->get_id();
+//								class_edge_visited[ neid[di] ] = true;
+//								class_edge_visited[this->sym_edge_id(neid[di])] = true;
+//							}
+//							continue;
+//						}
+//
+//						if( node_visited[(*trit)->get_target()] )
+//							continue;
+//						stacks[di].push_back( (*trit)->get_target() );
+//					}
+//				}
+//
+//				// if an stack is empty, one component has been found
+//				// contract it. If k-1 components have been contracted,
+//				// then process next edge class
+//				if( stacks[di].empty() ){
+//
+//					if( this->cal_node_size( component[di] ) <= sz_lim )
+//						this->contract_nodes( component[di] );
+//					component[di].clear();
+//
+//					comp_cnt++;
+//					if( comp_cnt >= comp_lim ){
+//						//stacks[0].clear();
+//						//stacks[1].clear();
+//						break; //next edge class
+//					}
+//					//else next component
+//					stacks[di].push_back( this->edge_list[ neid[di] ].get_target() );
+//					//continue;
+//				}
+//
+//			}//end while
+//		}//end for all edge classes
+//		return;
 }
 
 void G_Graph::fill_b_bits( vector<bool>& edge_removed, 
@@ -512,9 +1220,10 @@ void G_Graph::mark_node_vis( NodeID nid, vector<bool>& mark_list ){
 
 		NodeID cid = this->contract_to[nid];
 		//if( cid ){ //have been contracted
-		vector<NodeID>::const_iterator nit = this->contract_node_list[cid].begin();
-		for(; nit != this->contract_node_list[cid].end(); nit++)
-			mark_list[*nit] = true;
+//		vector<NodeID>::const_iterator nit = this->contract_node_list[cid].begin();
+//		for(; nit != this->contract_node_list[cid].end(); nit++)
+        for (NodeID nit : contract_node_list[cid])
+			mark_list[nit] = true;
 		return;
 		//}
 		//mark_list[nid] = true;
@@ -531,9 +1240,9 @@ void G_Graph::contract_nodes( const vector<NodeID>& node_list ){
 			this->del_cnt_node.pop_back();
 		}
 		else{
-			new_node_id = this->contract_node_list.size();
-			vector<NodeID> new_node;
-			this->contract_node_list.push_back( new_node );
+        new_node_id = this->contract_node_list.size();
+        vector<NodeID> new_node;
+        this->contract_node_list.push_back( new_node );
 		}
 
 		//set<NodeID> cntr_id_list;
@@ -587,9 +1296,9 @@ NodeID G_Graph::contract_cnodes( const list<NodeID>& node_list ){
 			this->del_cnt_node.pop_back();
 		}
 		else{
-			new_node_id = this->contract_node_list.size();
-			vector<NodeID> new_node;
-			this->contract_node_list.push_back( new_node );
+        new_node_id = this->contract_node_list.size();
+        vector<NodeID> new_node;
+        this->contract_node_list.push_back( new_node );
 		}
 
 		//set<NodeID> cntr_id_list;
@@ -702,16 +1411,16 @@ unsigned int G_Graph::node_degree( NodeID n ){
 		return degree;
 }
 
-NodeSize G_Graph::cal_node_size( const vector<NodeID>& n_list ){
+NodeSize G_Graph::cal_node_size( const vector<NodeID>& n_list ) {
 
-		NodeSize total_size = 0;
-		vector<NodeID>::const_iterator nit = n_list.begin();
-		for(; nit != n_list.end(); nit++){
+    NodeSize total_size = 0;
+    vector<NodeID>::const_iterator nit = n_list.begin();
+    for (; nit != n_list.end(); nit++) {
 
-			NodeID cid = this->contract_to[*nit];
-			total_size += this->contract_node_list[cid].size();
-		}
-		return total_size;
+        NodeID cid = this->contract_to[*nit];
+        total_size += this->contract_node_list[cid].size();
+    }
+    return total_size;
 }
 
 NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
@@ -725,35 +1434,107 @@ NodeSize G_Graph::cal_comp_size( const list<NodeID>& cn_list ){
 		return total_size;
 }
 
+void G_Graph::fisher_shuffle(vector<NodeID>& node_list) {
+    for (NodeID i = node_list.size()-1; i > 0; i--){
+        NodeID randId = rand()%i;
+        NodeID temp = node_list[randId];
+        node_list[randId] = node_list[i];
+        node_list[i] = temp;
+    }
+}
+
 void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 	NodeSize core_lim = sz_lim/DNCF;
+    cout<<"core limit: "<<core_lim<<", C:"<<DNCC<<endl;
 	
 	//dectect natural cuts C times
+    bool need_timer = true;
+    time_t start, mid, end;
 	for( int t = 0; t < DNCC; t++ ){
 
 		//Release
 		//srand((unsigned int)time(NULL)); //every time different:: no need
+        auto shuffle_start = chrono::steady_clock::now();
+        vector<NodeID> shuffle_nodes(node_list.size());
+        for (NodeID nid = 0; nid < node_list.size(); nid++)
+            shuffle_nodes[nid] = nid;
+        fisher_shuffle(shuffle_nodes);
+        auto shuffle_end = chrono::steady_clock::now();
+        auto shuffle_duration = chrono::duration_cast<chrono::milliseconds>(shuffle_end - shuffle_start);
+        if (need_timer)
+            cout<<"single shuffle time cost: "<<shuffle_duration.count()<<"ms\n";
 
-		bool * node_in_core = NULL;
-		node_in_core = new bool[this->node_list.size()];
-		check_new( node_in_core, "find natural cuts: node in core");
-		memset( node_in_core, false, this->node_list.size() );
+
+        NodeID shuffle_index = 0;
+        vector<bool> node_in_core(node_list.size(), false);
+//		bool * node_in_core = NULL;
+//		node_in_core = new bool[this->node_list.size()];
+//		check_new( node_in_core, "find natural cuts: node in core");
+//		memset( node_in_core, false, this->node_list.size() );
         int big_loop_count = 0, small_loop_count = 0;
         unsigned int nc_timer = 0, bfs_timer = 0;
+        // todo: member variable available_threads
+//        vector<NodeID> centers = next_centers(node_in_core, node_list.size(), thread_cap); // generate more centers for simplicity
+        vector<deque<NodeID>> cores;
+        vector<vector<NodeID>> between_nodes_vec;
+        mutex file_lock, m_lock;
+        vector<thread> threads;
+//        if (thread_cap == 1000) {
+//            cout<<"multithread processing...\n";
+//            condition_variable condition;
+//            bool visited_all = false;
+//            int thread_count = 0;
+//
+//
+//            compute_centers(cores, between_nodes_vec, node_in_core, core_lim);
+//            cout<<"\ncores size: "<<cores.size()<<endl;
+//            if (cores.size() != between_nodes_vec.size()){
+//                cout<<"core and between size not equal\n";
+//                exit(0);
+//            }
+//            for (int i = 0; i < cores.size(); i++)
+//                natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+////            vector<vector<int>> thread_index;
+////            thread_index.resize(thread_cap);
+////            for (NodeID i = 0; i < cores.size(); i++)
+////                thread_index[i%thread_cap].push_back(i);
+////
+////            for (int i = 0; i < thread_cap; i++) {
+////                threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
+////            }
+////            for (int i = 0; i < thread_cap; i++) {
+////                threads[i].join();
+////            }
+//            delete [] node_in_core;
+//        }
+
+
+
 
 		NodeID nc = 0;
+        time_t time1, time2, time3;
 
+        auto bfs_start = chrono::steady_clock::now();
 		while( true ){
 
-			nc = this->next_center( node_in_core );
+//            if (loop_cnt < 10){
+//                time(&time1);
+//                cout<<"loop no."<<loop_cnt++<<endl;
+//            }
+
+			nc = this->next_center( shuffle_nodes, node_in_core, shuffle_index );
+
+
+//            if (loop_cnt < 10){
+//                time(&time2);
+//                cout<<"single next center time: "<<time2-time1<<"s\n";
+//            }
+
 			if( nc == -1u ) //0xffffffff )
 				break;
 
-			bool * node_visited = NULL;
-			node_visited = new bool[this->node_list.size()];
-			check_new( node_visited, "find natural cuts: node visited");
-			memset( node_visited, false, this->node_list.size() );
+            vector<bool> node_visited(node_list.size(), false);
 
 			deque<NodeID> core; //core and between_nodes all contain the contracted id
 			vector<NodeID> between_nodes;
@@ -768,10 +1549,12 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 
 			bool first_always_add = true;
 
-            auto bfs_start = chrono::steady_clock::now();
-			NodeSize total_size = 0;
-			while( !nc_queue.empty() ){
 
+			NodeSize total_size = 0;
+            time(&time2);
+            int nc_count = 0;
+			while( !nc_queue.empty() ){
+                nc_count++;
 				NodeID n = nc_queue.front();
 				nc_queue.pop_front();
 
@@ -814,49 +1597,66 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 				}//end for all original nodes in the contracted node
                 small_loop_count++;
 			}//end while
-            auto bfs_end = chrono::steady_clock::now();
-            auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
-            bfs_timer += bfs_duration.count();
-            // if () milli timer.
-            auto nc_start = chrono::steady_clock::now();
-            this->natural_st_cuts_from_s( natural_cuts, core, between_nodes );
-            auto nc_end = chrono::steady_clock::now();
-            auto nc_duration = chrono::duration_cast<chrono::milliseconds>(nc_end - nc_start);
-            nc_timer += nc_duration.count();
 
-			delete[] node_visited;
+//            if (loop_cnt < 10){
+//                time(&time3);
+//                cout<<"find nc_queue spent "<<nc_count<<", "<<time3-time2<<"s\n";
+//            }
+
+
             big_loop_count++;
+            cores.emplace_back(core);
+            between_nodes_vec.emplace_back(between_nodes);
 		}
+        auto bfs_end = chrono::steady_clock::now();
+        auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
+        int time_cost = bfs_duration.count();
+        if (need_timer) {
+            cout<<"\nsearch center time cost: "<<time_cost<<"ms\n";
+        }
+
+        auto cnc_start = chrono::steady_clock::now();
+        vector<vector<int>> thread_index;
+        thread_index.resize(thread_cap);
+        for (NodeID i = 0; i < cores.size(); i++)
+            thread_index[i%thread_cap].push_back(i);
+        for (int i = 0; i < thread_cap; i++) {
+            threads.push_back(thread(parallel_compute_natural_cuts, ref(m_lock), thread_index[i], natural_cuts, ref(cores), ref(between_nodes_vec), ref(contract_node_list), ref(node_list), ref(contract_to)));
+        }
+        for (int i = 0; i < thread_cap; i++) {
+            threads[i].join();
+        }
+        auto cnc_end = chrono::steady_clock::now();
+        auto cnc_duration = chrono::duration_cast<chrono::milliseconds>(cnc_end - cnc_start);
+        if (need_timer) {
+            cout<<"compute natural cut time: "<<cnc_duration.count()<<"ms\n";
+            need_timer = false;
+        }
+
+//        for (int i = 0; i < cores.size(); i++)
+//            natural_st_cuts_from_s(natural_cuts, cores[i], between_nodes_vec[i]);
+
+
 //        cout<<"sum natural cut time: "<<nc_timer<<" sum bfs time: "<<bfs_timer<<endl;
 //        cout<<"natural cut count: "<<big_loop_count<<" bfs count: "<<small_loop_count<<endl;
-		delete[] node_in_core;
 
 	}
 	return;
 }
 
-NodeID G_Graph::next_center( bool node_in_core[] ){
+NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_in_core, NodeID& index ){
+        while(index < shuffle_nodes.size() && node_in_core[shuffle_nodes[index]]) {
+            index++;
+        }
 
-		vector<NodeID> remain_id;
-		remain_id.reserve( this->node_list.size() );
-		for(int i = 0; i < this->node_list.size(); i++){
-			if( !node_in_core[i] )
-				remain_id.push_back(i);
-		}
-        if (remain_id.size() * 100 / node_list.size())
-            cout<<"Natural cut: "<<100 - remain_id.size() * 100 / node_list.size()<<"%\r";
-        else
-            cout<<"Remaining ids: "<<remain_id.size()<<"\r";
-		if( remain_id.empty() )
+        int percent = (index*1000)/node_in_core.size();
+        if (!percent%10)
+            cout<<"Searching centers: "<<percent/10<<"%\r";
+		if( index == node_in_core.size() )
 			return -1u;
 
-		//random = (int)((rand()/(double)RAND_MAX)*(RANDOM_LEN+1));
-		int random = (int)( rand() % remain_id.size() );
-
-		//DEBUG
-		//random = 0;
-
-		return remain_id[random];
+        node_in_core[index] = true;
+		return shuffle_nodes[index];
 }
 
 void G_Graph::mark_node_vis( NodeID nid, bool * mark_list ){
@@ -978,10 +1778,7 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 			//record node sets of S, every other node is in T
 			set<NodeID> nc_source( core.begin(), core.end() );
 
-			bool * node_visited = NULL;
-			node_visited = new bool[ between_nodes.size() + 1 ];
-			check_new( node_visited, "natural_st_cuts: node_visited" );
-			memset( node_visited, false, between_nodes.size() + 1 );
+			vector<bool> node_visited(between_nodes.size()+1, false);
 
 			node_visited[0] = true;
 			node_visited[neighborID] = true;
@@ -1059,8 +1856,6 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 					}//for all edges from this contracted node
 				}//for all contracted nodes
 			}//for all nodes in S
-
-			delete[] node_visited;
 
 			return;
 }
@@ -1177,10 +1972,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 			set<NodeID> nc_target( neighbor.begin(), neighbor.end() );
 			deque<NodeID> pr_target;
 
-			bool * node_visited = NULL;
-			node_visited = new bool[ between_nodes.size() + 1 ];
-			check_new( node_visited, "natural_st_cuts: node_visited" );
-			memset( node_visited, false, between_nodes.size() + 1 );
+			vector<bool> node_visited(between_nodes.size()+1, false);
 
 			node_visited[0] = true;
 			node_visited[neighborID] = true;
@@ -1252,7 +2044,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 			}//for all nodes in S
 
 			//unmark those wrong natural cuts
-			memset( node_visited, false, between_nodes.size() + 1 );
+			node_visited.clear();
 
 			deque<NodeID>::const_iterator prnit = pr_target.begin();
 			for(; prnit != pr_target.end(); prnit++){
@@ -1333,8 +2125,6 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 				}//dfs from s
 			}//for all nodes in the search tree
 
-			delete[] node_visited;
-
 			return;
 }
 
@@ -1385,10 +2175,7 @@ void G_Graph::contract_nodes( const deque<NodeID>& node_list ){
 
 void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 
-		bool * node_visited = NULL;
-		node_visited = new bool[ this->node_list.size() ];
-		check_new( node_visited, "cnt natural cuts: node_visited" );
-		memset( node_visited, false, this->node_list.size() );
+		vector<bool> node_visited(node_list.size(), false);
 
 		deque<NodeID> component;
 				
@@ -1438,7 +2225,6 @@ void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 			this->contract_nodes( component );
 		}//for all nodes
 
-		delete[] node_visited;
 		return;
 }
 
@@ -1650,7 +2436,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
-		bool * node_visited = new bool[this->contract_node_list.size()]();
+        vector<bool> node_visited(contract_node_list.size(), false);
 
 		NodeID max_comp_pos = 0;
 		NodeID i = 0;
@@ -1691,7 +2477,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 							continue;
 						if( cut_edges.count( (*eit)->get_id() ) ){
 							children.push_back( target );
-							continue;
+                            continue;
 						}
 						if( node_visited[target] )
 							continue;
@@ -1726,17 +2512,17 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 				comp_cnodes_to_pos[*cnit] = i;
 		}
 		//recursively link the tree
-        if (component_tree.size()) {
-            if (max_comp_pos < component_tree.size()){
-                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max() );
-            } else {
-//                link_component( component_tree, comp_cnodes_to_pos, 0, numeric_limits<NodeID>::max());
-                cout<<"max_comp_pos oversize, redirecting search pos to 0.\n";
-                exit(1);
-            }
+        vector<bool> searched(component_tree.size(), false);
+//        vector<bool> searched(component_tree.size(), false);
+        if (component_tree.size() > 1) {
+                this->link_component( component_tree ,comp_cnodes_to_pos, max_comp_pos, numeric_limits<NodeID>::max(), searched );
         }
-
-
+//        int count = 0;
+//        for (int i = 0; i < component_tree.size(); i++)
+//            count += searched[i];
+//        if (count != component_tree.size())
+//            cout<<"some tree not searched\n";
+        cout<<"component tree size: "<<component_tree.size()<<endl;
 		return max_comp_pos;
 }
 
@@ -1761,6 +2547,8 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
         if (component_tree.empty()) {
             return;
         }
+        if (component_tree[root_p].neighbor_id_in_parent >= contract_node_list.size())
+            return;
 		if( !component_tree[root_p].subtree_size ) //component_tree[root_p].subtree_size is 0
 			return;
 
@@ -1774,7 +2562,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 			//shrink further
 			if( component_tree[root_p].subtree_size <= 5 ){
 
-				if( component_tree[root_p].subtree_size + 
+				if( component_tree[root_p].subtree_size +
 					this->contract_node_list[component_tree[root_p].neighbor_id_in_parent].size()
 					<= sz_lim ){
 
@@ -1805,48 +2593,48 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 }
 
 void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
-	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos ){
+	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched ){
 
-//        if (search_pos >= component_tree.size()){
-//            cout<<"search pos: "<<search_pos<<" tree size:"<<component_tree.size()<<endl;
-//            cout<<"parent pos: "<<parent_pos<<"; max pos: "<<numeric_limits<NodeID>::max()<<endl;
-//            search_pos = component_tree.size() - 1;
-//            cout<<"redirecting search pos to "<<search_pos<<endl;
+//        for (int i = 0; i < component_tree.size(); i++)
+//            count += searched[i];
+//        if (count == component_tree.size())
+//            cout<<"searched all component trees.\n";
+//        cout<<search_pos<<" marked\r";
+//        if (parent_pos == 0) {
+//            cout<<"search pos: "<<search_pos<<" parent: "<<parent_pos<<endl;
+//            cout<<"comp size: "<<component_tree[0].component.size()<<"; children size: "<<component_tree[0].children.size()<<endl;
+//            cout<<"children: ";
+//            for (NodeID chlid:component_tree[0].children)
+//                cout<<chlid<<" ";
+//            cout<<endl;
 //        }
-
+        if (searched[search_pos])
+            cout<<"multi searched\n";
+        if (search_pos > component_tree.size())
+            cout<<"search pos: "<<search_pos<<", comp pos: "<<comp_cnodes_to_pos[search_pos]<<endl;
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
-		list<NodeID> children_pos;
-		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
-		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-//            if (!comp_cnodes_to_pos.count(*chlit)){
-//                cout<<"key "<<*chlit<<" not exists\n";
-//                continue;
-//            }
-
-			if( comp_cnodes_to_pos[(*chlit)] == parent_pos ){
-				component_tree[search_pos].neighbor_id_in_parent = *chlit;
-			}
-			else{
-				children_pos.push_back( comp_cnodes_to_pos[(*chlit)] );
-			}
+        list<NodeID> children_pos;
+//		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
+//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+        for (NodeID chlit : component_tree[search_pos].children) {
+            NodeID chl_pos = comp_cnodes_to_pos[chlit];
+			if( chl_pos == parent_pos ){
+				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
+			} else {
+                children_pos.push_back(chl_pos);
+            }
 		}
+        searched[search_pos] = true;
 //        if (children_pos.empty())
 //            cout<<"children_pos empty.\n";
 
 		component_tree[search_pos].children = children_pos;
 		//recursively link
-//		chlit = component_tree[search_pos].children.begin();
-//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-        if (search_pos < component_tree.size()) {
-            for (NodeID chl_id : component_tree[search_pos].children){
-                if (chl_id >= component_tree.size())
-                    continue;
-                NodeID new_search_pos = chl_id;
-                this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos );
-            }
-        } else {
-            cout<<"search_pos oversize, skipping current linking process.\n";
+        assert(search_pos < component_tree.size());
+        for (NodeID chl_id : component_tree[search_pos].children){
+            NodeID new_search_pos = chl_id;
+            this->link_component( component_tree, comp_cnodes_to_pos, new_search_pos, search_pos, searched);
         }
 		return;
 }

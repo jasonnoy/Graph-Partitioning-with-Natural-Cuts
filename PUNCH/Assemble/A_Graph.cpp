@@ -90,7 +90,6 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 //		}
 //        infile.close();
 ////		fclose( co_f );
-        cout<<"Read in "<<edge_list.size()<<" edges\n";
 		//fill symmetric edge id
         cout<<"Filling symmetric edges\n";
 		this->sym_id.resize( this->edge_list.size(), 0);
@@ -108,9 +107,12 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 		this->contract_to.resize( this->node_list.size() );
 		for( NodeID i = 0; i < this->node_list.size(); i++ )
 			contract_to[i] = i;
-		this->contract_node_list.resize( this->node_list.size() );
-		for( NodeID i = 0; i < this->node_list.size(); i++ )
-			this->contract_node_list[i].push_back( i );
+		this->contract_node_list.reserve( 3*this->node_list.size() );
+		for( NodeID i = 0; i < this->node_list.size(); i++ ){
+            vector<NodeID> cnt_list = {i};
+            this->contract_node_list.push_back( cnt_list );
+        }
+
         cout<<"Initial contraction done!\n";
 }
 
@@ -1433,21 +1435,28 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 		
 		deque<Pool_Item> pool;
 		for(NodeID iter = 0; iter < M; iter++){
-
+            time_t time1, time2, time3;
 			VERBOSE(printf("Iteration %u ...\n", iter);)
 			Pool_Item pi;	//set<EdgeID> cut_edges;
 							//vector< vector<NodeID> > node_clusters;
 							//EdgeWeight item_weight;
 			//this->greedy_algorithm( sz_lim );
 			VERBOSE(printf("first greedy algorithm...");)
+            time(&time1);
 			this->greedy_algorithm_heap( sz_lim );
+            time(&time2);
 			VERBOSE(printf("done!\n");)
+            cout<<"greedy algorithm time cost: "<<time2-time1<<"s\n";
 
 			VERBOSE(printf("local search...");)
 			this->local_search( pi.node_clusters, sz_lim );
+            time(&time3);
 			VERBOSE(printf("done!\n");)
+            cout<<"local search time cost: "<<time3-time2<<"s\n";
 			this->pick_cut_edges( pi.node_clusters, pi.cut_edges );
 			this->cal_cut_set_weight( pi );
+            time(&time2);
+            cout<<"pick & cal cut edges time cost: "<<time2-time3<<"s\n";
 
 			//recover original contraction
 			this->contract_to.clear();
@@ -1463,6 +1472,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 			}
 
 			//pool item is ready
+            cout<<"use_combine: "<<use_combine<<" iter: "<<iter<<" sqrt: "<<(NodeID)ceil(sqrt((double)M))<<endl;
 			if( !this->use_combine || iter < (NodeID)ceil(sqrt((double)M)) ){
 				pool.push_back( pi );
 			}
@@ -1470,15 +1480,21 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result, Node
 				VERBOSE(printf("combine and replace...");)
 				//pi = P, pi_1 = P', pi_2 = P''
 				Pool_Item pi_1, pi_2;
+                time(&time2);
 				this->pool_internal_random_combine( pool, pi_1, sz_lim );
 				this->combine_two_pool_item( pi, pi_1, pi_2, sz_lim );
+                time(&time3);
+                cout<<"pool items combine time cost: "<<time3-time2<<"s\n";
 				
 				//insert in the order of P'', P', P
 				this->replace_pool( pool, pi_2 );
 				this->replace_pool( pool, pi_1 );
 				this->replace_pool( pool, pi );
+                time(&time2);
 				VERBOSE(printf("done!\n");)
+                cout<<"replace pool time cost: "<<time2-time3<<"s\n";
 			}
+            cout<<"combine & replace single iter time cost: "<<time2-time1<<"s\n";
 		}
 
 		EdgeWeight min_weight = numeric_limits<EdgeWeight>::max();

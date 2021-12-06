@@ -2,12 +2,12 @@ File formats:
 1. paras.txt
 A txt file, the formats of parameters are as following:
 The first line is the number of layer n, the following n lines defines other parameters as following:
-U, C, FI, M, Size of Pool
+U, Uf C, FI, M, Size of Pool
 such as:
 3
-1024 1 1 1 16
-4096 4 8 16 32
-4096 8 16 32 64
+1024 32 1 1 1 16
+4096 128 4 8 16 32
+4096 128 8 16 32 64
 
 2. nodes_all
 Standard sw node file
