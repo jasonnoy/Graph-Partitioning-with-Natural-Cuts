@@ -704,7 +704,7 @@ void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_no
 
     new_node_id = contract_node_list.size();
     vector<NodeID> new_node;
-    new_node.reserve(100);
+    new_node.reserve(10000);
     contract_node_list.push_back( new_node );
     lock.unlock();
 
