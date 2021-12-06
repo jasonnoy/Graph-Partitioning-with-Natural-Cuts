@@ -168,11 +168,7 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
         set<NodeID> nc_source( core.begin(), core.end() );
 
         //TODO: change to vector
-        bool * node_visited = NULL;
-        node_visited = new bool[ between_nodes.size() + 1 ];
-        check_new( node_visited, "natural_st_cuts: node_visited" );
-        memset( node_visited, false, between_nodes.size() + 1 );
-
+        vector<bool> node_visited(between_nodes.size()+1, false);
         node_visited[0] = true;
         node_visited[neighborID] = true;
 
@@ -250,7 +246,6 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
                 }//for all edges from this contracted node
             }//for all contracted nodes
         }//for all nodes in S
-        delete[] node_visited;
     }
 }
 //void parallel_find_natural_cuts(mutex& m_lock, bool* node_in_core, vector<NodeID>& centers, const NodeSize node_num, const NodeSize core_lim, const int sz_lim, const vector<NodeID>& contract_to, const vector<vector<NodeID>>& contract_node_list, const vector<G_Node>& node_list, bool* natural_cuts) {
@@ -361,8 +356,7 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
 //        nc = this->next_center( node_in_core );
 //        if( nc == -1u ) //0xffffffff )
 //            break;
-
-        bool* node_visited = new bool[this->node_list.size()]();
+        vector<bool> node_visited(node_list.size(), false);
 
         deque<NodeID> core; //core and between_nodes all contain the contracted id
         vector<NodeID> between_nodes;
@@ -422,7 +416,6 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
                 }//end for all targets
             }//end for all original nodes in the contracted node
         }//end while
-        delete[] node_visited;
         cores.push_back(core);
         between_nodes_vec.push_back(between_nodes);
     }
@@ -1540,7 +1533,7 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
 			if( nc == -1u ) //0xffffffff )
 				break;
 
-			bool* node_visited = new bool[this->node_list.size()]();
+            vector<bool> node_visited(node_list.size(), false);
 
 			deque<NodeID> core; //core and between_nodes all contain the contracted id
 			vector<NodeID> between_nodes;
@@ -1613,8 +1606,6 @@ void G_Graph::find_natural_cuts( bool natural_cuts[], NodeSize sz_lim ){
             big_loop_count++;
             cores.emplace_back(core);
             between_nodes_vec.emplace_back(between_nodes);
-
-            delete[] node_visited;
 		}
         auto bfs_end = chrono::steady_clock::now();
         auto bfs_duration = chrono::duration_cast<chrono::milliseconds>(bfs_end - bfs_start);
@@ -1786,10 +1777,7 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 			//record node sets of S, every other node is in T
 			set<NodeID> nc_source( core.begin(), core.end() );
 
-			bool * node_visited = NULL;
-			node_visited = new bool[ between_nodes.size() + 1 ];
-			check_new( node_visited, "natural_st_cuts: node_visited" );
-			memset( node_visited, false, between_nodes.size() + 1 );
+			vector<bool> node_visited(between_nodes.size()+1, false);
 
 			node_visited[0] = true;
 			node_visited[neighborID] = true;
@@ -1867,8 +1855,6 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 					}//for all edges from this contracted node
 				}//for all contracted nodes
 			}//for all nodes in S
-
-			delete[] node_visited;
 
 			return;
 }
@@ -1985,10 +1971,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 			set<NodeID> nc_target( neighbor.begin(), neighbor.end() );
 			deque<NodeID> pr_target;
 
-			bool * node_visited = NULL;
-			node_visited = new bool[ between_nodes.size() + 1 ];
-			check_new( node_visited, "natural_st_cuts: node_visited" );
-			memset( node_visited, false, between_nodes.size() + 1 );
+			vector<bool> node_visited(between_nodes.size()+1, false);
 
 			node_visited[0] = true;
 			node_visited[neighborID] = true;
@@ -2060,7 +2043,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 			}//for all nodes in S
 
 			//unmark those wrong natural cuts
-			memset( node_visited, false, between_nodes.size() + 1 );
+			node_visited.clear();
 
 			deque<NodeID>::const_iterator prnit = pr_target.begin();
 			for(; prnit != pr_target.end(); prnit++){
@@ -2141,8 +2124,6 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 				}//dfs from s
 			}//for all nodes in the search tree
 
-			delete[] node_visited;
-
 			return;
 }
 
@@ -2193,10 +2174,7 @@ void G_Graph::contract_nodes( const deque<NodeID>& node_list ){
 
 void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 
-		bool * node_visited = NULL;
-		node_visited = new bool[ this->node_list.size() ];
-		check_new( node_visited, "cnt natural cuts: node_visited" );
-		memset( node_visited, false, this->node_list.size() );
+		vector<bool> node_visited(node_list.size(), false);
 
 		deque<NodeID> component;
 				
@@ -2246,7 +2224,6 @@ void G_Graph::cnt_natural_cuts( bool * natural_cuts ){
 			this->contract_nodes( component );
 		}//for all nodes
 
-		delete[] node_visited;
 		return;
 }
 
@@ -2458,7 +2435,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 		set<EdgeID> cut_edges( one_cut_edges.begin(), one_cut_edges.end() );
 
-		bool * node_visited = new bool[this->contract_node_list.size()]();
+        vector<bool> node_visited(contract_node_list.size(), false);
 
 		NodeID max_comp_pos = 0;
 		NodeID i = 0;
@@ -2544,8 +2521,6 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
             count += searched[i];
         if (count != component_tree.size())
             cout<<"some tree not searched\n";
-
-        delete[] node_visited;
 		return max_comp_pos;
 }
 

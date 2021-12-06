@@ -190,7 +190,7 @@ void GraphPrinter::MLP_result() {
 }
 
 void GraphPrinter::filter_edges() {
-    bool* edge_map = new bool[cell_nodes.size()]();
+    vector<bool> edge_map(cell_nodes.size(), false);
     for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
         for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
             edge_map[*nit] = 1;
@@ -205,7 +205,6 @@ void GraphPrinter::filter_edges() {
             result_cuts.push_back(edge);
         }
     }
-    delete [] edge_map;
 }
 
 void GraphPrinter::fill_contracts() {
