@@ -2564,6 +2564,8 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
         if (component_tree.empty()) {
             return;
         }
+        if (component_tree[root_p].neighbor_id_in_parent >= contract_node_list.size())
+            return;
 		if( !component_tree[root_p].subtree_size ) //component_tree[root_p].subtree_size is 0
 			return;
 
