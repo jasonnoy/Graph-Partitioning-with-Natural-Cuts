@@ -45,7 +45,7 @@ class G_Graph{
 public:
 	
 	G_Graph(unsigned int c, unsigned int f):DNCC(c), DNCF(f){
-        atomic_init(&temp_cnt, 0);
+        atomic_init(&temp_cnt, (NodeID)0);
 	}
 
     G_Graph() {
