@@ -2609,6 +2609,8 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //        }
         if (searched[search_pos])
             cout<<"multi searched\n";
+        if (search_pos > component_tree.size())
+            cout<<"search pos: "<<search_pos<<", comp pos: "<<comp_cnodes_to_pos[search_pos]<<endl;
         vector<bool> tree_record(component_tree.size(), false);
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
@@ -2616,22 +2618,11 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         for (NodeID chlit : component_tree[search_pos].children) {
-            NodeID chl_pos;
-            if (comp_cnodes_to_pos[chlit] == -1u) {
-                chl_pos = chlit;
-            } else {
-                chl_pos = comp_cnodes_to_pos[chlit];
-                comp_cnodes_to_pos[chlit] = -1u;
-            }
+            NodeID chl_pos = comp_cnodes_to_pos[chlit];
 			if( chl_pos == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
-			}
-            else {
-                if (!tree_record[chl_pos]) {
-                    children_pos.push_back(chl_pos);
-                    tree_record[chl_pos] = true;
-                }
-
+			} else {
+                children_pos.push_back(chl_pos);
             }
 		}
         searched[search_pos] = true;
