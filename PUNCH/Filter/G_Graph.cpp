@@ -1220,9 +1220,10 @@ void G_Graph::mark_node_vis( NodeID nid, vector<bool>& mark_list ){
 
 		NodeID cid = this->contract_to[nid];
 		//if( cid ){ //have been contracted
-		vector<NodeID>::const_iterator nit = this->contract_node_list[cid].begin();
-		for(; nit != this->contract_node_list[cid].end(); nit++)
-			mark_list[*nit] = true;
+//		vector<NodeID>::const_iterator nit = this->contract_node_list[cid].begin();
+//		for(; nit != this->contract_node_list[cid].end(); nit++)
+        for (NodeID nit : contract_node_list[cid])
+			mark_list[nit] = true;
 		return;
 		//}
 		//mark_list[nid] = true;
