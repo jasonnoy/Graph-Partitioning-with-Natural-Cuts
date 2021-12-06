@@ -692,7 +692,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID> del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
+void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
