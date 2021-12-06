@@ -2616,7 +2616,13 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 //		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
 //		for(; chlit != component_tree[search_pos].children.end(); chlit++){
         for (NodeID chlit : component_tree[search_pos].children) {
-            NodeID chl_pos = comp_cnodes_to_pos[chlit];
+            NodeID chl_pos;
+            if (comp_cnodes_to_pos[chlit] == -1u) {
+                chl_pos = chlit;
+            } else {
+                chl_pos = comp_cnodes_to_pos[chlit];
+                comp_cnodes_to_pos[chlit] = -1u;
+            }
 			if( chl_pos == parent_pos ){
 				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
 			}
