@@ -692,7 +692,7 @@ NodeSize static_cal_node_size( const vector<NodeID>& n_list, vector<NodeID>& con
     return total_size;
 }
 
-void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
+void static_contract_nodes(vector<NodeID>& node_list, atomic<NodeID> del_cnt_node, vector<vector<NodeID>>& contract_node_list, vector<NodeID>& contract_to, mutex& m_lock, vector<bool>& contract_record) {
     if( node_list.size() <= 1 ) //do nothing
         return;
 
@@ -765,7 +765,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
         contract_node_list[cnid].clear();
         //do not waste time on managing memory
         //this->contract_node_list[cnid].shrink_to_fit();
-//        del_cnt_node.push_back( cnid );
+        del_cnt_node++;
 
         //}
         /*else{
@@ -775,7 +775,7 @@ void static_contract_nodes(vector<NodeID>& node_list, vector<NodeID>& del_cnt_no
     }//end for all new nodes
 }
 
-void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, vector<NodeID>& del_cnt_node, mutex& m_lock, vector<bool>& contract_record) {
+void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_edge_id, vector<G_Edge>& edge_list, vector<NodeID>& contract_to, vector<vector<NodeID>>& contract_node_list, const vector<vector<EdgeID>>& edge_classes, const vector<NodeID>& index, NodeSize sz_lim, atomic<NodeID>& del_cnt_node, mutex& m_lock, vector<bool>& contract_record) {
 
     for(NodeID i : index ){ //deal with one edge class
         vector<NodeID> edge_class_eid = edge_classes[i];
@@ -841,23 +841,24 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
                 cout<<"multi contract found\n";
             vector<NodeID> * ptr = &contract_node_list[m];
 //            contract_record.push_back(m);
-            vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
-            for(; nit != contract_node_list[m].end(); nit++){
+//            vector<NodeID>::const_iterator nit = contract_node_list[m].begin();
+//            for(; nit != contract_node_list[m].end(); nit++){
+            for (NodeID nit : contract_node_list[m]) {
 
 //                vector<G_Edge*>::const_iterator trit = // all target nodes iterator
 //                        node_list[*nit].get_adj_list().begin();
 //                for(; trit != node_list[*nit].get_adj_list().end(); trit++){
                 if (ptr != &contract_node_list[m])
                     cout<<"add changed\n";
-                if (*nit>node_list.size()){
+                if (nit>node_list.size()){
                     cout<<"cap: "<<contract_node_list.capacity()<<", size: "<<contract_node_list.size()<<", add: "<<&contract_node_list<<endl;
                     cout<<"m contracted: "<<contract_record[m]<<endl;
-                    cout<<"*nit: "<<(*nit)<<" m: "<<m<<", n:"<<n<<endl;
+                    cout<<"*nit: "<<(nit)<<" m: "<<m<<", n:"<<n<<endl;
                     cout<<"list size: "<<contract_node_list[m].size()<<endl;
                     exit(1);
                 }
 
-                for(auto trit : node_list[*nit].get_adj_list()) {
+                for(auto trit : node_list[nit].get_adj_list()) {
                     //whether this edge is closed
                     if( class_edge_visited.count(trit->get_id()) ){
                         //mark next traverse edge
