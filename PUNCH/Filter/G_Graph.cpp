@@ -824,9 +824,9 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 
             if( node_visited[n] ) continue;
 
-            unique_lock<mutex> lock(m_lock);
+//            unique_lock<mutex> lock(m_lock);
             static_mark_node_vis( n, node_visited, contract_to, contract_node_list );
-            lock.unlock();
+//            lock.unlock();
             component[di].push_back( n ); //record the node id consisting of the compnent
 
             if( comp_lim == 1 ){
