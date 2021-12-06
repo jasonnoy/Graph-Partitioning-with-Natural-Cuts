@@ -2610,14 +2610,16 @@ void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<Node
 		if( parent_pos != numeric_limits<NodeID>::max())
 			component_tree[search_pos].parent = parent_pos;
         list<NodeID> children_pos;
-		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
-		for(; chlit != component_tree[search_pos].children.end(); chlit++){
-			if( comp_cnodes_to_pos[*chlit] == parent_pos ){
-				component_tree[search_pos].neighbor_id_in_parent = *chlit;
+//		list<NodeID>::const_iterator chlit = component_tree[search_pos].children.begin();
+//		for(; chlit != component_tree[search_pos].children.end(); chlit++){
+        for (NodeID chlit : component_tree[search_pos].children) {
+            NodeID chl_pos = searched[search_pos] ? chlit : comp_cnodes_to_pos[chlit];
+			if( chl_pos == parent_pos ){
+				component_tree[search_pos].neighbor_id_in_parent = chl_pos;
 			}
             else {
-//                if (!searched[comp_cnodes_to_pos[*chlit]])
-                    children_pos.push_back(comp_cnodes_to_pos[*chlit]);
+                if (!searched[search_pos])
+                    children_pos.push_back(chl_pos);
             }
 		}
         searched[search_pos] = true;
