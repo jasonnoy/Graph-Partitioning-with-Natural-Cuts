@@ -124,10 +124,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-//        if (l + 1 > 4) {
-//            cout<<"not target, skip...\n";
-//            continue;
-//        }
+        if (l + 1 > 4) {
+            cout<<"not target, skip...\n";
+            continue;
+        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
@@ -317,17 +317,17 @@ int main(int argc, char** argv) {
     cout<<"Preprocess run time: "<<end-start<<"s.\n";
 
 
-//    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
-//    mlp.generateMLP();
+    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    mlp.generateMLP();
 
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
-    AdaptivePrinter adaptivePrinter(outPath, 6, preprocess.getNodeNum());
-    vector<vector<NodeID>> void_temp;
-    adaptivePrinter.filter_result(void_temp); // temp only
+//    AdaptivePrinter adaptivePrinter(outPath, 6, preprocess.getNodeNum());
+//    vector<vector<NodeID>> void_temp;
+//    adaptivePrinter.filter_result(void_temp); // temp only
 
-//    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
-//    adaptivePrinter.filter_result(mlp.get_void_cells());
+    AdaptivePrinter adaptivePrinter(outPath, mlp.getL(), preprocess.getNodeNum());
+    adaptivePrinter.filter_result(mlp.get_void_cells());
     cout<<"printing final result..\n";
     adaptivePrinter.print_final_result(timestamp);
 //    adaptivePrinter.print_result_for_show(nodePath, edgePath);
