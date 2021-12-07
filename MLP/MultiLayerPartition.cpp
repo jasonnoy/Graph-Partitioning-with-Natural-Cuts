@@ -124,10 +124,10 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-//        if (l + 1 > 1) {
-//            cout<<"not target, skip...\n";
-//            continue;
-//        }
+        if (l + 1 > 2) {
+            cout<<"not target, skip...\n";
+            continue;
+        }
         string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
         string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
