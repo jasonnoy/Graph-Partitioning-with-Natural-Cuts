@@ -22,14 +22,14 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
         vector<NodeID> cell = cells[cell_id];
          // for finding edges in cell
+        node_map.clear();
         for (NodeID nid : cell) {
             node_map[nid] = true;
         }
-//    cout<<"bit map finished\n";
+
         vector<vector<NodeID>> cell_edges;
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
-
         vector<vector<NodeID>> output_edges; // for ram storage
 
         //filter inner edges inside cell.
@@ -41,23 +41,17 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
             }
         }
 
-//    cout<<cell.size()<<" nodes, "<<cell_edges.size()<<" edges in cell_edges\n";
         Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
         cout<<"Running filter...";
         filter.runFilter();
         Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false);
         cout<<"Running assembly...\n";
         assembly.runAssembly();
-//            PostProgress postProgress(anodes, cell_edges, cell_iter->size(), U);
-//            postProgress.runPostProgress();
         bool need_contract = l == L - 1;
         GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
-        unique_lock<mutex> fileLock(file_lock); // mutex lock for printing
         graphPrinter.write_MLP_result(cur_layer, false);
         void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
-//    cout<<"Thread "<<processId<<" Print finished\n";
-//        void_nodes.insert(void_nodes.end(), graphPrinter.get_cell_void_nodes().begin(), graphPrinter.get_cell_void_nodes().end());
         cellCount += graphPrinter.nodes_result_size();
         edgeCount += graphPrinter.cuts_result_size();
     }
