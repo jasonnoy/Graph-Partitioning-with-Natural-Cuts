@@ -183,6 +183,7 @@ void MultiLayerPartition::MLP() {
         vector<vector<vector<NodeID>>> cells_edges;
         cells_edges.resize(count);
         for (int i = 0; i < count; i++) {
+            cout<<"processing node no."<<i<<"/"<<count<<endl;
             NodeID cellSize;
             infile >> cellSize;
             vector<NodeID> cell_nodes;
