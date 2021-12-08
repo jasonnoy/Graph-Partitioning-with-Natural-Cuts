@@ -24,7 +24,6 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         vector<NodeID> cell = cells[cell_id];
         vector<vector<NodeID>> cell_edges = cells_edges[cell_id];
          // for finding edges in cell
-        node_map.clear();
         for (NodeID nid : cell) {
             node_map[nid] = true;
         }
