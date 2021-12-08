@@ -15,9 +15,11 @@ int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
 void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+    time_t start, end;
     cout<<"Node num: "<<nodeNum<<endl;
     vector<bool> node_map(nodeNum, false);
     for (NodeID cell_id:thread_index) {
+        time(&start);
         process_count++;
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
         vector<NodeID> cell = cells[cell_id];
@@ -54,6 +56,9 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
 
         cellCount += graphPrinter.nodes_result_size();
         edgeCount += graphPrinter.cuts_result_size();
+
+        time(&end);
+        cout<<"cell time cost: "<<end-start<<"s\n";
     }
 }
 
@@ -108,6 +113,8 @@ void MultiLayerPartition::MLP() {
 
     // Bottom-up for now, needs to convert to top-down, change I/O logics.
     for (--l; l >= 0; l--) {
+        time_t start, end;
+        time(&start);
         cout<<"===========\n";
         cout<<"LAYER "<<l+1<<endl;
         cout<<"===========\n";
@@ -273,7 +280,8 @@ void MultiLayerPartition::MLP() {
         outfile<<edgeCount<<"\n"<<buffer2;
         outfile.close();
         outfile.clear(ios::goodbit);
-
+        time(&end);
+        cout<<"layer time cost: "<<end-start<<"s\n";
     }
 }
 
