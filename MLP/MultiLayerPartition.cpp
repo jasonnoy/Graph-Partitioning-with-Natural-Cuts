@@ -5,7 +5,6 @@
 #include "MultiLayerPartition.h"
 
 // Parallel global variables.
-mutex file_lock;
 const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
 atomic<int> process_count(0);
 
@@ -14,7 +13,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<vector<NodeID>>>& cells_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(mutex& file_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<vector<NodeID>>>& cells_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
     cout<<"Node num: "<<nodeNum<<"\n";
     for (NodeID cell_id:thread_index) {
@@ -41,7 +40,9 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         time(&mid);
         bool need_contract = l == L - 1;
         GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), cell, cell_edges, outPath, U, need_contract);
+        unique_lock<mutex> lock(file_lock);
         graphPrinter.write_MLP_result(cur_layer, false);
+        lock.unlock();
         void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
         cellCount += graphPrinter.nodes_result_size();
@@ -233,8 +234,9 @@ void MultiLayerPartition::MLP() {
         for (NodeID i = 0 ; i < cells.size(); i++) {
             thread_index[i%current_occupied].push_back(i);
         }
+        mutex file_lock;
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_cells), ref(cells_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, ref(file_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_cells), ref(cells_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
