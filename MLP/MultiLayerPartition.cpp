@@ -23,10 +23,6 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
         vector<NodeID> cell = cells[cell_id];
         vector<vector<NodeID>> cell_edges = cells_edges[cell_id];
-         // for finding edges in cell
-        for (NodeID nid : cell) {
-            node_map[nid] = true;
-        }
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
         vector<vector<NodeID>> output_edges; // for ram storage
