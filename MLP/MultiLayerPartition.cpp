@@ -276,7 +276,7 @@ void MultiLayerPartition::MLP() {
 //        for (NodeID vid : void_nodes) {
 //            outfile<<vid<<" ";
 //        }
-        outfile<<"\n"<<cellCount<<"\n"<<buffer;
+        outfile<<cellCount<<"\n"<<buffer;
         outfile.close();
         outfile.clear(ios::goodbit);
 
