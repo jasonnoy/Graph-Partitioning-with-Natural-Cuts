@@ -16,14 +16,14 @@ int thread_limit = 1, current_occupied = 1;
 // Parallel function
 void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<vector<NodeID>>>& cells_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
-    cout<<"Node num: "<<nodeNum<<;
+    cout<<"Node num: "<<nodeNum<<"\n";
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<"\r";
         vector<NodeID> cell = cells[cell_id];
         vector<vector<NodeID>> cell_edges = cells_edges[cell_id];
-        cout<<"cell edge size: "<<cell_edges.size()<<;
+        cout<<"cell edge size: "<<cell_edges.size()<<endl;
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
         vector<vector<NodeID>> output_edges; // for ram storage
