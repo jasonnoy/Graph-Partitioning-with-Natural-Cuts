@@ -513,10 +513,13 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size(), 0);
 
-    for (int i = 1; i < edge_list.size(); i++) {
-        sym_id[i-1] = i;
-        sym_id[i] = i - 1;
-        i++;
+    for (NodeID i = 0; i < edge_list.size(); i++) {
+        for (NodeID j = i + 1; j < edge_list.size(); j++) {
+            if (edge_list[i][0] == edge_list[j][1] && edge_list[i][1] == edge_list[j][0]){
+                sym_id[i] = j;
+                sym_id[j] = i;
+            }
+        }
     }
 
 //    edge_list.reserve(this->edge_list.size() * 2);
