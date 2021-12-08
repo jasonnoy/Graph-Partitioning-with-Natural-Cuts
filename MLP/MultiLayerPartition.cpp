@@ -200,7 +200,7 @@ void MultiLayerPartition::MLP() {
                 if (sid >= graph_edges.size()) {
                     cout<<"sid: "<<sid<<", cell size: "<<cell_nodes.size()<<endl;
                     cout<<"nodes: ";
-                    for (nid:cell_nodes)
+                    for (NodeID nid:cell_nodes)
                         cout<<nid<<" ";
                     cout<<endl;
                 }
