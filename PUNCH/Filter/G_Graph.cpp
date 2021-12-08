@@ -515,7 +515,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     for (NodeID i = 0; i < edge_list.size(); i++) {
         for (NodeID j = i + 1; j < edge_list.size(); j++) {
-            if (edge_list[i][0] == edge_list[j][1] && edge_list[i][1] == edge_list[j][0]){
+            if (edge_list[i].get_target() == edge_list[j].get_source() && edge_list[i].get_source() == edge_list[j].get_target()){
                 sym_id[i] = j;
                 sym_id[j] = i;
             }
