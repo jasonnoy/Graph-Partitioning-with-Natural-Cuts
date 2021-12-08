@@ -14,34 +14,23 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<NodeID>>& graph_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells, atomic<int> &cellCount, atomic<int> &edgeCount, vector<vector<NodeID>>& void_cells, const vector<vector<vector<NodeID>>>& cells_edges, const string outPath, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
     cout<<"Node num: "<<nodeNum<<endl;
-    vector<bool> node_map(nodeNum, false);
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
         vector<NodeID> cell = cells[cell_id];
+        vector<vector<NodeID>> cell_edges = cells_edges[cell_id];
          // for finding edges in cell
         node_map.clear();
         for (NodeID nid : cell) {
             node_map[nid] = true;
         }
-
-        vector<vector<NodeID>> cell_edges;
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
         vector<vector<NodeID>> output_edges; // for ram storage
-
-        //filter inner edges inside cell.
-        for (vector<NodeID> edge : graph_edges) {
-            if (edge[0]>=nodeNum || edge[1]>=nodeNum)
-                cout<<"nid1: "<<edge[0]<<", nid2: "<<edge[1]<<endl;
-            if (node_map[edge[0]] && node_map[edge[1]]) {
-                cell_edges.push_back(edge);
-            }
-        }
 
         time(&mid);
         cout<<"cell preprocess time: "<<mid-start<<"s\n";
@@ -102,14 +91,13 @@ void MultiLayerPartition::MLP() {
         cout<<"graph edge file open failed!\n";
         exit(1);
     }
+    graph_edges.resize(nodeNum);
     infile>>count;
     cout<<"Input graph has "<<count<<" edges\n";
-    graph_edges.resize(count);
     for (int i = 0; i < count; i++) {
         NodeID sid, tid;
         infile>>sid>>tid;
-        graph_edges[i].push_back(sid);
-        graph_edges[i].push_back(tid);
+        graph_edges[sid].push_back(tid);
 //            graph_edges[i].push_back(weight);
     }
     infile.close();
@@ -196,18 +184,29 @@ void MultiLayerPartition::MLP() {
         cout<<"current layer has "<<count<<" cells.\n";
         vector<vector<NodeID>> cells;
         cells.reserve(count);
-//        outfile.open(out_node_path, ios::app);
+        vector<vector<vector<NodeID>>> cells_edges;
+        cells_edges.resize(count);
         for (int i = 0; i < count; i++) {
             NodeID cellSize;
             infile >> cellSize;
             vector<NodeID> cell_nodes;
             cell_nodes.reserve(cellSize);
+            unordered_set<NodeID> cell_node_set;
             for (int j = 0; j < cellSize; j++) {
                 NodeID nid;
                 infile >> nid;
                 cell_nodes.push_back(nid);
+                cell_node_set.emplace(nid);
             }
             cells.push_back(cell_nodes);
+            for (NodeID sid : cell_nodes) {
+                for (NodeID tid : graph_edges[sid]) {
+                    if (cell_node_set.count(tid)) {
+                        vector<NodeID> edge = {sid, tid};
+                        cells_edges[i].push_back(edge);
+                    }
+                }
+            }
         }
         infile.close();
         infile.clear(ios::goodbit);
@@ -230,7 +229,7 @@ void MultiLayerPartition::MLP() {
             thread_index[i%current_occupied].push_back(i);
         }
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_cells), ref(graph_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, i, extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells), ref(cellCount), ref(edgeCount), ref(void_cells), ref(cells_edges), outPath, nodeNum, U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
