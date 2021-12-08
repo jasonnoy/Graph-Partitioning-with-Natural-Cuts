@@ -2531,7 +2531,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 
 NodeSize G_Graph::fill_subtree_size( vector<edge_cncted_comp>& component_tree, NodeID root_p ){
 		
-		if( component_tree[root_p].children.empty() )
+		if( component_tree[root_p].children.empty() || component_tree.size() < 2)
 			return component_tree[root_p].subtree_size; //leaf node size
 
 		list<NodeID>::const_iterator chlit = component_tree[root_p].children.begin();
