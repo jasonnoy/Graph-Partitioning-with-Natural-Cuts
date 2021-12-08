@@ -183,7 +183,7 @@ void MultiLayerPartition::MLP() {
         vector<vector<vector<NodeID>>> cells_edges;
         cells_edges.resize(count);
         for (int i = 0; i < count; i++) {
-            cout<<"processing node no."<<i<<"/"<<count<<endl;
+            cout<<"processing cell no."<<i<<"/"<<count<<"\r";
             NodeID cellSize;
             infile >> cellSize;
             vector<NodeID> cell_nodes;
@@ -197,8 +197,14 @@ void MultiLayerPartition::MLP() {
             }
             cells.push_back(cell_nodes);
             for (NodeID sid : cell_nodes) {
-                if (sid >= graph_edges.size())
-                    cout<<"sid: "<<sid<<endl;
+                if (sid >= graph_edges.size()) {
+                    cout<<"sid: "<<sid<<", cell size: "<<cell_nodes.size()<<endl;
+                    cout<<"nodes: ";
+                    for (nid:cell_nodes)
+                        cout<<nid<<" ";
+                    cout<<endl;
+                }
+
                 for (NodeID tid : graph_edges[sid]) {
                     if (cell_node_set.count(tid)) {
                         vector<NodeID> edge = {sid, tid};
