@@ -20,7 +20,7 @@ void dealCell(int processId, int extra_thread, int l, string cur_layer, vector<N
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
-        cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<"\r";
+        cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
         vector<NodeID> cell = cells[cell_id];
         vector<vector<NodeID>> cell_edges = cells_edges[cell_id];
         cout<<"cell edge size: "<<cell_edges.size()<<endl;
