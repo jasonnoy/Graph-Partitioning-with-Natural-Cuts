@@ -14,7 +14,6 @@
 #include "../Common/tp_basetype.h"
 #include "../Common/Utility.h"
 #include "../Common/crp_types.h"
-#include "../Common/io_util.h"
 #include "Assembly.h"
 #include "Filter.h"
 

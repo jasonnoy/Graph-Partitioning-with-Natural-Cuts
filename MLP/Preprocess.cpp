@@ -3,8 +3,7 @@
 //
 
 #include "Preprocess.h"
-#include <ctime>
-#include <string>
+#include "../Common/io_util.h"
 
 void Preprocess::preprocess() {
     ifstream infile;
