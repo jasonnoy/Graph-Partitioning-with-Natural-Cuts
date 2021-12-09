@@ -58,8 +58,9 @@ void Preprocess::preprocess() {
     outfile.open(out_node_path);
 
     outfile<<node_count<<endl;
-    for (size_t i = 0; i < node_count; i++)
-        outfile<<i<<endl;
+    nodeNum = node_count;
+//    for (size_t i = 0; i < node_count; i++)
+//        outfile<<i<<endl;
     outfile.close();
     outfile.clear(ios::goodbit);
 
