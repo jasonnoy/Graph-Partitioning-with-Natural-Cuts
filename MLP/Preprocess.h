@@ -11,7 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include "../Common/sw_basetypes.h"
-#include "../Common/tp_basetypes.h"
+#include "../Common/tp_basetype.h"
 #include "../Common/Utility.h"
 #include "../Common/crp_types.h"
 #include "../Common/io_util.h"
