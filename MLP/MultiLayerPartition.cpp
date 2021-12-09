@@ -297,13 +297,14 @@ void MultiLayerPartition::MLP() {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 7) {
+    if (argc != 8) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
         printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
         printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
-        printf("<arg4> result file directory, e.g. C:/GraphPatition/data/result/\n");
-        printf("<arg5> number of thread, must be an positive integer\n");
-        printf("<arg6> timestamp needed\n");
+        printf("<arg4> weight file path, e.g. C:/GraphPatition/data/weight.txt\n");
+        printf("<arg5> result file directory, e.g. C:/GraphPatition/data/result/\n");
+        printf("<arg6> number of thread, must be an positive integer\n");
+        printf("<arg7> timestamp needed\n");
         exit(0);
     }
     time_t start, end;
@@ -311,9 +312,10 @@ int main(int argc, char** argv) {
     string paraPath(argv[1]);
     string nodePath(argv[2]);
     string edgePath(argv[3]);
-    string outPath(argv[4]);
-    thread_limit = stoi(argv[5]);
-    string timestamp(argv[6]);
+    string weightPath(argv[4]);
+    string outPath(argv[5]);
+    thread_limit = stoi(argv[6]);
+    string timestamp(argv[7]);
     if (thread_limit <= 0)
         thread_limit = 1;
     if (thread_limit > hardware_threads / 2) {
@@ -325,7 +327,7 @@ int main(int argc, char** argv) {
     }
 
 //    cout<<"Dealing with layer 0...\n";
-    Preprocess preprocess(nodePath, edgePath, outPath);
+    Preprocess preprocess(nodePath, edgePath, weightPath, outPath);
     preprocess.runPreprocess();
     end = time(&end);
     cout<<"Preprocess run time: "<<end-start<<"s.\n";
