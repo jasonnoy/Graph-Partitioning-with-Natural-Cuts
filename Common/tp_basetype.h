@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <vector>
-#include "sw_basetype.h"
+#include "sw_basetypes.h"
 #include "base_def.h"
 namespace navi {
 
