@@ -72,7 +72,7 @@ void Preprocess::preprocess() {
     outfile<<edge_count<<endl;
     for (size_t i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
-        outfile<<link->s_node_<<"\n"<<link->e_node_<<endl;
+        outfile<<link.s_node_<<"\n"<<link.e_node_<<endl;
     }
 
     outfile.close();
