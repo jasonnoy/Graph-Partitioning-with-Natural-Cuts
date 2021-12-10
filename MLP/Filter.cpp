@@ -22,7 +22,7 @@ void Filter::contract_tiny_cuts(){
 //    int thread_capacity = (thread_limit-thread_occupied)/thread_occupied;
     time_t start, end;
     time(&start);
-    gGraph.dfs_tree( 10000, edge_in_fi, 0);
+    gGraph.dfs_tree( 100000, edge_in_fi, 0);
     time(&end);
     cout<<"Time cost: "<<end-start<<"s\n";
 
