@@ -506,7 +506,8 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     for (G_Edge edge : edge_list) {
         NodeID sid = edge.get_source();
-        for (auto e_ptr : node_list[sid].get_adj_list()) {
+        NodeID tid = edge.get_target();
+        for (auto e_ptr : node_list[tid].get_adj_list()) {
             if (e_ptr->get_target() == sid) {
                 sym_id[edge.get_id()] = e_ptr->get_id();
                 break;
