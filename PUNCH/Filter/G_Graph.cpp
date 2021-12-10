@@ -515,7 +515,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         }
     }
 
-    cout<<"sym[0]: "<<sym_id[0]<<" sym[1]: "<<sym_id[1]<<endl;
+    cout<<"sym[0]: "<<sym_id[0]<<" sym[1]: "<<sym_id[1]<<", sym[4544607]: "<<sym_id[4544607]<<endl;
 //    edge_list.reserve(this->edge_list.size() * 2);
 //    cout<<"counter: "<<counter<<endl;
 //    NodeID eid = counter;
