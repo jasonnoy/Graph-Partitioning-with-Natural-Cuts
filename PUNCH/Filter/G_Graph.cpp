@@ -474,13 +474,6 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
-//    sym_id.resize(edge_list.size());
-//    for (int i = 1; i < edge_list.size(); i++) {
-//        sym_id[i] = edge_list[i - 1].get_id();
-//        sym_id[i - 1] = edge_list[i].get_id();
-//    }
-//    this->edge_list.insert(edge_list.end(), edges.begin(), edges.end());
-
 
 
 //    std::vector<navi::base::link_info_t> links;
@@ -509,26 +502,17 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
-    this->sym_id.resize( this->edge_list.size(), 0);
+    this->sym_id.resize( this->edge_list.size());
 
     for (G_Edge edge : edge_list) {
         NodeID sid = edge.get_source();
         for (auto e_ptr : node_list[sid].get_adj_list()) {
             if (e_ptr->get_target() == sid) {
                 sym_id[edge.get_id()] = e_ptr->get_id();
+                break;
             }
         }
     }
-
-//    for (NodeID i = 0; i < edge_list.size(); i++) {
-//        for (NodeID j = i + 1; j < edge_list.size(); j++) {
-//            if (edge_list[i].get_target() == edge_list[j].get_source() && edge_list[i].get_source() == edge_list[j].get_target()){
-//                sym_id[i] = j;
-//                sym_id[j] = i;
-//            }
-//        }
-//    }
-
 //    edge_list.reserve(this->edge_list.size() * 2);
 //    cout<<"counter: "<<counter<<endl;
 //    NodeID eid = counter;
