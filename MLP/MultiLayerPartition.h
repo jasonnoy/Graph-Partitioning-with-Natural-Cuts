@@ -15,7 +15,7 @@
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
-//#include "Preprocess.h"
+#include "Preprocess.h"
 //#include "AdaptivePrinter.h"
 #include <string>
 #include <iostream>
