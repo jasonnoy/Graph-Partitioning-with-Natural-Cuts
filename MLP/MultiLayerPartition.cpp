@@ -196,19 +196,19 @@ void MultiLayerPartition::MLP() {
 //            in_edge_path = outPath + "layer0_edges.txt";
 //        }
         // read nodes
-        infile.open(in_node_path);
-        if (!infile.is_open()) {
-            cout<<"layer node file open failed!\n";
-            exit(1);
-        }
-        ofstream outfile;
-        // delete old files if any
-        outfile.open(out_node_path);
-        outfile.close();
-        outfile.clear(ios::goodbit);
-        outfile.open(out_cut_path);
-        outfile.close();
-        outfile.clear(ios::goodbit);
+//        infile.open(in_node_path);
+//        if (!infile.is_open()) {
+//            cout<<"layer node file open failed!\n";
+//            exit(1);
+//        }
+//        ofstream outfile;
+//        // delete old files if any
+//        outfile.open(out_node_path);
+//        outfile.close();
+//        outfile.clear(ios::goodbit);
+//        outfile.open(out_cut_path);
+//        outfile.close();
+//        outfile.clear(ios::goodbit);
 
         int voidSize = 0;
         atomic<int> cellCount(0);
@@ -361,7 +361,7 @@ void MultiLayerPartition::MLP() {
     }
     // deal void cells
     for (size_t i = 0; i < void_cells.size(); i++) {
-        size_t index = total_cell_num + i;
+        NodeID index = total_cell_num + i;
         for (NodeID vid : void_cells[i])
             node_parti[vid] = index;
     }
