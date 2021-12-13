@@ -363,7 +363,7 @@ void MultiLayerPartition::MLP() {
     for (size_t i = 0; i < void_cells.size(); i++) {
         NodeID index = total_cell_num + i;
         for (NodeID vid : void_cells[i])
-            node_parti[vid] = index;
+            node_parti[vid].emplace_back(index);
     }
     time(&finish);
     cout<<"mlp time cost: "<<finish-begin<<"s\n";
