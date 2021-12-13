@@ -159,7 +159,7 @@ void GraphPrinter::MLP_result() {
 
     map<NodeID, int> node_cell;
     index = 0;
-    for (size_t i = 0; i < result_nodes.size(); i++, index++) {
+    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
         for (NodeID node_iter : result_nodes[i]) {
             node_cell[node_iter] = index;
         }

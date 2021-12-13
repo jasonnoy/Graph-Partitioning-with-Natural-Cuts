@@ -62,7 +62,7 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     vector<topo_node_info_t> topo_nodes;
 
     topo_link_head_weight_t* topo_link_weight_head = read_topo_link(topo_weight_path);
-    size_t node_count = topo_link_weight_head->max_vertex_id+1;
+    NodeSize node_count = topo_link_weight_head->max_vertex_id+1;
 
     vector<NodeID> graph_nodes;
     graph_nodes.reserve(node_count);
@@ -74,14 +74,14 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     nodeNum = node_count;
     node_parti.reserve(nodeNum);
 
-    size_t edge_count = topo_link_weight_head->total_topo_link;
+    NodeSize edge_count = topo_link_weight_head->total_topo_link;
     edge_weight_t* topo_edge_weight_ptr = &topo_link_weight_head->topo_link_weight;
     cout<<"There are "<<edge_count<<" edges in layer 0\n";
 
     vector<vector<EdgeID>> graph_edges;
     graph_edges.resize(edge_count);
 
-    for (size_t i = 0; i < edge_count; i++) {
+    for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
         graph_edges[link.s_node_].push_back(link.e_node_);
         graph_edges[link.e_node_].push_back(link.s_node_);
@@ -96,8 +96,8 @@ void MultiLayerPartition::MLP() {
     time_t begin, mid, finish;
     time(&begin);
     cout<<"Server concurrency capacity: "<<thread::hardware_concurrency()<<endl;
-    size_t total_cell_num = 0;
-    size_t total_cut_num = 0;
+    NodeSize total_cell_num = 0;
+    NodeSize total_cut_num = 0;
 
 //    string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
@@ -280,7 +280,7 @@ void MultiLayerPartition::MLP() {
             thread_index[i%current_occupied].push_back(i);
         }
         mutex file_lock;
-        for (size_t i = 0; i < current_occupied; i++)
+        for (int i = 0; i < current_occupied; i++)
             ths.push_back(thread(dealCell, ref(file_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), nodeNum, U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
@@ -288,7 +288,7 @@ void MultiLayerPartition::MLP() {
         }
 
         cout<<"Writing layer partition result...\n";
-        for (size_t i = 0; i < res_cells_nodes.size(); i++) {
+        for (NodeSize i = 0; i < res_cells_nodes.size(); i++) {
             for (NodeID nid : res_cells_nodes[i])
                 node_parti[nid].emplace_back(i);
         }
@@ -360,7 +360,7 @@ void MultiLayerPartition::MLP() {
 
     }
     // deal void cells
-    for (size_t i = 0; i < void_cells.size(); i++) {
+    for (NodeSize i = 0; i < void_cells.size(); i++) {
         NodeID index = total_cell_num + i;
         for (NodeID vid : void_cells[i])
             node_parti[vid].emplace_back(index);
@@ -380,7 +380,7 @@ void MultiLayerPartition::print_parti(const string timestamp) {
         exit(-1);
     }
     outfile<<L<<endl;
-    for (size_t layer_size : cell_sizes)
+    for (NodeSize layer_size : cell_sizes)
         outfile<<layer_size<<endl;
     outfile<<nodeNum<<endl;
     for (auto node_cids : node_parti){
