@@ -19,19 +19,19 @@ class GraphPrinter {
 private:
     const int U;
     const bool contract_tiny;
-    const vector<NodeID>& cell_nodes;
-    const vector<vector<NodeID>>& cell_edges;
+    vector<vector<NodeID>> cell_edges;
+    vector<NodeID> cell_nodes;
     const vector<vector<NodeID>>& id_map;
-    const vector<unsigned int>& real_map;
+    const vector<NodeID>& real_map;
     const vector<vector<NodeID>>& a_result;
     vector<vector<NodeID>> phantom_nodes;
     vector<vector<NodeID>> result_nodes;
-    vector<vector<NodeID>> result_edges;
+    vector<vector<vector<NodeID>>> result_cells_edges;
     vector<vector<NodeID>> result_cuts;
     vector<vector<NodeID>> void_cells;
-    const string out_path;
+//    const string out_path;
     vector<NodeID> contract_to;
-    vector<NodeID> cell_void_nodes;
+//    vector<NodeID> cell_void_nodes;
 
     void fill_contracts();
     void filter_edges();
@@ -41,8 +41,8 @@ private:
     void contract_iso_cells();
 
 public:
-    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, const vector<NodeID>& cellNodes, const vector<vector<NodeID>>& cellEdges, const string o_path, const int u, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_nodes(cellNodes), cell_edges(cellEdges), out_path(o_path), U(u), contract_tiny(contract){}
-    void write_MLP_result(const string layer, bool isPhantom);
+    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<vector<NodeID>>& cellNodes, vector<vector<vector<EdgeID>>>& cellEdges,  const int u, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), U(u), contract_tiny(contract){}
+    void write_MLP_result(vector<vector<NodeID>>& cells_nodes, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock);
     NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
     vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}

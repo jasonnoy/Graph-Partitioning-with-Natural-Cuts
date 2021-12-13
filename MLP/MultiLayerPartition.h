@@ -7,11 +7,16 @@
 
 #include "../PUNCH/Filter/G_Graph.h"
 #include "../PUNCH/Assemble/A_Graph.h"
+#include "../Common/sw_basetypes.h"
+#include "../Common/tp_basetype.h"
+#include "../Common/Utility.h"
+#include "../Common/crp_types.h"
+
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
 #include "Preprocess.h"
-#include "AdaptivePrinter.h"
+//#include "AdaptivePrinter.h"
 #include <string>
 #include <iostream>
 #include <stdlib.h>
@@ -30,15 +35,22 @@ using namespace std;
 class MultiLayerPartition {
 private:
     int L, U, Uf, C, FI, M, PS;
-    void MLP();
     const string paraPath;
     const string outPath;
     const NodeID nodeNum;
-    vector<vector<NodeID>> graph_edges;
+    vector<vector<vector<NodeID>>> cells_edges;
+    vector<vector<NodeID>> cells_nodes;
+    vector<vector<vector<NodeID>>> res_cells_edges;
+    vector<vector<NodeID>> res_cells_nodes;
     vector<vector<NodeID>> void_cells;
-//    static void dealCell(int l, string cur_layer, vector<NodeID>& cell, atomic<int>& cell_count, atomic<int> &edge_count, vector<NodeID>& void_nodes, atomic<int>& process_count);
+    vector<vector<uint8_t>> node_parti;
+    vector<size_t> cell_sizes;
     bool phantom;
-//    void dealCell(int l, string cur_layer, vector<NodeID> &cell, atomic<int> &cellCount, atomic<int> &edgeCount, vector <NodeID> &void_nodes, atomic<int>& process_count);
+
+    void MLP();
+    void read_graph(const string topo_node_path, const string topo_weight_path);
+    void print_parti(const string timestamp);
+
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;

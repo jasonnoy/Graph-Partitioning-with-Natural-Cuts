@@ -44,7 +44,9 @@ else
   touch ./logs/"$date_str"/"$time_str".log || exit
 fi
 
-g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
+g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
+
+#g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
 #./bin/MLP ./data/paras.txt /data/cris.su/code/ch-routing-demo/data/china/nodes /data/cris.su/code/ch-routing-demo/data/china/links ./result/ 50 >> ./logs/"$date_str"/"$time_str".log 2>&1
 
@@ -53,10 +55,10 @@ g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.c
 #./bin/MLP ./data/paras.txt /data/jjh/partitions/1207/topo_node.hllnavi /data/jjh/partitions/1207/topo_link.hllnavi /data/jjh/partitions/1207/crp_weight_dist.hllnavi ./result/ 52 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # topo china input
-./bin/MLP ./data/paras.txt /data/jjh/crp_data/china/topo_node.hllnavi /data/jjh/crp_data/china/topo_link.hllnavi /data/jjh/crp_data/china/crp_weight_dist.hllnavi ./result/ 52 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
+#./bin/MLP ./data/paras.txt /data/jjh/crp_data/china/topo_node.hllnavi /data/jjh/crp_data/china/topo_link.hllnavi /data/jjh/crp_data/china/crp_weight_dist.hllnavi ./result/ 52 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # Topo beijing input
-#./bin/MLP ./data/paras_beijing.txt /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/topo_node.hllnavi /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/topo_link.hllnavi /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/crp_weight_dist.hllnavi ./result/beijing/ 32 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
+./bin/MLP ./data/paras_beijing.txt /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/topo_node.hllnavi /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/topo_link.hllnavi /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/crp_weight_dist.hllnavi ./result/beijing/ 32 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # ./bin/MLP ./data/paras_beijing.txt /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/nodes /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/links ./result/beijing/ 32 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
 

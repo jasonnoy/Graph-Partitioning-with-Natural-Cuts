@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
+void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vector<vector<vector<EdgeID>>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
@@ -12,29 +12,31 @@ void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
 //    }
     MLP_result();
     // convert relative vid to real nid
-    for (int i = 0; i < cell_void_nodes.size(); i++) {
-        cell_void_nodes[i] = real_map[cell_void_nodes[i]];
-    }
+//    for (int i = 0; i < cell_void_nodes.size(); i++) {
+//        cell_void_nodes[i] = real_map[cell_void_nodes[i]];
+//    }
 
-    string out_node_path = out_path + "layer" + layer + "_nodes.txt";
-    string out_edge_path = out_path + "layer" + layer + "_edges.txt";
-    string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
-    ofstream outfile;
-    outfile.open(out_node_path, ios::app);
-    if (!outfile.is_open()) {
-        cout<<"Graph printer open file failed!\n";
-        exit(1);
-    }
-    cout<<"Printing nodes of layer "<<layer<<endl;
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        outfile<<cell_iter->size();
-        for (auto nid_i = cell_iter->begin(); nid_i != cell_iter->end(); nid_i++) {
-            outfile<<" "<<real_map[*nid_i];
-        }
-        outfile<<"\n";
-    }
-    outfile.close();
-    outfile.clear(ios::goodbit);
+//    string out_node_path = out_path + "layer" + layer + "_nodes.txt";
+//    string out_edge_path = out_path + "layer" + layer + "_edges.txt";
+//    string out_cut_path = out_path + "layer" + layer + "_cuts.txt";
+//    ofstream outfile;
+//    outfile.open(out_node_path, ios::app);
+//    if (!outfile.is_open()) {
+//        cout<<"Graph printer open file failed!\n";
+//        exit(1);
+//    }
+    cout<<"Printing nodes of current layer "<<endl;
+
+    unique_lock<mutex> write_lock(w_lock);
+    for (auto new_cell_nodes : result_nodes)
+        res_cells_nodes.emplace_back(new_cell_nodes);
+    for (auto new_cell_edges : result_cells_edges)
+        res_cells_edges.emplace_back(new_cell_edges);
+    if (!void_cells.empty())
+        void_cells.emplace_back(void_cells);
+    write_lock.unlock();
+//    outfile.close();
+//    outfile.clear(ios::goodbit);
     cout<<"Done\n";
 
 //    outfile.open(out_cut_path, ios::app);
@@ -62,22 +64,22 @@ void GraphPrinter::write_MLP_result(const string layer, bool isPhantom) {
 }
 
 void GraphPrinter::phantom_result() {
-    fill_contracts();
-    cout<<"aresult size: "<<a_result.size()<<endl;
-    result_nodes.resize(a_result.size());
-    NodeID index = 0;
-    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
-        result_nodes[index].reserve( cit->size() );
-        result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
-    }
-
-    result_cuts.reserve(cell_edges.size());
-    for (int i = 0; i < cell_edges.size(); i++) {
-        NodeID sid = cell_edges[i][0];
-        NodeID tid = cell_edges[i][1];
-        vector<NodeID> edge = {sid, tid};
-        result_cuts.push_back(edge);
-    }
+//    fill_contracts();
+//    cout<<"aresult size: "<<a_result.size()<<endl;
+//    result_nodes.resize(a_result.size());
+//    NodeID index = 0;
+//    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
+//        result_nodes[index].reserve( cit->size() );
+//        result_nodes[index].insert(result_nodes[index].end(), cit->begin(), cit->end());
+//    }
+//
+//    result_cuts.reserve(cell_edges.size());
+//    for (int i = 0; i < cell_edges.size(); i++) {
+//        NodeID sid = cell_edges[i][0];
+//        NodeID tid = cell_edges[i][1];
+//        vector<NodeID> edge = {sid, tid};
+//        result_cuts.push_back(edge);
+//    }
 }
 
 void GraphPrinter::contract_tiny_cells() {
@@ -129,7 +131,7 @@ void GraphPrinter::contract_iso_cells() {
             cell_iter++;
             continue;
         }
-        void_cells.push_back(*cell_iter);
+        void_cells.emplace_back(*cell_iter);
         cell_iter = result_nodes.erase(cell_iter);
 //        cell_void_nodes.insert(cell_void_nodes.end(), cell_iter->begin(), cell_iter->end());
         contracted_cell_count++;
@@ -146,7 +148,7 @@ void GraphPrinter::MLP_result() {
         result_nodes[index].reserve( 10 * cit->size() );
         for(; nit != cit->end(); nit++){
             for (NodeID contain_nid : id_map[*nit]) {
-                result_nodes[index].push_back(contain_nid);
+                result_nodes[index].emplace_back(real_map[contain_nid]);
             }
         }
     }
@@ -157,19 +159,19 @@ void GraphPrinter::MLP_result() {
 
     map<NodeID, int> node_cell;
     index = 0;
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++, index++) {
-        for (auto node_iter = cell_iter->begin(); node_iter != cell_iter->end(); node_iter++) {
-            node_cell[real_map[*node_iter]] = index;
+    for (size_t i = 0; i < result_nodes.size(); i++, index++) {
+        for (NodeID node_iter : result_nodes[i]) {
+            node_cell[node_iter] = index;
         }
     }
-    for (NodeID void_id : cell_void_nodes) {
-        if (void_id >= cell_nodes.size()) {
-            cout<<"outsize void_id: "<<void_id<<endl;
+    for (auto void_nodes : void_cells) {
+        for (auto void_id : void_nodes) {
+            node_cell[real_map[void_id]] = -1;
         }
-        node_cell[void_id] = -1;
     }
+
     result_cuts.reserve(cell_edges.size());
-    result_edges.reserve(cell_edges.size());
+    result_cells_edges.resize(result_nodes.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         // note: real ids
         NodeID sid = cell_edges[i][0];
@@ -178,7 +180,7 @@ void GraphPrinter::MLP_result() {
 //            cout<<"node cell different\n";
         if (node_cell[sid] == node_cell[tid]){
             vector<NodeID> edge = {sid, tid};
-            result_edges.push_back(edge);
+            result_cells_edges[node_cell[sid]].emplace_back(edge);
             continue;
         }
         if (node_cell[sid] == -1 || node_cell[tid] == -1)
@@ -190,21 +192,21 @@ void GraphPrinter::MLP_result() {
 }
 
 void GraphPrinter::filter_edges() {
-    vector<bool> edge_map(cell_nodes.size(), false);
-    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
-        for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
-            edge_map[*nit] = 1;
-        }
-    }
-    result_cuts.reserve(cell_edges.size());
-    for (int i = 0; i < cell_edges.size(); i++) {
-        NodeID sid = cell_edges[i][0];
-        NodeID tid = cell_edges[i][1];
-        if (edge_map[sid] && edge_map[tid]) {
-            vector<NodeID> edge = {sid, tid};
-            result_cuts.push_back(edge);
-        }
-    }
+//    vector<bool> edge_map(cell_nodes.size(), false);
+//    for (auto cell_iter = result_nodes.begin(); cell_iter != result_nodes.end(); cell_iter++) {
+//        for (auto nit = cell_iter->begin(); nit != cell_iter->end(); nit++) {
+//            edge_map[*nit] = 1;
+//        }
+//    }
+//    result_cuts.reserve(cell_edges.size());
+//    for (int i = 0; i < cell_edges.size(); i++) {
+//        NodeID sid = cell_edges[i][0];
+//        NodeID tid = cell_edges[i][1];
+//        if (edge_map[sid] && edge_map[tid]) {
+//            vector<NodeID> edge = {sid, tid};
+//            result_cuts.push_back(edge);
+//        }
+//    }
 }
 
 void GraphPrinter::fill_contracts() {
