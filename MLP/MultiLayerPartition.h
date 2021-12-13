@@ -15,7 +15,7 @@
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
-#include "Preprocess.h"
+//#include "Preprocess.h"
 //#include "AdaptivePrinter.h"
 #include <string>
 #include <iostream>
@@ -43,8 +43,8 @@ private:
     vector<vector<vector<NodeID>>> res_cells_edges;
     vector<vector<NodeID>> res_cells_nodes;
     vector<vector<NodeID>> void_cells;
-    vector<vector<size_t>> node_parti;
-    vector<size_t> cell_sizes;
+    vector<vector<NodeID>> node_parti;
+    vector<NodeSize> cell_sizes;
     bool phantom;
 
     void MLP();
