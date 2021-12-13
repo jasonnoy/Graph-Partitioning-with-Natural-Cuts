@@ -32,8 +32,8 @@ void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vec
         res_cells_nodes.emplace_back(new_cell_nodes);
     for (auto new_cell_edges : result_cells_edges)
         res_cells_edges.emplace_back(new_cell_edges);
-    if (!void_cells.empty())
-        void_cells.emplace_back(void_cells);
+    for (auto new_void_cells : void_cells)
+        res_void_cells.emplace_back(new_void_cells);
     write_lock.unlock();
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
@@ -162,11 +162,6 @@ void GraphPrinter::MLP_result() {
     for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
         for (NodeID node_iter : result_nodes[i]) {
             node_cell[node_iter] = index;
-        }
-    }
-    for (auto void_nodes : void_cells) {
-        for (auto void_id : void_nodes) {
-            node_cell[real_map[void_id]] = -1;
         }
     }
 
