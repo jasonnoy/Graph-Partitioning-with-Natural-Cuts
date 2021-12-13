@@ -26,12 +26,11 @@ private:
     void write_result();
 public:
     const int U;
-    const string outPath;
 
     Assembly(int u, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
-        U(u), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
-    Assembly(int u, int fi, int m, bool combine, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, const string oPath, bool phantom):
-    U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), outPath(oPath), PHANTOM(phantom){};
+        U(u), anodes(a_nodes), aedges(a_edges), PHANTOM(phantom){};
+    Assembly(int u, int fi, int m, bool combine, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, bool phantom):
+    U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), PHANTOM(phantom){};
     void runAssembly();
     vector<vector<NodeID>>& get_result(){return result;}
     vector<vector<NodeID>>& get_id_map(){return id_map;}

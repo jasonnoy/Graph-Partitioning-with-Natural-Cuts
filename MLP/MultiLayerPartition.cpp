@@ -20,7 +20,7 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
-        cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells.size()<<endl;
+        cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells_nodes.size()<<endl;
         vector<NodeID>& cell = cells_nodes[cell_id];
         vector<vector<EdgeID>>& cell_edges = cells_edges[cell_id];
         cout<<"cell edge size: "<<cell_edges.size()<<endl;
@@ -34,7 +34,7 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
         Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
         cout<<"Running filter...";
         filter.runFilter();
-        Assembly assembly(U, FI, M, false, anodes, aedges, outPath, false);
+        Assembly assembly(U, FI, M, false, anodes, aedges, false);
         cout<<"Running assembly...\n";
         assembly.runAssembly();
 
@@ -53,11 +53,11 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
 }
 
 void MultiLayerPartition::read_graph(const string topo_node_path, const string topo_weight_path) {
-    ofstream outfile;
+//    ofstream outfile;
 //    string out_node_path = out_path + "layer0_nodes.txt";
 //    string out_edge_path = out_path + "layer0_edges.txt";
-    string out_node_path = out_path + "layer-1_nodes.txt";
-    string out_edge_path = out_path + "layer-1_edges.txt";
+//    string out_node_path = out_path + "layer-1_nodes.txt";
+//    string out_edge_path = out_path + "layer-1_edges.txt";
 
     vector<topo_node_info_t> topo_nodes;
 
@@ -88,8 +88,8 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     }
     cells_edges.emplace_back(graph_edges);
 
-    outfile.close();
-    outfile.clear(ios::goodbit);
+//    outfile.close();
+//    outfile.clear(ios::goodbit);
 }
 
 void MultiLayerPartition::MLP() {
@@ -97,6 +97,7 @@ void MultiLayerPartition::MLP() {
     time(&begin);
     cout<<"Server concurrency capacity: "<<thread::hardware_concurrency()<<endl;
     size_t total_cell_num = 0;
+    size_t total_cut_num = 0;
 
 //    string in_edge_path = outPath + "layer-1_edges.txt";
     ifstream infile;
@@ -188,12 +189,12 @@ void MultiLayerPartition::MLP() {
 //        }
 //        string aNodePath = outPath + "anode_" + prefix + ".txt";
 //        string aEdgePath = outPath + "aedge_" + prefix + ".txt";
-        string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
-        cout<<"input node: "<<in_node_path<<endl;
-        if (phantom) {
-            in_node_path = outPath + "layer0_nodes.txt";
-            in_edge_path = outPath + "layer0_edges.txt";
-        }
+//        string in_node_path = outPath + "layer" + last_layer + "_nodes.txt";
+//        cout<<"input node: "<<in_node_path<<endl;
+//        if (phantom) {
+//            in_node_path = outPath + "layer0_nodes.txt";
+//            in_edge_path = outPath + "layer0_edges.txt";
+//        }
         // read nodes
         infile.open(in_node_path);
         if (!infile.is_open()) {
@@ -429,7 +430,7 @@ int main(int argc, char** argv) {
 //    cout<<"Preprocess run time: "<<end-start<<"s.\n";
 
 
-    MultiLayerPartition mlp(paraPath, outPath, preprocess.getNodeNum(), false);
+    MultiLayerPartition mlp(paraPath, outPath, false);
     mlp.read_graph(nodePath, edgePath);
     mlp.generateMLP();
     mlp.print_parti(timestamp);

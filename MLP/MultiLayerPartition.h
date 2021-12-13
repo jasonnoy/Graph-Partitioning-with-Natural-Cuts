@@ -37,30 +37,30 @@ private:
     int L, U, Uf, C, FI, M, PS;
     const string paraPath;
     const string outPath;
-    const NodeID nodeNum;
+    NodeSize nodeNum;
     vector<vector<vector<NodeID>>> cells_edges;
     vector<vector<NodeID>> cells_nodes;
     vector<vector<vector<NodeID>>> res_cells_edges;
     vector<vector<NodeID>> res_cells_nodes;
     vector<vector<NodeID>> void_cells;
-    vector<vector<uint8_t>> node_parti;
+    vector<vector<size_t>> node_parti;
     vector<size_t> cell_sizes;
     bool phantom;
 
     void MLP();
-    void read_graph(const string topo_node_path, const string topo_weight_path);
-    void print_parti(const string timestamp);
 
 public:
     const int ParaNum = 5;
     vector<vector<int>> parameters;
 
-    MultiLayerPartition(const string pPath, const string oPath, const NodeID node_num, bool isPhantom):
-        paraPath(pPath), outPath(oPath), nodeNum(node_num), phantom(isPhantom){};
+    MultiLayerPartition(const string pPath, const string oPath, bool isPhantom):
+        paraPath(pPath), outPath(oPath), phantom(isPhantom){};
     ~MultiLayerPartition() = default;
     void generateMLP() {
         this->MLP();
     }
+    void read_graph(const string topo_node_path, const string topo_weight_path);
+    void print_parti(const string timestamp);
     int getL(){return L;}
     void setL(int l){L = l;}
     vector<vector<NodeID>>& get_void_cells() {return void_cells;}

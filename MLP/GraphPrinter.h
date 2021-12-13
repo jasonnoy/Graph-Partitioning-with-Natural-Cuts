@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 using namespace std;
 
@@ -41,11 +42,11 @@ private:
     void contract_iso_cells();
 
 public:
-    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<vector<NodeID>>& cellNodes, vector<vector<vector<EdgeID>>>& cellEdges,  const int u, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), U(u), contract_tiny(contract){}
+    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<NodeID>& cellNodes, vector<vector<EdgeID>>& cellEdges,  const int u, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_nodes(cellNodes), cell_edges(cellEdges), U(u), contract_tiny(contract){}
     void write_MLP_result(vector<vector<NodeID>>& cells_nodes, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock);
     NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
-    vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}
+//    vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}
     vector<vector<NodeID>>& get_void_cells(){return void_cells;}
 };
 
