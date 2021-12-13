@@ -21,7 +21,7 @@ private:
     int thread_cap;
     int F = 10;
     const vector<NodeID>& nodes;
-    const vector<vector<NodeID>>& edges;
+    const vector<vector<EdgeID>>& edges;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
     vector<NodeID> real_map;
@@ -31,7 +31,7 @@ private:
     void contract_natural_cuts();
     void convert_and_output();
 public:
-    Filter(int uf, int u, int c, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
+    Filter(int uf, int u, int c, vector<NodeID>& in_nodes, vector<vector<EdgeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
     Uf(uf), U(u), C(c), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), thread_cap(thread){
         gGraph.thread_cap = thread;
         gGraph.DNCC = c;
