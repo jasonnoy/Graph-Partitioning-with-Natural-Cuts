@@ -396,6 +396,9 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
     infile.read((char *)&count, sizeof(uint32_t));
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
+
+    node_parti.reserve(nodeNum);
+
     infile.close();
     infile.clear(ios::goodbit);
     
