@@ -23,7 +23,13 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells_nodes.size()<<endl;
         vector<NodeID>& cell = cells_nodes[cell_id];
         vector<vector<EdgeID>>& cell_edges = cells_edges[cell_id];
-        cout<<"cell edge size: "<<cell_edges.size()<<endl;
+        cout<<"cell node size: "<<cell.size()<<", cell edge size: "<<cell_edges.size()<<endl;
+
+        if (cell_edges.empty()) {
+            res_cells_nodes.emplace_back(cell);
+            cout<<"empty cell edge, skipping..\n";
+            return;
+        }
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
         vector<vector<NodeID>> output_edges; // for ram storage
