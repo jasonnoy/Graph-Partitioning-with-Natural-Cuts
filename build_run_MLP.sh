@@ -57,9 +57,9 @@ g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.c
 #./bin/MLP ./data/paras.txt ./result/ 52 "$date_str$time_str" /data/jjh/crp_data/china/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # Topo beijing input
-./bin/MLP ./data/paras_beijing.txt ./result/beijing/ 32 "$date_str$time_str" /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
+#./bin/MLP ./data/paras_beijing.txt ./result/beijing/ 32 "$date_str$time_str" /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # base beijing input
-# ./bin/MLP ./data/paras_beijing.txt ./result/beijing/ 32 "$date_str$time_str" /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/nodes /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/links >> ./logs/"$date_str"/"$time_str".log 2>&1
+ ./bin/MLP ./data/paras_beijing.txt ./result/beijing/ 32 "$date_str$time_str" /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/nodes /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/links >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 echo "Finished"
