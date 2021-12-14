@@ -435,6 +435,7 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
         cell_edges[eid].emplace_back(edge_iter->end_node_id);
         cell_edges[eid++].emplace_back(edge_iter->start_node_id);
     }
+    cells_edges.emplace_back(cell_edges);
 }
 void MultiLayerPartition::print_parti(const string timestamp) {
     time_t start, end;
