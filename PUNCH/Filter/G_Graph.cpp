@@ -2318,6 +2318,8 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 			s_id++;
 		}
 
+        cout<<"filter aedge list size: "<<ag->edge_list.size()<<endl;
+
 		ag->sym_id.resize( e_id );
 		//ag->edge_list.resize( e_id );
 
