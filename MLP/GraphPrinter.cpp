@@ -169,8 +169,8 @@ void GraphPrinter::MLP_result() {
     result_cells_edges.resize(result_nodes.size());
     for (int i = 0; i < cell_edges.size(); i++) {
         // note: real ids
-        NodeID sid = cell_edges[i][0];
-        NodeID tid = cell_edges[i][1];
+        NodeID sid = real_map[cell_edges[i][0]];
+        NodeID tid = real_map[cell_edges[i][1]];
 //        if(node_cell[sid] * node_cell[tid] < 0)
 //            cout<<"node cell different\n";
         if (node_cell[sid] == node_cell[tid]){

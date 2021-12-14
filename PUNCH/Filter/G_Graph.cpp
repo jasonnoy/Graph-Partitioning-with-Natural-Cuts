@@ -468,12 +468,14 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // read in edges
     edge_list.reserve(edges.size());
-    NodeID counter = 0;
+    EdgeID eid = 0;
     for (vector<NodeID>edge : edges) {
-        G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], counter++);
+        G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], eid++);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }
+    cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
+
 
 
 //    std::vector<navi::base::link_info_t> links;
@@ -499,7 +501,6 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //    }
 //    links.clear();
 //    fs.close();
-    cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size());

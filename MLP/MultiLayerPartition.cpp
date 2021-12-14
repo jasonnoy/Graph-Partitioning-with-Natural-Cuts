@@ -58,7 +58,9 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
 //    string out_edge_path = out_path + "layer0_edges.txt";
 //    string out_node_path = out_path + "layer-1_nodes.txt";
 //    string out_edge_path = out_path + "layer-1_edges.txt";
-
+    time_t begin, finish;
+    time(&begin);
+    cout<<"MLP reading graph...\n";
     vector<topo_node_info_t> topo_nodes;
 
     topo_link_head_weight_t* topo_link_weight_head = read_topo_link(topo_weight_path);
@@ -79,14 +81,18 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     cout<<"There are "<<edge_count<<" edges in layer 0\n";
 
     vector<vector<EdgeID>> graph_edges;
-    graph_edges.resize(nodeNum);
+    graph_edges.reserve(edge_count);
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
-        graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
-        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
+        vector<EdgeID> edge = {link.s_node_, link.e_node_};
+        graph_edges.emplace_back(edge);
+//        graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
+//        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
     }
     cells_edges.emplace_back(graph_edges);
+    time(&finish);
+    cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
 
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
