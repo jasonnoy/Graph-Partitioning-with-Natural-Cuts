@@ -461,7 +461,7 @@ void MultiLayerPartition::print_parti(const string timestamp) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 8 && argc != 6) {
+    if (argc != 7 && argc != 6) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
         printf("<arg2> weight file path, e.g. C:/GraphPatition/data/weight.txt\n");
         printf("<arg3> result file directory, e.g. C:/GraphPatition/data/result/\n");
@@ -481,11 +481,11 @@ int main(int argc, char** argv) {
     string topoPath, nodePath, edgePath;
     bool topo = tue;
     if (argc == 6) {
-        topoPath(argv[5]);
+        topoPath = argv[5];
     } else {
         topo = false;
-        nodePath(argv[5]);
-        edgePath(argv[6]);
+        nodePath = argv[5];
+        edgePath = argv[6];
     }
     if (thread_limit <= 0)
         thread_limit = 1;
