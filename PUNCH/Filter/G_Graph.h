@@ -51,6 +51,7 @@ public:
     G_Graph() {
         DNCC = 1;
         DNCF = 10;
+        atomic_init(&temp_cnt, (NodeID)0);
     }
 
 	~G_Graph(){

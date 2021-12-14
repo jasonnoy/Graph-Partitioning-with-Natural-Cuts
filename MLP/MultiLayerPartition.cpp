@@ -14,9 +14,8 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<vector<EdgeID>>>& res_cells_edges, const NodeID nodeNum, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<vector<EdgeID>>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
-    cout<<"Node num: "<<nodeNum<<"\n";
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
@@ -295,7 +294,7 @@ void MultiLayerPartition::MLP() {
         }
         mutex file_lock;
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, ref(file_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), nodeNum, U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, ref(file_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
