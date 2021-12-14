@@ -27,14 +27,14 @@ void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vec
 //    }
     cout<<"Printing nodes of layer "<<l<<endl;
 
-    unique_lock<mutex> write_lock(w_lock);
+//    unique_lock<mutex> write_lock(w_lock);
     for (auto new_cell_nodes : result_nodes)
         res_cells_nodes.emplace_back(new_cell_nodes);
     for (auto new_cell_edges : result_cells_edges)
         res_cells_edges.emplace_back(new_cell_edges);
     for (auto new_void_cells : void_cells)
         res_void_cells.emplace_back(new_void_cells);
-    write_lock.unlock();
+//    write_lock.unlock();
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
     cout<<"Done\n";

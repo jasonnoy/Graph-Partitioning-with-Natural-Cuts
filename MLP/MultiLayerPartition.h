@@ -40,7 +40,7 @@ private:
     NodeSize nodeNum;
     vector<vector<vector<NodeID>>> cells_edges;
     vector<vector<NodeID>> cells_nodes;
-    vector<vector<vector<NodeID>>> res_cells_edges;
+    vector< vector<vector<NodeID>> > res_cells_edges;
     vector<vector<NodeID>> res_cells_nodes;
     vector<vector<NodeID>> void_cells;
     vector<vector<NodeID>> node_parti;
