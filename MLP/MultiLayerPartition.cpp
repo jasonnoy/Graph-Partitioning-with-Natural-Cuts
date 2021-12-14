@@ -39,6 +39,7 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
         Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
         cout<<"Running filter...";
         filter.runFilter();
+        cout<<"Filter result node size: "<<anodes.size()<<", edge size: "<<aedges.size()<<endl;
         Assembly assembly(U, FI, M, false, anodes, aedges, false);
         cout<<"Running assembly...\n";
         assembly.runAssembly();
