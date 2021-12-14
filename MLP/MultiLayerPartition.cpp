@@ -412,12 +412,6 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
         cout<<"gr_file open failed!\n";
         exit(1);
     }
-    
-    infile.open(base_link_path);
-    if (!infile.is_open()) {
-        cout<<"sw_link_file open failed!\n";
-        exit(1);
-    }
     infile.read((char *)&count, sizeof(uint32_t));
     vector<vector<EdgeID>> cell_edges;
     cell_edges.resize(count * 2);
@@ -483,10 +477,12 @@ int main(int argc, char** argv) {
     bool topo = true;
     if (argc == 6) {
         topoPath = argv[5];
+        cout<<"reading topo file: "<<topoPath<<endl;
     } else {
         topo = false;
         nodePath = argv[5];
         edgePath = argv[6];
+        cout<<"reading base node: "<<nodePath<<", base link: "<<edgePath<<endl;
     }
     if (thread_limit <= 0)
         thread_limit = 1;
@@ -506,10 +502,11 @@ int main(int argc, char** argv) {
 
 
     MultiLayerPartition mlp(paraPath, outPath, false);
-    if (topo)
+    if (topo) {
         mlp.read_topo_graph(topoPath);
-    else
+    } else {
         mlp.read_base_graph(nodePath, edgePath);
+    }
     mlp.generateMLP();
     mlp.print_parti(timestamp);
 
