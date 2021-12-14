@@ -407,7 +407,7 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
 
     // read in edges
     std::vector<navi::base::link_info_t> links;
-    infile.open(sw_link_path, std::ios::binary);
+    infile.open(base_link_path, std::ios::binary);
     if (!infile.is_open()) {
         cout<<"gr_file open failed!\n";
         exit(1);
@@ -479,7 +479,7 @@ int main(int argc, char** argv) {
     thread_limit = stoi(argv[3]);
     string timestamp(argv[4]);
     string topoPath, nodePath, edgePath;
-    bool topo = tue;
+    bool topo = true;
     if (argc == 6) {
         topoPath = argv[5];
     } else {
