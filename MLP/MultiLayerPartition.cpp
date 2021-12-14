@@ -58,7 +58,7 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
     }
 }
 
-void MultiLayerPartition::read_graph(const string topo_node_path, const string topo_weight_path) {
+void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 //    ofstream outfile;
 //    string out_node_path = out_path + "layer0_nodes.txt";
 //    string out_edge_path = out_path + "layer0_edges.txt";
@@ -383,6 +383,59 @@ void MultiLayerPartition::MLP() {
     cout<<"mlp time cost: "<<finish-begin<<"s\n";
 }
 
+void MultiLayerPartition::read_base_graph(const string base_node_path, const string base_link_path) {
+    ifstream infile;
+    infile.open(base_node_path, std::ios::binary);
+
+    if (!infile.is_open()) {
+        cout<<"sw_node_file open failed!\n";
+        exit(1);
+    }
+    
+    uint32_t count;
+    infile.read((char *)&count, sizeof(uint32_t));
+    nodeNum = count;
+    cout<<"There are "<<count<<" nodes in layer 0\n";
+    infile.close();
+    infile.clear(ios::goodbit);
+    
+    vector<NodeID> cell_nodes(count);
+    for (NodeID i = 0; i < count; i++)
+        cell_nodes[i] = i;
+    cells_nodes.emplace_back(cell_nodes);
+
+
+    // read in edges
+    std::vector<navi::base::link_info_t> links;
+    infile.open(sw_link_path, std::ios::binary);
+    if (!infile.is_open()) {
+        cout<<"gr_file open failed!\n";
+        exit(1);
+    }
+    
+    infile.open(base_link_path);
+    if (!infile.is_open()) {
+        cout<<"sw_link_file open failed!\n";
+        exit(1);
+    }
+    infile.read((char *)&count, sizeof(uint32_t));
+    vector<vector<EdgeID>> cell_edges;
+    cell_edges.resize(count * 2);
+    cout<<"There are "<<count<<" edges in layer 0\n";
+    
+    links.resize(count);
+    infile.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
+    infile.close();
+    
+    EdgeID eid = 0;
+    for (auto edge_iter = links.begin(); edge_iter != links.end(); edge_iter++) {
+        cell_edges[eid].emplace_back(edge_iter->start_node_id);
+        cell_edges[eid++].emplace_back(edge_iter->end_node_id);
+        // revert edge
+        cell_edges[eid].emplace_back(edge_iter->end_node_id);
+        cell_edges[eid++].emplace_back(edge_iter->start_node_id);
+    }
+}
 void MultiLayerPartition::print_parti(const string timestamp) {
     time_t start, end;
     time(&start);
@@ -408,25 +461,32 @@ void MultiLayerPartition::print_parti(const string timestamp) {
 }
 
 int main(int argc, char** argv) {
-    if (argc != 8) {
+    if (argc != 8 && argc != 6) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
-        printf("<arg2> node file path, e.g. C:/GraphPatition/data/node.txt\n");
-        printf("<arg3> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
-        printf("<arg4> weight file path, e.g. C:/GraphPatition/data/weight.txt\n");
-        printf("<arg5> result file directory, e.g. C:/GraphPatition/data/result/\n");
-        printf("<arg6> number of thread, must be an positive integer\n");
-        printf("<arg7> timestamp needed\n");
+        printf("<arg2> weight file path, e.g. C:/GraphPatition/data/weight.txt\n");
+        printf("<arg3> result file directory, e.g. C:/GraphPatition/data/result/\n");
+        printf("<arg4> number of thread, must be an positive integer\n");
+        printf("<arg5> timestamp needed\n");
+        printf("topo or base: <arg6> topo file path, e.g. C:/GraphPatition/data/topo_weight.txt\n");
+        printf("topo or base: <arg6> node file path, e.g. C:/GraphPatition/data/node.txt\n");
+        printf("topo or base: <arg7> edge file path, e.g. C:/GraphPatition/data/edge.txt\n");
         exit(0);
     }
     time_t start, end;
     start = time(&start);
     string paraPath(argv[1]);
-    string nodePath(argv[2]);
-    string edgePath(argv[3]);
-    string weightPath(argv[4]);
-    string outPath(argv[5]);
-    thread_limit = stoi(argv[6]);
-    string timestamp(argv[7]);
+    string outPath(argv[2]);
+    thread_limit = stoi(argv[3]);
+    string timestamp(argv[4]);
+    string topoPath, nodePath, edgePath;
+    bool topo = tue;
+    if (argc == 6) {
+        topoPath(argv[5]);
+    } else {
+        topo = false;
+        nodePath(argv[5]);
+        edgePath(argv[6]);
+    }
     if (thread_limit <= 0)
         thread_limit = 1;
     if (thread_limit > hardware_threads / 2) {
@@ -438,14 +498,17 @@ int main(int argc, char** argv) {
     }
 
 //    cout<<"Dealing with layer 0...\n";
-//    Preprocess preprocess(nodePath, edgePath, weightPath, outPath);
+//    Preprocess preprocess(nodePath, edgePath, topoPath, outPath);
 //    preprocess.runPreprocess();
 //    end = time(&end);
 //    cout<<"Preprocess run time: "<<end-start<<"s.\n";
 
 
     MultiLayerPartition mlp(paraPath, outPath, false);
-    mlp.read_graph(nodePath, weightPath);
+    if (topo)
+        mlp.read_topo_graph(topoPath);
+    else
+        mlp.read_base_graph(nodePath, edgePath);
     mlp.generateMLP();
     mlp.print_parti(timestamp);
 

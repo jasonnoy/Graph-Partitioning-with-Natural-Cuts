@@ -59,7 +59,8 @@ public:
     void generateMLP() {
         this->MLP();
     }
-    void read_graph(const string topo_node_path, const string topo_weight_path);
+    void read_topo_graph(const string topo_weight_path);
+    void read_base_graph(const string base_node_path, const string base_link_path);
     void print_parti(const string timestamp);
     int getL(){return L;}
     void setL(int l){L = l;}
