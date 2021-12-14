@@ -19,7 +19,7 @@ using namespace std;
 class GraphPrinter {
 private:
     const int U;
-    const int L;
+    const int l;
     const bool contract_tiny;
     vector<vector<NodeID>> cell_edges;
     vector<NodeID> cell_nodes;
@@ -43,7 +43,7 @@ private:
     void contract_iso_cells();
 
 public:
-    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<NodeID>& cellNodes, vector<vector<EdgeID>>& cellEdges,  const int u, const int l, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_nodes(cellNodes), cell_edges(cellEdges), U(u), L(l), contract_tiny(contract){}
+    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<NodeID>& cellNodes, vector<vector<EdgeID>>& cellEdges,  const int u, const int l, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_nodes(cellNodes), cell_edges(cellEdges), U(u), l(l), contract_tiny(contract){}
     void write_MLP_result(vector<vector<NodeID>>& cells_nodes, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock);
     NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
