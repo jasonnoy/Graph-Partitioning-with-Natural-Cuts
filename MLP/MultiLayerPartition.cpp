@@ -75,14 +75,14 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     node_parti.reserve(nodeNum);
 
     NodeSize edge_count = topo_link_weight_head->total_topo_link;
-    edge_weight_t* topo_edge_weight_ptr = &topo_link_weight_head->topo_link_weight;
+//    edge_weight_t* topo_edge_weight_ptr = &topo_link_weight_head;
     cout<<"There are "<<edge_count<<" edges in layer 0\n";
 
     vector<vector<EdgeID>> graph_edges;
     graph_edges.resize(nodeNum);
 
     for (NodeSize i = 0; i < edge_count; i++) {
-        edge_weight_t& link = topo_edge_weight_ptr[i];
+        edge_weight_t& link = topo_link_weight_head[i].topo_link_weight;
         graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
         graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
     }
