@@ -83,8 +83,8 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
-        graph_edges[link.s_node_].push_back(link.e_node_);
-        graph_edges[link.e_node_].push_back(link.s_node_);
+        graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
+        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
     }
     cells_edges.emplace_back(graph_edges);
 
