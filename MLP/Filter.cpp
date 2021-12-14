@@ -111,6 +111,7 @@ void Filter::contract_natural_cuts(){
 void Filter::convert_and_output(){
 
     cout<<"Convert to assemble gGraph and output...\n";
+    cout<<"aedges size: "<<aedges.size()<<endl;
     gGraph.convert_n_output( anodes, aedges );
     cout<<"Filter phase done!\n";
 
