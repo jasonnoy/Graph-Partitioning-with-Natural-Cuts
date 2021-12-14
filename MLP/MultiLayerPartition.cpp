@@ -79,7 +79,7 @@ void MultiLayerPartition::read_graph(const string topo_node_path, const string t
     cout<<"There are "<<edge_count<<" edges in layer 0\n";
 
     vector<vector<EdgeID>> graph_edges;
-    graph_edges.resize(edge_count);
+    graph_edges.resize(nodeNum);
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
