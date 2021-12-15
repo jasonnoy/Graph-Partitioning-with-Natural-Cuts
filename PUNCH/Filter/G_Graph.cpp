@@ -528,7 +528,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
         // add new sym edge
         G_Edge new_edge = {tid, sid, next_eid};
         edge_list.emplace_back(new_edge);
-        node_list[tid].get_adj_list().emplace_back(edge_list.back());
+        node_list[tid].get_adj_list().emplace_back(&edge_list.back());
         sym_id[edge.get_id()] = next_eid;
         sym_id.emplace_back(edge.get_id());
         next_eid++;
