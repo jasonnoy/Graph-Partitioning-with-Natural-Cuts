@@ -467,7 +467,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     cout<<"Done. Read in "<<node_list.size()<<" nodes\n";
 
     // read in edges
-    edge_list.reserve(edges.size());
+    edge_list.reserve(2 * edges.size());
     EdgeID eid = 0;
     for (vector<NodeID>edge : edges) {
         G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], eid++);
@@ -504,16 +504,34 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 
     // create and fill symmetric edge id
     this->sym_id.resize( this->edge_list.size());
+    this->sym_id.reserve(2*edge_list.size());
 
-    for (G_Edge edge : edge_list) {
+    EdgeID ori_size = edge_list.size();
+    EdgeID next_eid = edge_list.size();
+    for (EdgeID i = 0; i < ori_size; i++) {
+        G_Edge edge = edge_list[i];
         NodeID sid = edge.get_source();
         NodeID tid = edge.get_target();
+
+        // filter origin sym edge
+        bool found_sym = false;
         for (auto e_ptr : node_list[tid].get_adj_list()) {
             if (e_ptr->get_target() == sid) {
+                found_sym = true;
                 sym_id[edge.get_id()] = e_ptr->get_id();
                 break;
             }
         }
+
+        if (found_sym)
+            continue;
+        // add new sym edge
+        G_Edge new_edge = {tid, sid, next_eid};
+        edge_list.emplace_back(new_edge);
+        node_list[tid].get_adj_list().emplace_back(edge_list.back());
+        sym_id[edge.get_id()] = next_eid;
+        sym_id.emplace_back(edge.get_id());
+        next_eid++;
     }
 
     cout<<"sym[0]: "<<sym_id[0]<<" sym[1]: "<<sym_id[1]<<endl;
