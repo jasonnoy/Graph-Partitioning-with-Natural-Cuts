@@ -157,7 +157,7 @@ void GraphPrinter::MLP_result() {
     if (contract_tiny)
         contract_iso_cells();
 
-    unordered_unordered_map<NodeID, int> node_cell;
+    unordered_map<NodeID, int> node_cell;
     index = 0;
     for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
         for (NodeID node_iter : result_nodes[i]) {

@@ -427,7 +427,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     del_cnt_node.reserve(2*nodes.size());
     // use relative node id for punch, map real nid for output
     NodeID id = 0;
-    unordered_unordered_map<NodeID , NodeID> real_to_nid;
+    unordered_map<NodeID , NodeID> real_to_nid;
     real_map.reserve(nodes.size());
     for (NodeID nid : nodes) {
         G_Node node(id);
