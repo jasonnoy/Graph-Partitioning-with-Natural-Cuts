@@ -53,6 +53,9 @@ g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.c
 
 #./bin/MLP ./data/paras.txt /data/jjh/partitions/1207/topo_node.hllnavi /data/jjh/partitions/1207/topo_link.hllnavi /data/jjh/partitions/1207/crp_weight_dist.hllnavi ./result/ 52 "$date_str$time_str" >> ./logs/"$date_str"/"$time_str".log 2>&1
 
+# topo china test
+#./bin/MLP ./data/paras.txt ./result/ 52 000 /data/jjh/crp_data/china/crp_weight_dist.hllnavi
+
 # topo china input
 #./bin/MLP ./data/paras.txt ./result/ 52 "$date_str$time_str" /data/jjh/crp_data/china/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
 
