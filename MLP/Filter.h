@@ -20,8 +20,8 @@ private:
     const int C;
     int thread_cap;
     int F = 10;
-    const vector<NodeID>& nodes;
-    const vector<vector<EdgeID>>& edges;
+    vector<NodeID>& nodes;
+    vector<vector<EdgeID>>& edges;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
     vector<NodeID> real_map;
@@ -36,7 +36,7 @@ public:
         gGraph.thread_cap = thread;
         gGraph.DNCC = c;
     };
-    Filter(int uf, int u, int c, int f, const vector<NodeID>& in_nodes, const vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
+    Filter(int uf, int u, int c, int f, vector<NodeID>& in_nodes, vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
             Uf(uf), U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), thread_cap(thread){
     };
     ~Filter() = default;
