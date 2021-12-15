@@ -14,7 +14,7 @@
 using namespace std;
 
 #include "../Common/common.h"
-#include <map>
+#include <unordered_map>
 
 class GraphPrinter {
 private:

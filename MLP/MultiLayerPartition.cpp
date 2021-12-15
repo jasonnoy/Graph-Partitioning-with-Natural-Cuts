@@ -88,6 +88,7 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
     vector<vector<EdgeID>> graph_edges;
     graph_edges.reserve(2*edge_count);
+//    graph_edges.reserve(edge_count);
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];

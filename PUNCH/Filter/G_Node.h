@@ -2,7 +2,7 @@
 #define G_NODE_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -31,7 +31,7 @@ public:
 
 private:
 	const NodeID nid;
-	//map< NodeID, G_Edge* > adj_list;
+	//unordered_map< NodeID, G_Edge* > adj_list;
     vector<G_Edge*> adj_list;
 	//NodeSize sz;
 };

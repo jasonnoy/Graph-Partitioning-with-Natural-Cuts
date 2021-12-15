@@ -67,7 +67,7 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
         PushRelabel pr( between_nodes.size() + 1 );
         NodeID neighborID = between_nodes.size();
 
-        map<NodeID, NodeID> old_to_new;
+        unordered_map<NodeID, NodeID> old_to_new;
         { //to destroy temp variable
             //map: old id --> new id
             vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
@@ -81,7 +81,7 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
             }
 
             // map: target --> weight
-            map<NodeID, EdgeWeight> accumulate_wet;
+            unordered_map<NodeID, EdgeWeight> accumulate_wet;
 
             //first, handle core, which contains contracted node id
             //node_visited[0] = true; //core id is 0
@@ -113,7 +113,7 @@ void parallel_compute_natural_cuts( mutex& m_lock, vector<int> index, bool * nat
                 }//for all node in the contracted node
 
             }//for all contracted node in core
-            map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+            unordered_map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
             for(; i_eit != accumulate_wet.end(); i_eit++){
                 pr.AddEdge( 0, i_eit->first, i_eit->second );
                 //////////////////newly added/////////////////
@@ -427,7 +427,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
     del_cnt_node.reserve(2*nodes.size());
     // use relative node id for punch, map real nid for output
     NodeID id = 0;
-    map<NodeID , NodeID> real_to_nid;
+    unordered_unordered_map<NodeID , NodeID> real_to_nid;
     real_map.reserve(nodes.size());
     for (NodeID nid : nodes) {
         G_Node node(id);
@@ -782,7 +782,7 @@ void parallel_cnt_two_cuts(vector<G_Node>& node_list, const vector<NodeID>& sym_
 
         //close edges in this class
         //and initially mark class edges unvisited
-        map<NodeID, bool> class_edge_visited;
+        unordered_map<NodeID, bool> class_edge_visited;
         for (NodeID eid:edge_class_eid)
                 class_edge_visited[eid] = false; //edge_closed[*eit] = true;
 
@@ -972,7 +972,7 @@ void G_Graph::cnt_two_cuts( const vector< vector<EdgeID> >& edge_classes,
 //
 //			//close edges in this class
 //			//and initially mark class edges unvisited
-//			map<NodeID, bool> class_edge_visited;
+//			unordered_map<NodeID, bool> class_edge_visited;
 //			vector<EdgeID>::const_iterator eit = ecit->begin();
 //			for(; eit != ecit->end(); eit++){
 //				//edge_closed[*eit] = true;
@@ -1112,7 +1112,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 		for(; nit != this->get_node_list().end(); nit++, cn_it++ ){
 
 			NodeID remain_edge_count = nit->get_adj_list().size();
-			//map<NodeID, G_Edge*>::iterator eit = nit->get_adj_list().begin();
+			//unordered_map<NodeID, G_Edge*>::iterator eit = nit->get_adj_list().begin();
 			vector<G_Edge*>::iterator eit = nit->get_adj_list().begin();
 			for(; eit != nit->get_adj_list().end(); eit++){
 
@@ -1676,7 +1676,7 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 			PushRelabel pr( between_nodes.size() + 1 );
 			NodeID neighborID = between_nodes.size();
 
-			map<NodeID, NodeID> old_to_new;
+			unordered_map<NodeID, NodeID> old_to_new;
 			{ //to destroy temp variable
 				//map: old id --> new id
 				vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
@@ -1690,7 +1690,7 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 				}
 
 				// map: target --> weight
-				map<NodeID, EdgeWeight> accumulate_wet;
+				unordered_map<NodeID, EdgeWeight> accumulate_wet;
 
 				//first, handle core, which contains contracted node id
 				//node_visited[0] = true; //core id is 0
@@ -1722,7 +1722,7 @@ void G_Graph::natural_st_cuts_from_s( bool * natural_cuts, const deque<NodeID>& 
 					}//for all node in the contracted node
 
 				}//for all contracted node in core
-				map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+				unordered_map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
 				for(; i_eit != accumulate_wet.end(); i_eit++){
 					pr.AddEdge( 0, i_eit->first, i_eit->second );
 					//////////////////newly added/////////////////
@@ -1867,7 +1867,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 			PushRelabel pr( between_nodes.size() + 1 );
 			NodeID neighborID = between_nodes.size();
 
-			map<NodeID, NodeID> old_to_new;
+			unordered_map<NodeID, NodeID> old_to_new;
 			{ //to destroy temp variable
 				//map: old id --> new id
 				vector<NodeID>::const_iterator nit = between_nodes.begin() + 1;
@@ -1881,7 +1881,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 				}
 
 				// map: target --> weight
-				map<NodeID, EdgeWeight> accumulate_wet;
+				unordered_map<NodeID, EdgeWeight> accumulate_wet;
 
 				//first, handle core, which contains contracted node id
 				//node_visited[0] = true; //core id is 0
@@ -1914,7 +1914,7 @@ void G_Graph::natural_st_cuts_from_t( bool * natural_cuts, const deque<NodeID>& 
 					}//for all node in the contracted node
 
 				}//for all contracted node in core
-				map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
+				unordered_map<NodeID, EdgeWeight>::const_iterator i_eit = accumulate_wet.begin();//i = 0
 				for(; i_eit != accumulate_wet.end(); i_eit++){
 					pr.AddEdge( 0, i_eit->first, i_eit->second );
 					//////////////////newly added/////////////////
@@ -2233,7 +2233,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 		vector< vector<NodeID> > id_map;
 
 		//map: old id (contracted node id) to new id
-		map<NodeID, NodeID> old_to_new;
+		unordered_map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
 		NodeID i = 0;
 		for( i = 0; i < this->contract_node_list.size(); i++){
@@ -2264,7 +2264,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		ag->sym_id.resize( this->edge_list.size(), 0 );
 
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		s_id = 0;
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
@@ -2298,7 +2298,7 @@ void G_Graph::convert_n_output( vector<vector<NodeID>>& anodes, vector<vector<No
 			}//for all contained nodes
 
 			//make new nodes and incident edges
-			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
+			unordered_map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
 
 				A_Edge e( s_id, neit->first, neit->second, e_id );
@@ -2506,7 +2506,7 @@ NodeID G_Graph::build_component_tree( const vector<EdgeID>& one_cut_edges,
 		}
 
 		//now we have all the tree nodes and their sizes, then we build the tree
-		map<NodeID, NodeID> comp_cnodes_to_pos;
+		unordered_map<NodeID, NodeID> comp_cnodes_to_pos;
 		for( NodeID i = 0; i < component_tree.size(); i++ ){
 			for(auto cnit = component_tree[i].component.begin(); cnit != component_tree[i].component.end(); cnit++)
 				comp_cnodes_to_pos[*cnit] = i;
@@ -2592,7 +2592,7 @@ void G_Graph::cnt_proper_tree_components( vector<edge_cncted_comp>& component_tr
 		return;
 }
 
-void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
+void G_Graph::link_component( vector<edge_cncted_comp>& component_tree, unordered_map<NodeID, NodeID>&
 	comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched ){
 
 //        for (int i = 0; i < component_tree.size(); i++)

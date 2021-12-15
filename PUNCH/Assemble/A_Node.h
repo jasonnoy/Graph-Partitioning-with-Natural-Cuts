@@ -2,7 +2,7 @@
 #define A_NODE_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 

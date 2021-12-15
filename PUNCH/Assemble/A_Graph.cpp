@@ -119,7 +119,7 @@ void A_Graph::read_graph_n_idmap( vector<vector<NodeID>>& id_map, const vector<v
 void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		//initialize the logic edge structure
 		vector<Logic_Edge> logic_edges;
-		map<NodeID, NodeID> logic_edge_counter;
+		unordered_map<NodeID, NodeID> logic_edge_counter;
 		set<NodeID> node_deleted;
 		vector<NodeID> available_new_id;
 
@@ -155,7 +155,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 		//end initial
 
 		NodeID new_id = 0;
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( !logic_edges.empty() ){
@@ -228,7 +228,7 @@ void A_Graph::greedy_algorithm_heap( NodeSize sz_lim ){
 						logic_edge_counter[new_id] += accumulate_wet.size();
 					else
 						logic_edge_counter[new_id] = accumulate_wet.size();
-					map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
+					unordered_map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
 					for(; nleit != accumulate_wet.end(); nleit++){
 
 						Logic_Edge le(new_id, nleit->first, nleit->second);
@@ -284,7 +284,7 @@ void A_Graph::greedy_algorithm( NodeSize sz_lim ){
 		logic_edges.erase( leit );
 
 		NodeID new_id = 0;
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		vector<NodeID>::const_iterator nit;
 		//assemble those nodes
 		while( min_e.score != numeric_limits<double>::max() ){
@@ -326,7 +326,7 @@ void A_Graph::greedy_algorithm( NodeSize sz_lim ){
 							}
 						}
 					}//end for
-					map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
+					unordered_map<NodeID, EdgeWeight>::const_iterator nleit = accumulate_wet.begin();
 					for(; nleit != accumulate_wet.end(); nleit++){
 
 						Logic_Edge le(new_id, nleit->first, nleit->second);
@@ -508,10 +508,10 @@ NodeSize A_Graph::cal_cnode_size_with_contraction( NodeID cid, contract_struct* 
 		return total_size;
 }
 
-void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
+void A_Graph::convert( F_Graph* ag, unordered_map<NodeID, NodeID>& old_to_new ){
 		
 		//map: old id (contracted node id) to new id
-		//map<NodeID, NodeID> old_to_new;
+		//unordered_map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
 		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
@@ -536,7 +536,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		ag->sym_id.resize( this->edge_list.size(), 0 );
 
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		s_id = 0;
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
@@ -570,7 +570,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 			}//for all contained nodes
 
 			//make new nodes and incident edges
-			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
+			unordered_map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
 
 				A_Edge e( s_id, neit->first, neit->second, e_id );
@@ -599,7 +599,7 @@ void A_Graph::convert( F_Graph* ag, map<NodeID, NodeID>& old_to_new ){
 void A_Graph::convert( F_Graph* ag ){
 		
 		//map: old id (contracted node id) to new id
-		map<NodeID, NodeID> old_to_new;
+		unordered_map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
 		for(NodeID i = 0; i < this->contract_node_list.size(); i++){
 
@@ -624,7 +624,7 @@ void A_Graph::convert( F_Graph* ag ){
 		ag->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		ag->sym_id.resize( this->edge_list.size(), 0 );
 
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		s_id = 0;
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
@@ -658,7 +658,7 @@ void A_Graph::convert( F_Graph* ag ){
 			}//for all contained nodes
 
 			//make new nodes and incident edges
-			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
+			unordered_map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
 
 				A_Edge e( s_id, neit->first, neit->second, e_id );
@@ -687,19 +687,19 @@ void A_Graph::convert( F_Graph* ag ){
 void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 		
 		//F_Graph result_g;
-		//map<NodeID, NodeID> old_to_final;
+		//unordered_map<NodeID, NodeID> old_to_final;
 		//this->convert( &result_g, old_to_final );
 		
 		//logic_final_graph: < Source, < Target, Counter > >
-		map< NodeID, map<NodeID, NodeID> > logic_final_graph;
+		unordered_map< NodeID, unordered_map<NodeID, NodeID> > logic_final_graph;
 		set< pair<NodeID, NodeID> > random_edges;
 		//this->initial_logic_final_edges( logic_final_graph );
 		this->initial_logic_final_edges( logic_final_graph, random_edges );
 
-		//map<NodeID, map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
+		//unordered_map<NodeID, unordered_map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
 		//for(; neit != logic_final_graph.end(); neit++){
 
-		//	map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
+		//	unordered_map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
 		//	for(; lseit != neit->second.end(); lseit++){
 
 		//		pair<NodeID, NodeID> p( neit->first, lseit->first );
@@ -734,7 +734,7 @@ void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 			//	break;
 
 			A_Graph local_graph;
-			map<NodeID, NodeID> old_to_local; //contracted neighbor represented by first fragment ID
+			unordered_map<NodeID, NodeID> old_to_local; //contracted neighbor represented by first fragment ID
 
 			EdgeWeight total_old_weight = 0;
 
@@ -801,14 +801,14 @@ void A_Graph::local_search( vector< vector<NodeID> >& result, NodeSize sz_lim ){
 }
 
 //void A_Graph::auxiliary_instance( F_Graph& result_g, A_Graph& local_graph, 
-//	EdgeID next_eid, map<NodeID, NodeID>& old_to_final, map<NodeID,NodeID>& old_to_local,
+//	EdgeID next_eid, unordered_map<NodeID, NodeID>& old_to_final, unordered_map<NodeID,NodeID>& old_to_local,
 //	set<NodeID>& cnt_neighbor_id, set<NodeID>& pair_fra_id ){
-void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
-	pair<NodeID, NodeID>& next_edge, map<NodeID,NodeID>& old_to_local, EdgeWeight& total_weight ){//,
+void A_Graph::auxiliary_instance( A_Graph& local_graph, unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
+	pair<NodeID, NodeID>& next_edge, unordered_map<NodeID,NodeID>& old_to_local, EdgeWeight& total_weight ){//,
 	//set<NodeID>& cnt_neighbor_id, set<NodeID>& pair_fra_id ){
 
-		//map<NodeID, NodeID> final_to_old;
-		//map<NodeID, NodeID>::const_iterator otnit = old_to_final.begin();
+		//unordered_map<NodeID, NodeID> final_to_old;
+		//unordered_map<NodeID, NodeID>::const_iterator otnit = old_to_final.begin();
 		//for(; otnit != old_to_final.end(); otnit++){
 		//	final_to_old[ otnit->second ] = otnit->first;
 		//}
@@ -836,7 +836,7 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 
 			//	cnt_neighbor_id.insert( final_to_old[(*nei_it)->get_target()] );
 			//}
-			map<NodeID, NodeID>::const_iterator nei_it = logic_final_graph[pn1].begin();
+			unordered_map<NodeID, NodeID>::const_iterator nei_it = logic_final_graph[pn1].begin();
 			for(; nei_it != logic_final_graph[pn1].end(); nei_it++){
 
 				cnt_neighbor_id.insert( nei_it->first );
@@ -916,7 +916,7 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 			local_graph.edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 			local_graph.sym_id.resize( this->edge_list.size(), 0 );
 			
-			map<NodeID, EdgeWeight> add_wet;
+			unordered_map<NodeID, EdgeWeight> add_wet;
 			NodeID ls=0, lt=0;
 			EdgeID loc_e_id = 0;
 
@@ -951,7 +951,7 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 				}//end for all edges
 					
 				//new edges
-				map<NodeID, EdgeWeight>::const_iterator neit = add_wet.begin();
+				unordered_map<NodeID, EdgeWeight>::const_iterator neit = add_wet.begin();
 				for(; neit != add_wet.end(); neit++){
 
 					A_Edge e( ls, neit->first, neit->second, loc_e_id );
@@ -1001,7 +1001,7 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 				}//end for all contracted nodes
 
 				//new edges
-				map<NodeID, EdgeWeight>::const_iterator neit = add_wet.begin();
+				unordered_map<NodeID, EdgeWeight>::const_iterator neit = add_wet.begin();
 				for(; neit != add_wet.end(); neit++){
 
 					A_Edge e( ls, neit->first, neit->second, loc_e_id );
@@ -1037,11 +1037,11 @@ void A_Graph::auxiliary_instance( A_Graph& local_graph, map<NodeID, map<NodeID, 
 }
 
 void A_Graph::form_new_contraction( A_Graph& local_graph,
-	map<NodeID, NodeID>& old_to_local, pair<NodeID, NodeID>& next_edge,
+	unordered_map<NodeID, NodeID>& old_to_local, pair<NodeID, NodeID>& next_edge,
 	contract_struct* new_contraction, vector<NodeID>& delete_nodes, vector<NodeID>& add_nodes ){
 
-		map<NodeID, NodeID> local_to_old;
-		map<NodeID, NodeID>::const_iterator totlit = old_to_local.begin();
+		unordered_map<NodeID, NodeID> local_to_old;
+		unordered_map<NodeID, NodeID>::const_iterator totlit = old_to_local.begin();
 		for(; totlit != old_to_local.end(); totlit++){
 			local_to_old[ totlit->second ] = totlit->first;
 		}
@@ -1169,7 +1169,7 @@ bool A_Graph::compare_contraction( contract_struct& new_c ){
 void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 
 		//map: old id (contracted node id) to new id
-		map<NodeID, NodeID> old_to_new;
+		unordered_map<NodeID, NodeID> old_to_new;
 		NodeID new_id = 0;
 		for(NodeID i = 0; i < c_s.contract_node_list.size(); i++){
 
@@ -1193,7 +1193,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		g->edge_list.reserve( this->edge_list.size() ); //large enough, just in case
 		g->sym_id.resize( this->edge_list.size(), 0 );
 
-		map<NodeID, EdgeWeight> accumulate_wet;
+		unordered_map<NodeID, EdgeWeight> accumulate_wet;
 		s_id = 0;
 		NodeID t_id = 0;
 		EdgeID e_id = 0;
@@ -1227,7 +1227,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 			}//for all contained nodes
 
 			//make new nodes and incident edges
-			map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
+			unordered_map<NodeID, EdgeWeight>::const_iterator neit = accumulate_wet.begin();
 			for(; neit != accumulate_wet.end(); neit++){
 
 				A_Edge e( s_id, neit->first, neit->second, e_id );
@@ -1253,7 +1253,7 @@ void A_Graph::convert_with_contract( F_Graph* g, contract_struct& c_s ){
 		return;
 }
 
-void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph ){
+void A_Graph::initial_logic_final_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph ){
 
 		NodeID s_id = 0;
 		vector< vector<NodeID> >::const_iterator sit = 
@@ -1281,7 +1281,7 @@ void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logi
 		return;
 }
 
-void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::initial_logic_final_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	set< pair<NodeID, NodeID> >& random_edges){
 
 		NodeID s_id = 0;
@@ -1311,14 +1311,14 @@ void A_Graph::initial_logic_final_edges( map<NodeID, map<NodeID, NodeID> >& logi
 		return;
 }
 
-void A_Graph::next_local_search_edge( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::next_local_search_edge( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	pair<NodeID, NodeID>& next_edge ){
 
 		vector< pair<NodeID, NodeID> > random;
-		map<NodeID, map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
+		unordered_map<NodeID, unordered_map<NodeID, NodeID> >::const_iterator neit = logic_final_graph.begin();
 		for(; neit != logic_final_graph.end(); neit++){
 
-			map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
+			unordered_map<NodeID, NodeID>::const_iterator lseit = neit->second.begin();
 			for(; lseit != neit->second.end(); lseit++){
 
 				if( lseit->second < FI ){
@@ -1339,13 +1339,13 @@ void A_Graph::next_local_search_edge( map<NodeID, map<NodeID, NodeID> >& logic_f
 		return;
 }
 
-void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::delete_logic_graph_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& delete_nodes ){
 
 		vector<NodeID>::const_iterator dnit = delete_nodes.begin();
 		for(; dnit != delete_nodes.end(); dnit++){
 
-			map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
+			unordered_map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
 			for(; adjit != logic_final_graph[*dnit].end(); adjit++){
 
 				//erase <target, source>
@@ -1357,13 +1357,13 @@ void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic
 		return;
 }
 
-void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::delete_logic_graph_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& delete_nodes, set< pair<NodeID, NodeID> >& random_edges ){
 
 		vector<NodeID>::const_iterator dnit = delete_nodes.begin();
 		for(; dnit != delete_nodes.end(); dnit++){
 
-			map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
+			unordered_map<NodeID, NodeID>::const_iterator adjit = logic_final_graph[ *dnit ].begin();
 			for(; adjit != logic_final_graph[*dnit].end(); adjit++){
 
 				//erase <target, source>
@@ -1377,7 +1377,7 @@ void A_Graph::delete_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic
 		return;
 }
 
-void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::add_logic_graph_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& add_nodes ){
 
 		//only traverse souce node list
@@ -1403,7 +1403,7 @@ void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_fi
 		return;
 }
 
-void A_Graph::add_logic_graph_edges( map<NodeID, map<NodeID, NodeID> >& logic_final_graph,
+void A_Graph::add_logic_graph_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 	vector<NodeID>& add_nodes, set< pair<NodeID, NodeID> >& random_edges ){
 
 		//only traverse souce node list

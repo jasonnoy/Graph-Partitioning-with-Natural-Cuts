@@ -1,6 +1,6 @@
 #include<iostream>
 #include<fstream>
-#include<map>
+#include <unordered_map>
 #include<set>
 
 using namespace std;
@@ -29,7 +29,7 @@ int main(int argc, char** argv){
 		exit(0);
 	}
 
-	map< point, set<point> > edge_set;
+	unordered_map< point, set<point> > edge_set;
 
 	//while( !originalFile.eof() ){
 	while( !feof(fin) ){
@@ -49,7 +49,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-	map< point, set<point> >::const_iterator iter = edge_set.begin();
+	unordered_map< point, set<point> >::const_iterator iter = edge_set.begin();
 	while( iter != edge_set.end() ){
 
 		set<point>::const_iterator piter = iter->second.begin();

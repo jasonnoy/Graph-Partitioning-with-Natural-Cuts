@@ -4,7 +4,7 @@
 #include <vector>
 #include <stdio.h>
 #include <list>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <string>
 //#include <algorithm>
@@ -199,7 +199,7 @@ private:
 	void cnt_proper_tree_components( vector<edge_cncted_comp>& component_tree, NodeID root_p,
 		NodeSize sz_lim );
 
-	void link_component( vector<edge_cncted_comp>& component_tree, map<NodeID, NodeID>&
+	void link_component( vector<edge_cncted_comp>& component_tree, unordered_map<NodeID, NodeID>&
 		comp_cnodes_to_pos, NodeID search_pos, NodeID parent_pos, vector<bool>& searched );
 
 	NodeID contract_cnodes( const list<NodeID>& cnode_list );
