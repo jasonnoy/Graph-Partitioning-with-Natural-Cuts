@@ -104,7 +104,9 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
 
     // Test only!
-    sleep(30);
+    sleep(10);
+
+    delete topo_link_weight_head;
 
     time(&finish);
     cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
