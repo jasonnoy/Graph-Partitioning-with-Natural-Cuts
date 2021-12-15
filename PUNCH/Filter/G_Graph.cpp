@@ -554,6 +554,7 @@ void G_Graph::read_graph( const vector<NodeID>& nodes, const vector<vector<NodeI
 //        eid++;
 //    }
     cout<<"fill symmetric edge done\n";
+    cout<<"edge size after filling sym edge: "<<edge_list.size()<<endl;
 
     //initial contraction
     this->contract_to.resize( this->node_list.size() );
