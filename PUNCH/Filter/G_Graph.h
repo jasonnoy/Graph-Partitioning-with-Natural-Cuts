@@ -100,7 +100,7 @@ public:
 
 	/////////////////////////////main methods////////////////////////////
 
-	void read_graph( const vector<NodeID>& nodes, const vector<vector<NodeID>>& edges, vector<NodeID>& real_map );
+	void read_graph( vector<NodeID>& nodes, vector<vector<NodeID>>& edges, vector<NodeID>& real_map );
 
 	void dfs_tree( NodeID start, vector<bool>& edge_removed, NodeSize size_lim );
 
