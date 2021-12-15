@@ -92,7 +92,9 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
-        vector<EdgeID> edge1 = {link.s_node_, link.e_node_};
+        vector<EdgeID> edge1;
+        edge1.push_back(link.s_node_);
+        edge1.push_back(link.e_node_);
 //        vector<EdgeID> edge2 = {link.e_node_, link.s_node_};
         graph_edges.emplace_back(edge1);
 //        graph_edges.emplace_back(edge2);
@@ -107,6 +109,8 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     sleep(10);
 
     delete topo_link_weight_head;
+
+    sleep(10);
 
     time(&finish);
     cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
