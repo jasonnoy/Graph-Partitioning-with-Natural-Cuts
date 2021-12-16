@@ -420,7 +420,7 @@ void G_Graph::compute_centers(vector<deque<NodeID>>& cores, vector<vector<NodeID
         between_nodes_vec.push_back(between_nodes);
     }
 }
-void G_Graph::read_graph( vector<NodeID>& nodes, vector<vector<NodeID>>& edges, vector<NodeID>& real_map){
+void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<NodeID>& real_map){
 
     // read in node
     node_list.reserve(nodes.size());
@@ -471,9 +471,9 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<vector<NodeID>>& edges, 
 
     // read in edges
     edge_list.reserve(2 * edges.size());
-    EdgeID eid = 0;
-    for (vector<NodeID>edge : edges) {
-        G_Edge gEdge(real_to_nid[edge[0]], real_to_nid[edge[1]], eid++);
+
+    for ( EdgeID eid = 0; eid < edges.size(); eid++) {
+        G_Edge gEdge(real_to_nid[2*eid], real_to_nid[edges[2*eid+1]], eid);
         edge_list.push_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
     }

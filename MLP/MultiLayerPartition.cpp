@@ -14,14 +14,14 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<vector<EdgeID>>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<vector<EdgeID>>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
     for (NodeID cell_id:thread_index) {
         time(&start);
         process_count++;
         cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells_nodes.size()<<endl;
         vector<NodeID>& cell = cells_nodes[cell_id];
-        vector<vector<EdgeID>>& cell_edges = cells_edges[cell_id];
+        vector<EdgeID>& cell_edges = cells_edges[cell_id];
         cout<<"cell node size: "<<cell.size()<<", cell edge size: "<<cell_edges.size()<<endl;
 
         if (cell_edges.empty()) {
@@ -97,17 +97,15 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     cout<<"topo_edge_weight_ptr pointer, check mem\n";
     sleep(15);
 
-    vector<vector<EdgeID>> graph_edges;
+    vector<NodeID> graph_edges;
 //    graph_edges.reserve(2*edge_count);
-    graph_edges.reserve(edge_count);
+    graph_edges.resize(2*edge_count);
 
     for (NodeSize i = 0; i < edge_count; i++) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
-        vector<EdgeID> edge1;
-        edge1.push_back(link.s_node_);
-        edge1.push_back(link.e_node_);
+        graph_edges[2*i] = link.s_node_;
+        graph_edges[2*i+1] = link.e_node_;
 //        vector<EdgeID> edge2 = {link.e_node_, link.s_node_};
-        graph_edges.emplace_back(edge1);
 //        graph_edges.emplace_back(edge2);
 //        graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
 //        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
@@ -339,7 +337,9 @@ void MultiLayerPartition::MLP() {
         cells_nodes = res_cells_nodes;
         cells_edges = res_cells_edges;
         res_cells_nodes.clear();
+        res_cells_nodes.shrink_to_fit();
         res_cells_edges.clear();
+        res_cells_edges.shrink_to_fit();
 
         time(&end);
         cout<<"layer time cost: "<<end-start<<"s\n";
