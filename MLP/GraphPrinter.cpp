@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vector<vector<vector<EdgeID>>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock) {
+void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
