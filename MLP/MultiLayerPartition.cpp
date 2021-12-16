@@ -74,7 +74,7 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
     // Test only!
     cout<<"read in topo finished, check mem\n";
-    sleep(10);
+    sleep(30);
 
     vector<NodeID> graph_nodes;
     graph_nodes.reserve(node_count);
