@@ -35,7 +35,7 @@ private:
 //    vector<NodeID> contract_to;
 //    vector<NodeID> cell_void_nodes;
 
-    void fill_contracts();
+//    void fill_contracts();
     void filter_edges();
     void MLP_result();
     void phantom_result();

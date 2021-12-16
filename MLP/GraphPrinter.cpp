@@ -140,7 +140,7 @@ void GraphPrinter::contract_iso_cells() {
 }
 
 void GraphPrinter::MLP_result() {
-    fill_contracts();
+//    fill_contracts();
     result_nodes.resize(a_result.size());
     NodeID index = 0;
     for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
