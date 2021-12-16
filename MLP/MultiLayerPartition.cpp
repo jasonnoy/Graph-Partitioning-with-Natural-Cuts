@@ -438,21 +438,20 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
         exit(1);
     }
     infile.read((char *)&count, sizeof(uint32_t));
-    vector<vector<EdgeID>> cell_edges;
+    vector<NodeID> cell_edges;
     cell_edges.resize(count * 2);
     cout<<"There are "<<count<<" edges in layer 0\n";
     
     links.resize(count);
     infile.read((char *)&links[0], sizeof(navi::base::link_info_t) * count);
     infile.close();
-    
-    EdgeID eid = 0;
+
     for (auto edge_iter = links.begin(); edge_iter != links.end(); edge_iter++) {
-        cell_edges[eid].emplace_back(edge_iter->start_node_id);
-        cell_edges[eid++].emplace_back(edge_iter->end_node_id);
+        cell_edges.emplace_back(edge_iter->start_node_id);
+        cell_edges.emplace_back(edge_iter->end_node_id);
         // revert edge
-        cell_edges[eid].emplace_back(edge_iter->end_node_id);
-        cell_edges[eid++].emplace_back(edge_iter->start_node_id);
+        cell_edges.emplace_back(edge_iter->end_node_id);
+        cell_edges.emplace_back(edge_iter->start_node_id);
     }
     cells_edges.emplace_back(cell_edges);
 }
