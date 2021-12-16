@@ -431,8 +431,8 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
     real_map.reserve(nodes.size());
     for (NodeID nid : nodes) {
         G_Node node(id);
-        node_list.push_back(node);
-        real_map.push_back(nid);
+        node_list.emplace_back(node);
+        real_map.emplace_back(nid);
         real_to_nid[nid] = id;
         id++;
     }
@@ -474,8 +474,8 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
 
     for ( EdgeID eid = 0; eid < edges.size(); eid++) {
         G_Edge gEdge(real_to_nid[2*eid], real_to_nid[edges[2*eid+1]], eid);
-        edge_list.push_back(gEdge);
-        node_list[gEdge.get_source()].get_adj_list().push_back(&edge_list.back());
+        edge_list.emplace_back(gEdge);
+        node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());
     }
 
     edges.clear();
@@ -1671,7 +1671,7 @@ NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_i
         while(index < shuffle_nodes.size() && node_in_core[shuffle_nodes[index]]) {
             index++;
         }
-        if (!(index*1000)%node_in_core.size())
+        if (!index%(node_in_core.size()/1000))
             cout<<"Searching centers: "<<(index*1000)%node_in_core.size()/10.0<<"%\r";
 		if( index == node_in_core.size() )
 			return -1u;
