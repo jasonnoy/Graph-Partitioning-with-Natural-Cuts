@@ -91,7 +91,7 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     NodeSize edge_count = topo_link_weight_head->total_topo_link;
     edge_weight_t* topo_edge_weight_ptr = &topo_link_weight_head->topo_link_weight;
     cout<<"There are "<<edge_count<<" edges in topo file\n";
-    cout<<"emplace in topo edges finished, check mem\n";
+    cout<<"reserved node parti, check mem\n";
     sleep(15);
 
     vector<vector<EdgeID>> graph_edges;
@@ -110,6 +110,8 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 //        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
     }
     cells_edges.emplace_back(graph_edges);
+    cout<<"emplace in topo edges finished, check mem\n";
+    sleep(15);
     time(&finish);
     cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
 
