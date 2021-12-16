@@ -56,7 +56,7 @@ g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.c
 # topo china test
 #./bin/MLP ./data/paras.txt ./result/ 52 000 /data/jjh/crp_data/china/crp_weight_dist.hllnavi
 
- topo china input
+# topo china input
 ./bin/MLP ./data/paras.txt ./result/ 52 "$date_str$time_str" /data/jjh/crp_data/china/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # Topo beijing input

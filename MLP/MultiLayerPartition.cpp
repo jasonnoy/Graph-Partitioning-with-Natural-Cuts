@@ -72,6 +72,10 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     topo_link_head_weight_t* topo_link_weight_head = read_topo_link(topo_weight_path);
     NodeSize node_count = topo_link_weight_head->max_vertex_id+1;
 
+    // Test only!
+    cout<<"read in topo finished, check mem\n";
+    sleep(10);
+
     vector<NodeID> graph_nodes;
     graph_nodes.reserve(node_count);
 
