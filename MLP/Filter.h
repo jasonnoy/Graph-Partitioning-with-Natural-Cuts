@@ -36,7 +36,7 @@ public:
         gGraph.thread_cap = thread;
         gGraph.DNCC = c;
     };
-    Filter(int uf, int u, int c, int f, vector<NodeID>& in_nodes, vector<vector<NodeID>>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
+    Filter(int uf, int u, int c, int f, vector<NodeID>& in_nodes, vector<NodeID>& in_edges, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, int thread = 1):
             Uf(uf), U(u), C(c), F(f), nodes(in_nodes), edges(in_edges), anodes(a_nodes), aedges(a_edges), thread_cap(thread){
     };
     ~Filter() = default;
