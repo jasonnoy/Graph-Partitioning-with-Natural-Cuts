@@ -37,7 +37,7 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
 
     //    fill_contracts();
     size_t contracted_cell_count = 0;
-    result_nodes.resize(a_result.size());
+//    result_nodes.resize(a_result.size());
     NodeID index = 0;
     for (auto cell : a_result) {
         vector<NodeID> res_cell;
