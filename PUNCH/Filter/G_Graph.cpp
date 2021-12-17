@@ -1156,8 +1156,6 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 		while( true ){
 
 			//no leaf edge, stop
-            if (!degree_node[1])
-                break;
 			if( degree_node[1].empty() )
 				break;
 			//find a leaf node
