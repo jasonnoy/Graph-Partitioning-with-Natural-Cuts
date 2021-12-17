@@ -1131,7 +1131,7 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 
 		//count every node remain edges
 		vector<NodeID>			node_rem_edge( this->get_node_list().size() );
-		vector< set<NodeID> >	degree_node;
+		vector< set<NodeID> >	degree_node(2);
 
 		vector<G_Node>::iterator nit = this->get_node_list().begin();
 		vector<NodeID>::iterator cn_it = node_rem_edge.begin();
@@ -1159,6 +1159,8 @@ void G_Graph::fill_b_bits( vector<bool>& edge_removed,
 			if( degree_node[1].empty() )
 				break;
 			//find a leaf node
+            if ( !degree_node[1].begin() )
+                break;
 			nit = this->node_list.begin() + (*degree_node[1].begin()); // degree_node[1].begin()在下面被erase
 			degree_node[1].erase( degree_node[1].begin() );
 
