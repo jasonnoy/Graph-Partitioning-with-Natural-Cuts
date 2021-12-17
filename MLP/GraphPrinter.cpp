@@ -86,8 +86,8 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
 //    result_cuts.reserve(cell_edges.size());
     vector<vector<NodeID>> result_cells_edges(valid_cell_num);
     for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
-        NodeID sid = real_map[cell_edges[2*eid]];
-        NodeID tid = real_map[cell_edges[2*eid+1]];
+        NodeID sid = cell_edges[2*eid];
+        NodeID tid = cell_edges[2*eid+1];
         if (node_cell[sid] == node_cell[tid]){
             result_cells_edges[node_cell[sid]].emplace_back(sid);
             result_cells_edges[node_cell[sid]].emplace_back(tid);
