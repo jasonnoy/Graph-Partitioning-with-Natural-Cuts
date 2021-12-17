@@ -515,7 +515,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
     EdgeID ori_size = edge_list.size();
     EdgeID next_eid = edge_list.size();
     for (EdgeID i = 0; i < ori_size; i++) {
-        G_Edge& edge = edge_list[i];
+        G_Edge edge = edge_list[i];
         NodeID sid = edge.get_source();
         NodeID tid = edge.get_target();
         cout<<"sid: "<<sid<<", tid: "<<tid<<endl;
@@ -533,6 +533,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         if (found_sym)
             continue;
         // add new sym edge
+        cout<<"Add new edge\n";
         G_Edge new_edge = {tid, sid, next_eid};
         edge_list.emplace_back(new_edge);
         node_list[tid].get_adj_list().emplace_back(&edge_list.back());
