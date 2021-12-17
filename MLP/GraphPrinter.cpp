@@ -41,9 +41,10 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
     NodeID index = 0;
     for (auto cell : a_result) {
         vector<NodeID> res_cell;
-        res_cell.reserve(10 * cell.size());
-        for (NodeID nid : res_cell)
-            res_cell.emplace_back(real_map[nid]);
+        res_cell.reserve(3 * cell.size());
+        for (NodeID contain_id : cell)
+            for (NodeID nid : id_map[contain_id])
+                res_cell.emplace_back(real_map[nid]);
         if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
             unique_lock<mutex> write_lock(w_lock);
             res_cells_nodes.emplace_back(res_cell);
