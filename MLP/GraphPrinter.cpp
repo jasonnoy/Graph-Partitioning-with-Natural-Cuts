@@ -84,8 +84,8 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
 //    result_cuts.reserve(cell_edges.size());
     vector<vector<NodeID>> result_cells_edges(valid_cell_num);
     for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
-        NodeID sid = cell_edges[2*eid];
-        NodeID tid = cell_edges[2*eid+1];
+        NodeID sid = real_map[cell_edges[2*eid]];
+        NodeID tid = real_map[cell_edges[2*eid+1]];
         if (node_cell[sid] == node_cell[tid]){
             result_cells_edges[node_cell[sid]].emplace_back(sid);
             result_cells_edges[node_cell[sid]].emplace_back(tid);
@@ -211,7 +211,7 @@ void GraphPrinter::contract_tiny_cells() {
 }
 
 void GraphPrinter::contract_iso_cells() {
-
+//
 //    int contracted_cell_count = 0;
 //    auto cell_iter = result_nodes.begin();
 //    while( cell_iter != result_nodes.end() ) {
