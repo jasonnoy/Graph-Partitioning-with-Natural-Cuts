@@ -1675,7 +1675,7 @@ NodeID G_Graph::next_center( vector<NodeID>& shuffle_nodes, vector<bool>& node_i
         while(index < shuffle_nodes.size() && node_in_core[shuffle_nodes[index]]) {
             index++;
         }
-        if (!(index*100)%node_in_core.size())
+        if ((index*100)%node_in_core.size() == 0)
             cout<<"Searching centers: "<<(index*100)%node_in_core.size()<<"%\r";
 		if( index == node_in_core.size() )
 			return -1u;
