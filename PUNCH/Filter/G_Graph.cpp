@@ -478,8 +478,6 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());
     }
 
-    cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
-
     edges.clear();
     edges.shrink_to_fit();
     cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
@@ -516,12 +514,10 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
 
     EdgeID ori_size = edge_list.size();
     EdgeID next_eid = edge_list.size();
-    cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
     for (EdgeID i = 0; i < ori_size; i++) {
         G_Edge edge = edge_list[i];
         NodeID sid = edge.get_source();
         NodeID tid = edge.get_target();
-        cout<<"sid: "<<sid<<", tid: "<<tid<<endl;
 
         // filter origin sym edge
         bool found_sym = false;
@@ -536,13 +532,13 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         if (found_sym)
             continue;
         // add new sym edge
-        cout<<"Add new edge, tid: "<<tid<<", sid: "<<sid<<", next_eid: "<<next_eid<<endl;
+//        cout<<"Add new edge, tid: "<<tid<<", sid: "<<sid<<", next_eid: "<<next_eid<<endl;
         G_Edge new_edge(tid, sid, next_eid);
-        cout<<"New edge, sid: "<<new_edge.get_source()<<", tid: "<<new_edge.get_target()<<", eid: "<<new_edge.get_id()<<endl;
+//        cout<<"New edge, sid: "<<new_edge.get_source()<<", tid: "<<new_edge.get_target()<<", eid: "<<new_edge.get_id()<<endl;
         edge_list.emplace_back(new_edge);
         node_list[tid].get_adj_list().emplace_back(&edge_list.back());
-        cout<<"last edge, sid: "<<node_list[tid].get_adj_list().back()->get_source()<<", tid: "<<node_list[tid].get_adj_list().back()->get_target()<<", eid: "<<node_list[tid].get_adj_list().back()->get_id()<<endl;
-        cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
+//        cout<<"last edge, sid: "<<node_list[tid].get_adj_list().back()->get_source()<<", tid: "<<node_list[tid].get_adj_list().back()->get_target()<<", eid: "<<node_list[tid].get_adj_list().back()->get_id()<<endl;
+//        cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
         sym_id[i] = next_eid;
         sym_id.emplace_back(i);
         next_eid++;
