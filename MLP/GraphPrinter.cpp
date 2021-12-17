@@ -93,8 +93,12 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
             result_cells_edges[node_cell[sid]].emplace_back(tid);
         }
     }
-    for (auto cells_edges : result_cells_edges)
+    for (auto cells_edges : result_cells_edges) {
+        unique_lock<mutex> write_lock(w_lock);
         res_cells_edges.emplace_back(cells_edges);
+        write_lock.unlock();
+    }
+
 
 //
 //    for (auto edge : cell_edges) {
