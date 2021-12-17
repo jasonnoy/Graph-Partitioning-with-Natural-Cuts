@@ -15,6 +15,8 @@ private:
     bool PHANTOM;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
+
+    vector<vector<NodeID>> result_nodes;
     vector<vector<NodeID>> id_map;
     A_Graph a_graph;
 
