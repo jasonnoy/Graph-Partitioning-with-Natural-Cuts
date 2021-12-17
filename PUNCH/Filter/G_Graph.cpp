@@ -515,7 +515,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
     EdgeID ori_size = edge_list.size();
     EdgeID next_eid = edge_list.size();
     for (EdgeID i = 0; i < ori_size; i++) {
-        G_Edge edge = edge_list[i];
+        G_Edge& edge = edge_list[i];
         NodeID sid = edge.get_source();
         NodeID tid = edge.get_target();
 
