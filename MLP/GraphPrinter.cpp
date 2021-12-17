@@ -48,8 +48,9 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
             unique_lock<mutex> write_lock(w_lock);
             res_cells_nodes.emplace_back(res_cell);
             write_lock.unlock();
-            for (NodeID nid : res_cell)
-                node_cell[nid] = index++;
+            for (NodeID rid : res_cell)
+                node_cell[rid] = index;
+            index++
             continue;
         }
         unique_lock<mutex> write_lock(w_lock);
