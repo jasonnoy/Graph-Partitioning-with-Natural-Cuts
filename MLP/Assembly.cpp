@@ -12,14 +12,8 @@ void Assembly::read_a_graph(){
 
 void Assembly::multistart_and_combination(){
     cout<<"multi-start and combination (it may take a long time)...\n";
-    a_graph.multistart_and_combination( result, U );
-    cout<<"Done. Assemble result size: "<<result.size()<<endl;
-}
-
-void Assembly::write_result(){
-    cout<<"write result into target directory...\n";
-//    EdgeWeight weight = real_graph.write_result( result, id_map, nodePath, graphPath, outPath, PHANTOM ); // for test only
-//    printf("Done! Total weight of the cut edges is: %u\n", weight);
+    a_graph.multistart_and_combination( result_nodes, result_edges, U );
+    cout<<"Done. Assemble result size: "<<result_nodes.size()<<endl;
 }
 
 void Assembly::runAssembly() {
@@ -32,9 +26,10 @@ void Assembly::runAssembly() {
     time(&mid);
     cout<<"assembly read graph time: "<<mid-start<<"s\n";
     multistart_and_combination();
+    // free mem
+    ~a_graph();
     cout<<"Assembly phase done\n";
 
-//    write_result();
     time(&end);
 
     cout<<"Assembly run time: "<<end-start<<"s\n";

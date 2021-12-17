@@ -46,12 +46,12 @@ void dealCell(mutex& w_lock, int extra_thread, int l, string cur_layer, vector<N
 
         time(&mid);
         bool need_contract = l == L - 1;
-        GraphPrinter graphPrinter(assembly.get_result(), assembly.get_id_map(), filter.get_real_map(), aedges, U, l, need_contract);
-        graphPrinter.write_MLP_result(res_cells_nodes, res_cells_edges, res_void_cells, w_lock);
+        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), assembly.get_result_edges(), U, l, need_contract);
+        graphPrinter.write_MLP_result( w_lock, res_cells_nodes, res_cells_edges, res_void_cells);
 //        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
 //        cellCount += graphPrinter.nodes_result_size();
-        cutCount += graphPrinter.cuts_result_size();
+//        cutCount += graphPrinter.cuts_result_size();
 
         time(&end);
         cout<<"cell print time cost: "<<end-mid<<"s, "<<"cell time cost: "<<end-start<<"s\n";

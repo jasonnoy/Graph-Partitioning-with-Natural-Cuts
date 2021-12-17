@@ -16,14 +16,14 @@ private:
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
 
-    vector<vector<NodeID>> result;
+    vector<vector<NodeID>> result_nodes;
+    vector<NodeID> result_edges;
     vector<vector<NodeID>> id_map;
     A_Graph a_graph;
 
 
     void read_a_graph();
     void multistart_and_combination();
-    void write_result();
 public:
     const int U;
 
@@ -32,7 +32,8 @@ public:
     Assembly(int u, int fi, int m, bool combine, vector<vector<NodeID>>& a_nodes, vector<vector<NodeID>>& a_edges, bool phantom):
     U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), PHANTOM(phantom){};
     void runAssembly();
-    vector<vector<NodeID>>& get_result(){return result;}
+    vector<vector<NodeID>>& get_result_nodes(){return result_nodes;}
+    vector<NodeID>& get_result_edges(){return result_edges;}
     vector<vector<NodeID>>& get_id_map(){return id_map;}
 };
 

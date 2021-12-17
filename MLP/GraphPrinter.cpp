@@ -4,13 +4,13 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells, mutex& w_lock) {
+void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
 //        MLP_result();
 //    }
-    MLP_result();
+//    MLP_result();
     // convert relative vid to real nid
 //    for (int i = 0; i < cell_void_nodes.size(); i++) {
 //        cell_void_nodes[i] = real_map[cell_void_nodes[i]];
@@ -26,6 +26,94 @@ void GraphPrinter::write_MLP_result(vector<vector<NodeID>>& res_cells_nodes, vec
 //        exit(1);
 //    }
     cout<<"Printing nodes of layer "<<l<<endl;
+
+    unordered_map<NodeID, int> node_cell;
+    NodeSize index = 0;
+//    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
+//        for (NodeID node_iter : result_nodes[i]) {
+//            node_cell[node_iter] = index;
+//        }
+//    }
+
+    //    fill_contracts();
+    size_t contracted_cell_count = 0;
+    result_nodes.resize(a_result.size());
+    NodeID index = 0;
+    for (auto cell : a_result) {
+        vector<NodeID> res_cell;
+        res_cell.reserve(10 * cell.size());
+        for (NodeID nid : res_cell)
+            res_cell.emplace_back(real_map[nid]);
+        if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
+            unique_lock<mutex> write_lock(w_lock);
+            res_cells_nodes.emplace_back(res_cell);
+            write_lock.unlock();
+            for (NodeID nid : res_cell)
+                node_cell[nid] = index++;
+            continue;
+        }
+        unique_lock<mutex> write_lock(w_lock);
+        res_void_cells.emplace_back(res_cell);
+        write_lock.unlock();
+        contracted_cell_count++;
+    }
+    const NodeSize valid_cell_num = a_result.size() - contracted_cell_count;
+    cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
+//    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
+//        auto nit = cit->begin();
+//        result_nodes[index].reserve( 10 * cit->size() );
+//        for(; nit != cit->end(); nit++){
+//            for (NodeID contain_nid : id_map[*nit]) {
+//                result_nodes[index].emplace_back(real_map[contain_nid]);
+//            }
+//        }
+//    }
+
+//    contract_tiny_cells();
+//    if (contract_tiny)
+//        contract_iso_cells();
+
+//    unordered_map<NodeID, int> node_cell;
+//    index = 0;
+//    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
+//        for (NodeID node_iter : result_nodes[i]) {
+//            node_cell[node_iter] = index;
+//        }
+//    }
+
+//    result_cuts.reserve(cell_edges.size());
+    vector<vector<NodeID>> result_cells_edges(valid_cell_num);
+    for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
+        NodeID sid = cell_edges[2*eid];
+        NodeID tid = cell_edges[2*eid+1];
+        if (node_cell[sid] == node_cell[tid]){
+            result_cells_edges[node_cell[sid]].emplace_back(sid);
+            result_cells_edges[node_cell[sid]].emplace_back(tid);
+        }
+    }
+    for (auto cells_edges : result_cells_edges)
+        res_cells_edges.emplace_back(cells_edges);
+
+//
+//    for (auto edge : cell_edges) {
+//        // note: real ids
+//        NodeID sid = edge[0];
+//        NodeID tid = edge[1];
+////        NodeID sid = cell_edges[2*i];
+////        NodeID tid = cell_edges[2*i+1];
+////        if(node_cell[sid] * node_cell[tid] < 0)
+////            cout<<"node cell different\n";
+//        if (node_cell[sid] == node_cell[tid]){
+//            result_cells_edges[node_cell[sid]].emplace_back(sid);
+//            result_cells_edges[node_cell[sid]].emplace_back(tid);
+//            continue;
+//        }
+//        if (node_cell[sid] == -1 || node_cell[tid] == -1)
+//            continue;
+////        vector<NodeID> cut = {sid, tid};
+////        result_cuts.emplace_back(cut);
+//    }
+//    filter_edges();
 
     unique_lock<mutex> write_lock(w_lock);
     for (auto new_cell_nodes : result_nodes)
