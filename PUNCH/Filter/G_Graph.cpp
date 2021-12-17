@@ -478,6 +478,8 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());
     }
 
+    cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
+
     edges.clear();
     edges.shrink_to_fit();
     cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
@@ -514,6 +516,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
 
     EdgeID ori_size = edge_list.size();
     EdgeID next_eid = edge_list.size();
+    cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
     for (EdgeID i = 0; i < ori_size; i++) {
         G_Edge edge = edge_list[i];
         NodeID sid = edge.get_source();
