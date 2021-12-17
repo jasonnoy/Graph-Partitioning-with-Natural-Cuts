@@ -86,7 +86,7 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 //    sleep(15);
 
     nodeNum = node_count;
-    node_parti.reserve(nodeNum);
+    node_parti.resize(nodeNum);
 
 //    cout<<"reserved node parti, check mem\n";
 //    sleep(15);
@@ -419,7 +419,7 @@ void MultiLayerPartition::read_base_graph(const string base_node_path, const str
     nodeNum = count;
     cout<<"There are "<<count<<" nodes in layer 0\n";
 
-    node_parti.reserve(nodeNum);
+    node_parti.resize(nodeNum);
 
     infile.close();
     infile.clear(ios::goodbit);

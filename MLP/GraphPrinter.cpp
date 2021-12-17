@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells) {
+void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells, vector<vector<uint8_t>>& node_parti) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
@@ -49,8 +49,11 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
             unique_lock<mutex> node_lock(n_lock);
             res_cells_nodes.emplace_back(res_cell);
             node_lock.unlock();
-            for (NodeID rid : res_cell)
+            for (NodeID rid : res_cell) {
                 node_cell[rid] = index;
+                node_parti[rid].emplace_back(index);
+            }
+
             index++;
             continue;
         }
