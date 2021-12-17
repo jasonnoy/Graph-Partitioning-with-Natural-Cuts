@@ -27,7 +27,7 @@ void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, in
         if (cell_edges.empty()) {
             res_cells_nodes.emplace_back(cell);
             cout<<"empty cell edge, skipping..\n";
-            return;
+            continue;
         }
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
