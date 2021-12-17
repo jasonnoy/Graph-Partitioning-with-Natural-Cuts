@@ -1432,14 +1432,6 @@ void A_Graph::add_logic_graph_edges( unordered_map<NodeID, unordered_map<NodeID,
 }
 
 void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result_nodes, vector<NodeID>& result_edges, NodeSize sz_lim ){
-
-        result_edges.reserve(edge_list.size()*2);
-        for (auto edge : edge_list) {
-            result_edges.emplace_back(edge.get_source());
-            result_edges.emplace_back(edge.get_target());
-        }
-        edge_list.clear();
-        edge_list.shrink_to_fit();
 		
 		deque<Pool_Item> pool;
 		for(NodeID iter = 0; iter < M; iter++){
@@ -1515,6 +1507,15 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result_nodes
 				min_pos = piit;
 			}
 		}
+
+        result_edges.reserve(edge_list.size()*2);
+        for (auto edge : edge_list) {
+            result_edges.emplace_back(edge.get_source());
+            result_edges.emplace_back(edge.get_target());
+        }
+        edge_list.clear();
+        edge_list.shrink_to_fit();
+
 		result_nodes.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
 		return;
 }
