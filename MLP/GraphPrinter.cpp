@@ -28,7 +28,7 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
     cout<<"Printing nodes of layer "<<l<<endl;
 
     unordered_map<NodeID, int> node_cell;
-    NodeSize index = 0;
+//    NodeSize index = 0;
 //    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
 //        for (NodeID node_iter : result_nodes[i]) {
 //            node_cell[node_iter] = index;
@@ -115,14 +115,14 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
 //    }
 //    filter_edges();
 
-    unique_lock<mutex> write_lock(w_lock);
-    for (auto new_cell_nodes : result_nodes)
-        res_cells_nodes.emplace_back(new_cell_nodes);
-    for (auto new_cell_edges : result_cells_edges)
-        res_cells_edges.emplace_back(new_cell_edges);
-    for (auto new_void_cells : void_cells)
-        res_void_cells.emplace_back(new_void_cells);
-    write_lock.unlock();
+//    unique_lock<mutex> write_lock(w_lock);
+//    for (auto new_cell_nodes : result_nodes)
+//        res_cells_nodes.emplace_back(new_cell_nodes);
+//    for (auto new_cell_edges : result_cells_edges)
+//        res_cells_edges.emplace_back(new_cell_edges);
+//    for (auto new_void_cells : void_cells)
+//        res_void_cells.emplace_back(new_void_cells);
+//    write_lock.unlock();
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
     cout<<"Done\n";
@@ -212,68 +212,68 @@ void GraphPrinter::contract_tiny_cells() {
 
 void GraphPrinter::contract_iso_cells() {
 
-    int contracted_cell_count = 0;
-    auto cell_iter = result_nodes.begin();
-    while( cell_iter != result_nodes.end() ) {
-        if (cell_iter->size() > U/10 || cell_iter->size() > 1000) {
-            cell_iter++;
-            continue;
-        }
-        void_cells.emplace_back(*cell_iter);
-        cell_iter = result_nodes.erase(cell_iter);
-//        cell_void_nodes.insert(cell_void_nodes.end(), cell_iter->begin(), cell_iter->end());
-        contracted_cell_count++;
-    }
-    cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
+//    int contracted_cell_count = 0;
+//    auto cell_iter = result_nodes.begin();
+//    while( cell_iter != result_nodes.end() ) {
+//        if (cell_iter->size() > U/10 || cell_iter->size() > 1000) {
+//            cell_iter++;
+//            continue;
+//        }
+//        void_cells.emplace_back(*cell_iter);
+//        cell_iter = result_nodes.erase(cell_iter);
+////        cell_void_nodes.insert(cell_void_nodes.end(), cell_iter->begin(), cell_iter->end());
+//        contracted_cell_count++;
+//    }
+//    cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
 }
 
 void GraphPrinter::MLP_result() {
-//    fill_contracts();
-    result_nodes.resize(a_result.size());
-    NodeID index = 0;
-    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
-        auto nit = cit->begin();
-        result_nodes[index].reserve( 10 * cit->size() );
-        for(; nit != cit->end(); nit++){
-            for (NodeID contain_nid : id_map[*nit]) {
-                result_nodes[index].emplace_back(real_map[contain_nid]);
-            }
-        }
-    }
-
-//    contract_tiny_cells();
-    if (contract_tiny)
-        contract_iso_cells();
-
-    unordered_map<NodeID, int> node_cell;
-    index = 0;
-    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
-        for (NodeID node_iter : result_nodes[i]) {
-            node_cell[node_iter] = index;
-        }
-    }
-
-    result_cuts.reserve(cell_edges.size());
-    result_cells_edges.resize(result_nodes.size());
-    for (auto edge : cell_edges) {
-        // note: real ids
-        NodeID sid = edge[0];
-        NodeID tid = edge[1];
-//        NodeID sid = cell_edges[2*i];
-//        NodeID tid = cell_edges[2*i+1];
-//        if(node_cell[sid] * node_cell[tid] < 0)
-//            cout<<"node cell different\n";
-        if (node_cell[sid] == node_cell[tid]){
-            result_cells_edges[node_cell[sid]].emplace_back(sid);
-            result_cells_edges[node_cell[sid]].emplace_back(tid);
-            continue;
-        }
-        if (node_cell[sid] == -1 || node_cell[tid] == -1)
-            continue;
-        vector<NodeID> cut = {sid, tid};
-        result_cuts.emplace_back(cut);
-    }
-//    filter_edges();
+////    fill_contracts();
+//    result_nodes.resize(a_result.size());
+//    NodeID index = 0;
+//    for (auto cit = a_result.begin(); cit!=a_result.end(); cit++, index++) {
+//        auto nit = cit->begin();
+//        result_nodes[index].reserve( 10 * cit->size() );
+//        for(; nit != cit->end(); nit++){
+//            for (NodeID contain_nid : id_map[*nit]) {
+//                result_nodes[index].emplace_back(real_map[contain_nid]);
+//            }
+//        }
+//    }
+//
+////    contract_tiny_cells();
+//    if (contract_tiny)
+//        contract_iso_cells();
+//
+//    unordered_map<NodeID, int> node_cell;
+//    index = 0;
+//    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
+//        for (NodeID node_iter : result_nodes[i]) {
+//            node_cell[node_iter] = index;
+//        }
+//    }
+//
+//    result_cuts.reserve(cell_edges.size());
+//    result_cells_edges.resize(result_nodes.size());
+//    for (auto edge : cell_edges) {
+//        // note: real ids
+//        NodeID sid = edge[0];
+//        NodeID tid = edge[1];
+////        NodeID sid = cell_edges[2*i];
+////        NodeID tid = cell_edges[2*i+1];
+////        if(node_cell[sid] * node_cell[tid] < 0)
+////            cout<<"node cell different\n";
+//        if (node_cell[sid] == node_cell[tid]){
+//            result_cells_edges[node_cell[sid]].emplace_back(sid);
+//            result_cells_edges[node_cell[sid]].emplace_back(tid);
+//            continue;
+//        }
+//        if (node_cell[sid] == -1 || node_cell[tid] == -1)
+//            continue;
+//        vector<NodeID> cut = {sid, tid};
+//        result_cuts.emplace_back(cut);
+//    }
+////    filter_edges();
 }
 
 void GraphPrinter::filter_edges() {

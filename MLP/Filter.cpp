@@ -18,7 +18,7 @@ void Filter::contract_tiny_cuts(){
     //third pass: process 2-cuts classes elaborate
     //make a dfs tree on the graph
     cout<<"get DFS tree...\n";
-    vector<bool> final_edge_in_fi
+//    vector<bool> final_edge_in_fi
     vector<bool> edge_in_fi( gGraph.get_edge_list().size(), true );
 //    int thread_capacity = (thread_limit-thread_occupied)/thread_occupied;
     time_t start, end;

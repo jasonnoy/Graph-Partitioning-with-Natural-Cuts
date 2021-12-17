@@ -45,7 +45,7 @@ public:
 //    NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
 //    vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}
-    vector<vector<NodeID>>& get_void_cells(){return void_cells;}
+//    vector<vector<NodeID>>& get_void_cells(){return void_cells;}
 };
 
 

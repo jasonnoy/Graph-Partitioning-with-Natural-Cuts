@@ -27,7 +27,7 @@ void Assembly::runAssembly() {
     cout<<"assembly read graph time: "<<mid-start<<"s\n";
     multistart_and_combination();
     // free mem
-    ~a_graph();
+    a_graph.~A_Graph();
     cout<<"Assembly phase done\n";
 
     time(&end);
