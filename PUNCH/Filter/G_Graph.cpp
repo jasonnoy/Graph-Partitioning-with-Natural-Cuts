@@ -470,10 +470,10 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
     cout<<"Done. Read in "<<node_list.size()<<" nodes\n";
 
     // read in edges
-    edge_list.reserve(2 * edges.size());
+    edge_list.reserve(edges.size()/2);
 
-    for ( EdgeID eid = 0; eid < edges.size(); eid++) {
-        G_Edge gEdge(real_to_nid[2*eid], real_to_nid[edges[2*eid+1]], eid);
+    for ( EdgeID eid = 0; eid < edges.size()/2; eid++) {
+        G_Edge gEdge(real_to_nid[edges[2*eid]], real_to_nid[edges[2*eid+1]], eid);
         edge_list.emplace_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());
     }
