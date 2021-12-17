@@ -477,9 +477,6 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         edge_list.emplace_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());
     }
-
-    edges.clear();
-    edges.shrink_to_fit();
     cout<<"Done. Read in "<<edge_list.size()<<" edges\n";
 
 

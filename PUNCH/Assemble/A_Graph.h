@@ -129,7 +129,7 @@ public:
 	void initial_logic_final_edges( unordered_map<NodeID, unordered_map<NodeID, NodeID> >& logic_final_graph,
 		set< pair<NodeID, NodeID> >& random_edges );
 
-	void multistart_and_combination( vector< vector<NodeID> >& result_nodes, vector<NodeID>& result_edges, NodeSize sz_lim );
+	void multistart_and_combination( vector< vector<NodeID> >& result_nodes, NodeSize sz_lim );
 
 	void pick_cut_edges( const vector< vector<NodeID> >& node_clusters, set<EdgeID>& cut_edges );
 

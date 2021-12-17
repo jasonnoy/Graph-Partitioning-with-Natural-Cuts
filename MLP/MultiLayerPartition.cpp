@@ -46,7 +46,7 @@ void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, in
 
         time(&mid);
         bool need_contract = l == L - 1;
-        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), assembly.get_result_edges(), U, l, need_contract);
+        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, U, l, need_contract);
         graphPrinter.write_MLP_result( n_lock, e_lock, v_lock, res_cells_nodes, res_cells_edges, res_void_cells);
 //        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
