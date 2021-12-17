@@ -518,12 +518,11 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         G_Edge& edge = edge_list[i];
         NodeID sid = edge.get_source();
         NodeID tid = edge.get_target();
+        cout<<"sid: "<<sid<<", tid: "<<tid<<endl;
 
         // filter origin sym edge
         bool found_sym = false;
         for (auto e_ptr : node_list[tid].get_adj_list()) {
-            if (e_ptr->get_id()>=ori_size)
-                cout<<"new edge\n";
             if (e_ptr->get_target() == sid) {
                 found_sym = true;
                 sym_id[edge.get_id()] = e_ptr->get_id();
