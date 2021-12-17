@@ -25,7 +25,9 @@ void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, in
         cout<<"cell node size: "<<cell.size()<<", cell edge size: "<<cell_edges.size()/2<<endl;
 
         if (cell_edges.empty()) {
+            unique_lock<mutex> node_lock(n_lock);
             res_cells_nodes.emplace_back(cell);
+            node_lock.unlock();
             cout<<"empty cell edge, skipping..\n";
             continue;
         }
