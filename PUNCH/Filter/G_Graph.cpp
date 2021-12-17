@@ -539,6 +539,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
         edge_list.emplace_back(new_edge);
         node_list[tid].get_adj_list().emplace_back(&edge_list.back());
         cout<<"last edge, sid: "<<node_list[tid].get_adj_list().back()->get_source()<<", tid: "<<node_list[tid].get_adj_list().back()->get_target()<<", eid: "<<node_list[tid].get_adj_list().back()->get_id()<<endl;
+        cout<<"edge2, sid: "<<node_list[1463497].get_adj_list().back()->get_source()<<", tid: "<<node_list[1463497].get_adj_list().back()->get_target()<<", eid: "<<node_list[1463497].get_adj_list().back()->get_id()<<endl;
         sym_id[i] = next_eid;
         sym_id.emplace_back(i);
         next_eid++;
