@@ -1509,7 +1509,7 @@ void A_Graph::multistart_and_combination( vector< vector<NodeID> >& result_nodes
 		}
 		result_nodes.assign( min_pos->node_clusters.begin(), min_pos->node_clusters.end() );
 
-        result_edges.reserve(edge_list*2);
+        result_edges.reserve(edge_list.size()*2);
         for (auto edge : edge_list) {
             result_edges.emplace_back(edge.get_source());
             result_edges.emplace_back(edge.get_target());
