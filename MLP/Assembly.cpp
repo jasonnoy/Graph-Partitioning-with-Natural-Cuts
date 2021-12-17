@@ -12,7 +12,7 @@ void Assembly::read_a_graph(){
 
 void Assembly::multistart_and_combination(){
     cout<<"multi-start and combination (it may take a long time)...\n";
-    a_graph.multistart_and_combination( result_nodes, result_edges, U );
+    a_graph.multistart_and_combination( result_nodes, U );
     cout<<"Done. Assemble result size: "<<result_nodes.size()<<endl;
 }
 

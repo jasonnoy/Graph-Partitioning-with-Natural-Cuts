@@ -15,9 +15,6 @@ private:
     bool PHANTOM;
     vector<vector<NodeID>>& anodes;
     vector<vector<NodeID>>& aedges;
-
-    vector<vector<NodeID>> result_nodes;
-    vector<NodeID> result_edges;
     vector<vector<NodeID>> id_map;
     A_Graph a_graph;
 
@@ -33,7 +30,6 @@ public:
     U(u), FI(fi), M(m), COMBINE(combine), anodes(a_nodes), aedges(a_edges), PHANTOM(phantom){};
     void runAssembly();
     vector<vector<NodeID>>& get_result_nodes(){return result_nodes;}
-    vector<NodeID>& get_result_edges(){return result_edges;}
     vector<vector<NodeID>>& get_id_map(){return id_map;}
 };
 
