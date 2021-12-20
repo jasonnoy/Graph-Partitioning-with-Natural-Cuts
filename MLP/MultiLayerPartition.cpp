@@ -487,7 +487,7 @@ void MultiLayerPartition::print_parti(const string timestamp) {
     cout<<"Print partition time cost: "<<end-start<<endl;
 }
 
-void MultiLayerPartition::read_accumu_parti(const string parti_path, const int ori_layer, const int base_layer) {
+void MultiLayerPartition::read_accumu_parti(const string parti_path, const int base_layer) {
     ifstream infile(parti_path);
     assert(infile.is_open());
     int ori_layer;
@@ -600,12 +600,12 @@ int main(int argc, char** argv) {
 
     bool accumulate = true;
     const string partition_file_path = "/data/jjh/partitions/1220/node_partitions_20211217221805.txt";
-    const int ori_layer = 5;
+//    const int ori_layer = 5;
     const int base_layer = 3;
     if (accumulate) {
         time_t begin, end;
         time(&begin);
-        mlp.read_accumu_parti(partition_file_path, ori_layer, base_layer);
+        mlp.read_accumu_parti(partition_file_path, base_layer);
         time(&end);
         cout<<"read accumu parti used "<<end-begin<<"s\n";
     }
