@@ -24,6 +24,13 @@ void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, in
         vector<EdgeID>& cell_edges = cells_edges[cell_id];
         cout<<"cell node size: "<<cell.size()<<", cell edge size: "<<cell_edges.size()/2<<endl;
 
+        if (cell.size() < U) {
+            cout<<"cell size less than U, hand over to next layer\n";
+            unique_lock<mutex> node_lock(n_lock);
+            res_cells_nodes.emplace_back(cell);
+            node_lock.unlock();
+            continue;
+        }
         if (cell_edges.empty()) {
             unique_lock<mutex> node_lock(n_lock);
             res_cells_nodes.emplace_back(cell);
@@ -73,17 +80,19 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
     topo_link_head_weight_t* topo_link_weight_head = read_topo_link(topo_weight_path);
     NodeSize node_count = topo_link_weight_head->max_vertex_id+1;
+    cout<<"There are "<<node_count<<" nodes in topo file\n";
 
 //    // Test only!
 //    cout<<"read in topo finished, check mem\n";
 //    sleep(15);
 
-    vector<NodeID> graph_nodes;
-    graph_nodes.reserve(node_count);
-
-    for (NodeID i = 0; i < node_count; i++)
-        graph_nodes.emplace_back(i);
-    cells_nodes.emplace_back(graph_nodes);
+    if (!accumulate) {
+        vector<NodeID> graph_nodes;
+        graph_nodes.reserve(node_count);
+        for (NodeID i = 0; i < node_count; i++)
+            graph_nodes.emplace_back(i);
+        cells_nodes.emplace_back(graph_nodes);
+    }
 //    cout<<"emplace in topo nodes finished, check mem\n";
 //    sleep(15);
 
@@ -120,9 +129,6 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
     // Test only!
 //    sleep(10);
-
-    time(&finish);
-    cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
 
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
@@ -481,6 +487,64 @@ void MultiLayerPartition::print_parti(const string timestamp) {
     cout<<"Print partition time cost: "<<end-start<<endl;
 }
 
+void MultiLayerPartition::read_accumu_parti(const string parti_path, const int ori_layer, const int base_layer) {
+    ifstream infile(parti_path);
+    assert(infile.is_open());
+    int ori_layer;
+    infile>>ori_layer;
+    cout<<"[accumulate] original partition has "<<ori_layer<<" layers\n";
+    vector<NodeSize> layer_sizes(ori_layer);
+    for (NodeID i = 0; i < ori_layer; i++)
+        infile>>layer_sizes[i];
+    const int base_index = L - base_layer;
+    const NodeSize nodeCount;
+    infile>>nodeCount;
+    assert(nodeCount == nodeNum);
+    vector<vector<NodeID>> layer_cells(layer_sizes[base_index]);
+    for (NodeID i = 0; i < nodeCount; i++) {
+        int j = 0;
+        for (; j < base_index; j++) {
+            NodeID cid;
+            infile>>cid;
+            node_parti[i].emplace_back(cid);
+        }
+        NodeID cur_cid;
+        infile>>cur_cid;
+        node_parti[i].emplace_back(cur_cid);
+        layer_cells[cur_cid].emplace_back(i);
+        j++;
+        for (; j < ori_layer; j++) {
+            NodeID void_cid;
+            infile>>void_cid;
+        }
+    }
+    cells_nodes.assign(layer_cells.begin(), layer_cells.end());
+    layer_cells.clear();
+    layer_cells.shrink_to_fit();
+
+    vector<vector<NodeID>> edge_map(cells_edges[1].size());
+    for (NodeID i = 0; i < cells_edges[1].size()/2; i++) {
+        NodeID sid = cells_edges[1][2*i];
+        NodeID tid = cells_edges[1][2*i+1];
+        edge_map[sid].emplace_back(tid);
+    }
+
+    cells_edges.clear();
+    cells_edges.shrink_to_fit();
+    cells_edges.resize(layer_sizes[base_index]);
+
+    for (NodeID cid; cid < cells_nodes.size(); cid++) {
+        for (NodeID sid : cells_nodes[cid]) {
+            for (NodeID tid : edge_map[sid]) {
+                if (node_parti[tid][base_index] == cid) {
+                    cells_edges[cid].emplace_back(sid);
+                    cells_edges[cid].emplace_back(tid);
+                }
+            }
+        }
+    }
+}
+
 int main(int argc, char** argv) {
     if (argc != 7 && argc != 6) {
         printf("usage:\n<arg1> parameter file path, e.g. C:/GraphPatition/data/paras.txt\n");
@@ -532,6 +596,18 @@ int main(int argc, char** argv) {
         mlp.read_topo_graph(topoPath);
     } else {
         mlp.read_base_graph(nodePath, edgePath);
+    }
+
+    bool accumulate = true;
+    const string partition_file_path = "/data/jjh/partitions/1220/node_partitions_20211217221805.txt";
+    const int ori_layer = 5;
+    const int base_layer = 3;
+    if (accumulate) {
+        time_t begin, end;
+        time(&begin);
+        mlp.read_accumu_parti(partition_file_path, ori_layer, base_layer);
+        time(&end);
+        cout<<"read accumu parti used "<<end-begin<<"s\n";
     }
 //    cout<<"read in graph finished, check mem\n";
 //    sleep(15);

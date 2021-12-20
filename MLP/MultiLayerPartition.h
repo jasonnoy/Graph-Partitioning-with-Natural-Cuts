@@ -46,6 +46,7 @@ private:
     vector<vector<NodeID>> node_parti;
     vector<NodeSize> cell_sizes;
     bool phantom;
+    bool accumulate = true;
 
     void MLP();
 
@@ -61,6 +62,7 @@ public:
     }
     void read_topo_graph(const string topo_weight_path);
     void read_base_graph(const string base_node_path, const string base_link_path);
+    void read_accumu_parti(const string parti_path, const int ori_layer, const int base_layer);
     void print_parti(const string timestamp);
     int getL(){return L;}
     void setL(int l){L = l;}
