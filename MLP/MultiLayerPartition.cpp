@@ -515,6 +515,8 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
         NodeID cur_cid;
         infile>>cur_cid;
         node_parti[i].emplace_back(cur_cid);
+        if (cur_cid >= layer_sizes[base_index])
+            cout<<"oversize cid: "<<cur_cid<<endl;
         layer_cells[cur_cid].emplace_back(i);
         j++;
         for (; j < ori_layer; j++) {
