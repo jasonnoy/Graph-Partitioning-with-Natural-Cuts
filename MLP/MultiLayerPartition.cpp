@@ -541,7 +541,7 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     cells_edges.shrink_to_fit();
     cells_edges.resize(layer_sizes[base_index]);
 
-    for (NodeID cid; cid < cells_nodes.size(); cid++) {
+    for (NodeID cid = 0; cid < cells_nodes.size(); cid++) {
         for (NodeID sid : cells_nodes[cid]) {
             for (NodeID tid : edge_map[sid]) {
                 if (node_parti[tid][base_index] == cid) {
