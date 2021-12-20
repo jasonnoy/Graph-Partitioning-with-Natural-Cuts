@@ -525,8 +525,10 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
         }
     }
     cells_nodes.assign(layer_cells.begin(), layer_cells.end());
+    cout<<"cells_nodes size: "<<cells_nodes.size()<<endl;
     layer_cells.clear();
     layer_cells.shrink_to_fit();
+    cout<<"cells_nodes size: "<<cells_nodes.size()<<endl;
 
     vector<vector<NodeID>> edge_map(nodeCount);
     for (NodeID i = 0; i < cells_edges[0].size()/2; i++) {
