@@ -201,7 +201,7 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-        if (l + 1 > 4) {
+        if (l + 1 > 3) {
             cout<<"not target, skip...\n";
             continue;
         }
@@ -610,7 +610,7 @@ int main(int argc, char** argv) {
     bool accumulate = true;
     const string partition_file_path = "/data/jjh/partitions/1220/node_partitions_20211217221805.txt";
 //    const int ori_layer = 5;
-    const int base_layer = 5;
+    const int base_layer = 3;
     if (accumulate) {
         time_t begin, end;
         time(&begin);
