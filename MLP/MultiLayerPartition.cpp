@@ -495,8 +495,11 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     infile>>ori_layer;
     cout<<"[accumulate] original partition has "<<ori_layer<<" layers\n";
     vector<NodeSize> layer_sizes(ori_layer);
-    for (NodeID i = 0; i < ori_layer; i++)
+    for (NodeID i = 0; i < ori_layer; i++) {
         infile>>layer_sizes[i];
+        cout<<"layer "<<i<<": "<<layer_sizes[i]<<endl;
+    }
+
     const int base_index = ori_layer - base_layer;
     NodeSize nodeCount;
     infile>>nodeCount;
