@@ -497,7 +497,7 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     vector<NodeSize> layer_sizes(ori_layer);
     for (NodeID i = 0; i < ori_layer; i++)
         infile>>layer_sizes[i];
-    const int base_index = L - base_layer;
+    const int base_index = ori_layer - base_layer;
     NodeSize nodeCount;
     infile>>nodeCount;
     assert(nodeCount == nodeNum);
