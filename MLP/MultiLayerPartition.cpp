@@ -488,6 +488,7 @@ void MultiLayerPartition::print_parti(const string timestamp) {
 }
 
 void MultiLayerPartition::read_accumu_parti(const string parti_path, const int base_layer) {
+    cout<<"accumulate parti file path: "<<parti_path<<endl;
     ifstream infile(parti_path);
     assert(infile.is_open());
     int ori_layer;
