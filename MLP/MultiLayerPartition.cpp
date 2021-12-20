@@ -201,7 +201,7 @@ void MultiLayerPartition::MLP() {
         }
         string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
-        if (l + 1 > 2) {
+        if (l + 1 > 4) {
             cout<<"not target, skip...\n";
             continue;
         }
@@ -220,7 +220,7 @@ void MultiLayerPartition::MLP() {
         C = parameters[l][2];
         FI = parameters[l][3];
         M = parameters[l][4];
-        PS = parameters[l][5]; // 暂时默认PS = sqrt(M)
+        PS = sqrt(M); // 暂时默认PS = sqrt(M)
         cout<<"Layer "<<l + 1<<" parameters: U="<<U<<", Uf="<<Uf<<", C="<<C<<", FI="<<FI<<", M="<<M<<", PS="<<PS<<endl;
 //        if (phantom) {
 //            U = 32, C = 4, FI = 4, M = 4;
@@ -525,10 +525,9 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
         }
     }
     cells_nodes.assign(layer_cells.begin(), layer_cells.end());
-    cout<<"cells_nodes size: "<<cells_nodes.size()<<endl;
     layer_cells.clear();
     layer_cells.shrink_to_fit();
-    cout<<"cells_nodes size: "<<cells_nodes.size()<<endl;
+    cout<<"read in cells size: "<<cells_nodes.size()<<endl;
 
     vector<vector<NodeID>> edge_map(nodeCount);
     for (NodeID i = 0; i < cells_edges[0].size()/2; i++) {
@@ -611,7 +610,7 @@ int main(int argc, char** argv) {
     bool accumulate = true;
     const string partition_file_path = "/data/jjh/partitions/1220/node_partitions_20211217221805.txt";
 //    const int ori_layer = 5;
-    const int base_layer = 3;
+    const int base_layer = 5;
     if (accumulate) {
         time_t begin, end;
         time(&begin);
