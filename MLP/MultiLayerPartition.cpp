@@ -529,9 +529,9 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     layer_cells.shrink_to_fit();
 
     vector<vector<NodeID>> edge_map(nodeCount);
-    for (NodeID i = 0; i < cells_edges[1].size()/2; i++) {
-        NodeID sid = cells_edges[1][2*i];
-        NodeID tid = cells_edges[1][2*i+1];
+    for (NodeID i = 0; i < cells_edges[0].size()/2; i++) {
+        NodeID sid = cells_edges[0][2*i];
+        NodeID tid = cells_edges[0][2*i+1];
         edge_map[sid].emplace_back(tid);
     }
 

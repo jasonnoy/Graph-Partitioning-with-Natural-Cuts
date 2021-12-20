@@ -45,21 +45,28 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
         for (NodeID contain_id : cell)
             for (NodeID nid : id_map[contain_id])
                 res_cell.emplace_back(real_map[nid]);
-        if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
-            unique_lock<mutex> node_lock(n_lock);
-            res_cells_nodes.emplace_back(res_cell);
-            node_lock.unlock();
-            for (NodeID rid : res_cell) {
-                node_cell[rid] = index;
-            }
-
-            index++;
-            continue;
+        unique_lock<mutex> node_lock(n_lock);
+        res_cells_nodes.emplace_back(res_cell);
+        node_lock.unlock();
+        for (NodeID rid : res_cell) {
+            node_cell[rid] = index;
         }
-        unique_lock<mutex> void_lock(v_lock);
-        res_void_cells.emplace_back(res_cell);
-        void_lock.unlock();
-        contracted_cell_count++;
+        index++;
+//        if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
+//            unique_lock<mutex> node_lock(n_lock);
+//            res_cells_nodes.emplace_back(res_cell);
+//            node_lock.unlock();
+//            for (NodeID rid : res_cell) {
+//                node_cell[rid] = index;
+//            }
+//
+//            index++;
+//            continue;
+//        }
+//        unique_lock<mutex> void_lock(v_lock);
+//        res_void_cells.emplace_back(res_cell);
+//        void_lock.unlock();
+//        contracted_cell_count++;
     }
     const NodeSize valid_cell_num = a_result.size() - contracted_cell_count;
     cout<<"contracted "<<contracted_cell_count<<" tiny iso cells\n";
