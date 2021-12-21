@@ -79,11 +79,11 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
 //            }
 //        }
 //    }
-
+//
 //    contract_tiny_cells();
 //    if (contract_tiny)
 //        contract_iso_cells();
-
+//
 //    unordered_map<NodeID, int> node_cell;
 //    index = 0;
 //    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
@@ -91,7 +91,7 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
 //            node_cell[node_iter] = index;
 //        }
 //    }
-
+//
 //    result_cuts.reserve(cell_edges.size());
     vector<vector<NodeID>> result_cells_edges(valid_cell_num);
     for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
@@ -102,11 +102,10 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
             result_cells_edges[node_cell[sid]].emplace_back(tid);
         }
     }
-    for (auto cells_edges : result_cells_edges) {
-        unique_lock<mutex> edge_lock(e_lock);
+    unique_lock<mutex> edge_lock(e_lock);
+    for (auto cells_edges : result_cells_edges)
         res_cells_edges.emplace_back(cells_edges);
-        edge_lock.unlock();
-    }
+    edge_lock.unlock();
 
 
 //

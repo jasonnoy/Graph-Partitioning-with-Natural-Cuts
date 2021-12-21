@@ -403,12 +403,12 @@ void MultiLayerPartition::MLP() {
 //        outfile.clear(ios::goodbit);
 
     }
-    // deal void cells
-    for (NodeSize i = 0; i < void_cells.size(); i++) {
-        NodeID index = total_cell_num + i;
-        for (NodeID vid : void_cells[i])
-            node_parti[vid].emplace_back(index);
-    }
+//    // deal void cells
+//    for (NodeSize i = 0; i < void_cells.size(); i++) {
+//        NodeID index = total_cell_num + i;
+//        for (NodeID vid : void_cells[i])
+//            node_parti[vid].emplace_back(index);
+//    }
     time(&finish);
     cout<<"mlp time cost: "<<finish-begin<<"s\n";
 }
