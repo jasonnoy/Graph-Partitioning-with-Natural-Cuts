@@ -4,7 +4,7 @@
 
 #include "GraphPrinter.h"
 
-void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells) {
+void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells) {
 //    if (isPhantom) {
 //        phantom_result();
 //    } else {
@@ -38,19 +38,15 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
     //    fill_contracts();
     size_t contracted_cell_count = 0;
 //    result_nodes.resize(a_result.size());
+    vector<vector<NodeID>> result_cells_nodes(a_result.size());
     NodeID index = 0;
     for (auto cell : a_result) {
-        vector<NodeID> res_cell;
-        res_cell.reserve(3 * cell.size());
         for (NodeID contain_id : cell)
-            for (NodeID nid : id_map[contain_id])
-                res_cell.emplace_back(real_map[nid]);
-        unique_lock<mutex> node_lock(n_lock);
-        res_cells_nodes.emplace_back(res_cell);
-        node_lock.unlock();
-        for (NodeID rid : res_cell) {
-            node_cell[rid] = index;
-        }
+            for (NodeID nid : id_map[contain_id]) {
+                NodeID rid = real_map[nid];
+                result_cells_nodes[index].emplace_back(rid);
+                node_cell[rid] = index;
+            }
         index++;
 //        if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
 //            unique_lock<mutex> node_lock(n_lock);
@@ -102,7 +98,9 @@ void GraphPrinter::write_MLP_result(mutex& n_lock, mutex& e_lock, mutex& v_lock,
             result_cells_edges[node_cell[sid]].emplace_back(tid);
         }
     }
-    unique_lock<mutex> edge_lock(e_lock);
+    unique_lock<mutex> edge_lock(w_lock);
+    for (auto cell_nodes : result_cells_nodes)
+        res_cells_nodes.emplace_back(cell_nodes);
     for (auto cells_edges : result_cells_edges)
         res_cells_edges.emplace_back(cells_edges);
     edge_lock.unlock();

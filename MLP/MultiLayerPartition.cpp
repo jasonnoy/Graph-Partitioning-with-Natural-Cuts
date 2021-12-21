@@ -14,7 +14,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(mutex& n_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
     time_t start, mid, end;
     for (NodeID cell_id:thread_index) {
         time(&start);
@@ -56,7 +56,7 @@ void dealCell(mutex& n_lock, mutex& e_lock, mutex& v_lock,  int extra_thread, in
         time(&mid);
         bool need_contract = l == L - 1;
         GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, U, l, need_contract);
-        graphPrinter.write_MLP_result( n_lock, e_lock, v_lock, res_cells_nodes, res_cells_edges, res_void_cells);
+        graphPrinter.write_MLP_result( n_lock, res_cells_nodes, res_cells_edges, res_void_cells);
 //        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
 //        cellCount += graphPrinter.nodes_result_size();
@@ -321,9 +321,9 @@ void MultiLayerPartition::MLP() {
         for (NodeID i = 0 ; i < cells_nodes.size(); i++) {
             thread_index[i%current_occupied].push_back(i);
         }
-        mutex node_lock, edge_lock, void_lock;
+        mutex node_lock;
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, ref(node_lock), ref(edge_lock), ref(void_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, ref(node_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), U, Uf, C, FI, M, L));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";
