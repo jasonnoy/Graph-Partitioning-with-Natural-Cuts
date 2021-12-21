@@ -473,6 +473,7 @@ void G_Graph::read_graph( vector<NodeID>& nodes, vector<NodeID>& edges, vector<N
     edge_list.reserve(edges.size());
 
     for ( EdgeID eid = 0; eid < edges.size()/2; eid++) {
+        assert(real_to_nid.count(edges[2*eid]) && real_to_nid.count(edges[2*eid+1]));
         G_Edge gEdge(real_to_nid[edges[2*eid]], real_to_nid[edges[2*eid+1]], eid);
         edge_list.emplace_back(gEdge);
         node_list[gEdge.get_source()].get_adj_list().emplace_back(&edge_list.back());

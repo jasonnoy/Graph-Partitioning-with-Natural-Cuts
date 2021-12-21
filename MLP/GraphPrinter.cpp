@@ -41,12 +41,13 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
     vector<vector<NodeID>> result_cells_nodes(a_result.size());
     NodeID index = 0;
     for (auto cell : a_result) {
-        for (NodeID contain_id : cell)
-            for (NodeID nid : id_map[contain_id]) {
+        for (NodeID contain_id : cell) {
+            for (NodeID nid: id_map[contain_id]) {
                 NodeID rid = real_map[nid];
                 result_cells_nodes[index].emplace_back(rid);
                 node_cell[rid] = index;
             }
+        }
         index++;
 //        if (!contract_tiny || res_cell.size() > U/10 || res_cell.size() > 1000){
 //            unique_lock<mutex> node_lock(n_lock);
