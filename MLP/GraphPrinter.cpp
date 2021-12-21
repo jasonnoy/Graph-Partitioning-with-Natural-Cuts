@@ -98,13 +98,21 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
             result_cells_edges[node_cell[sid]].emplace_back(tid);
         }
     }
-    unique_lock<mutex> edge_lock(w_lock);
+    unique_lock<mutex> write_lock(w_lock);
     for (auto cell_nodes : result_cells_nodes)
         res_cells_nodes.emplace_back(cell_nodes);
     for (auto cells_edges : result_cells_edges)
         res_cells_edges.emplace_back(cells_edges);
-    edge_lock.unlock();
+    write_lock.unlock();
 
+    ofstream outfile("/data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/logs/20211221/temp.txt");
+    outfile<<"nodes: "
+    for (NodeID nid : result_cells_nodes[0])
+        outfile<<nid<<" ";
+    outfile<<"\n edges: ";
+    for (EdgeID eid = 0; eid < result_cells_edges[0].size()/2; eid++)
+        outfile<<"s: "<<result_cells_edges[0][eid*2]<<" t: "<<result_cells_edges[0][eid*2+1]<<"; ";
+    outfile<<"\n";
 
 //
 //    for (auto edge : cell_edges) {
