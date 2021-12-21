@@ -27,7 +27,7 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
 //    }
     cout<<"Printing nodes of layer "<<l<<endl;
 
-    unordered_map<NodeID, int> node_cell;
+    unordered_map<NodeID, NodeID> node_cell;
 //    NodeSize index = 0;
 //    for (NodeSize i = 0; i < result_nodes.size(); i++, index++) {
 //        for (NodeID node_iter : result_nodes[i]) {
@@ -94,6 +94,7 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
     for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
         NodeID sid = cell_edges[2*eid];
         NodeID tid = cell_edges[2*eid+1];
+        assert(node_cell.count(sid) && node_cell.count(tid));
         if (node_cell[sid] == node_cell[tid]){
             result_cells_edges[node_cell[sid]].emplace_back(sid);
             result_cells_edges[node_cell[sid]].emplace_back(tid);
