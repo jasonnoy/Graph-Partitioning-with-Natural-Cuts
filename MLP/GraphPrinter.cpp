@@ -106,7 +106,7 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
     write_lock.unlock();
 
     ofstream outfile("/data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/logs/20211221/temp.txt");
-    outfile<<"nodes: "
+    outfile<<"nodes: ";
     for (NodeID nid : result_cells_nodes[0])
         outfile<<nid<<" ";
     outfile<<"\n edges: ";
