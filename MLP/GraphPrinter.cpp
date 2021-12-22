@@ -173,6 +173,26 @@ void GraphPrinter::write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_c
 //    cout<<"Done\n";
 }
 
+void GraphPrinter::write_void_result(mutex &w_lock, vector <vector<NodeID>> &res_cells_nodes,
+                                     vector <vector<NodeID>> &res_cells_edges) {
+    unordered_set<NodeID> cell_set;
+    for (NodeID vid : void_nodes)
+        cell_set.emplace(vid);
+    vector<NodeID> result_edges;
+    for (EdgeID eid = 0; eid < cell_edges.size()/2; eid++) {
+        NodeID sid = cell_edges[eid*2];
+        NodeID tid = cell_edges[eid*2+1];
+        if (cell_set.count(sid) && cell_set.count(tid)) {
+            result_edges.emplace_back(sid);
+            result_edges.emplace_back(tid);
+        }
+    }
+    unique_lock<mutex> write_lock(w_lock);
+    res_cells_nodes.emplace_back(void_nodes);
+    res_cells_edges.emplace_back(result_edges);
+    write_lock.unlock();
+}
+
 void GraphPrinter::phantom_result() {
 //    fill_contracts();
 //    cout<<"aresult size: "<<a_result.size()<<endl;

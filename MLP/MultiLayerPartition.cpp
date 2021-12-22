@@ -26,18 +26,18 @@ void dealCell(mutex& n_lock, int extra_thread, int l, string cur_layer, vector<N
 
         if (cell.size() < U) {
             cout<<"cell size less than U, hand over to next layer\n";
-            unique_lock<mutex> node_lock(n_lock);
-            res_cells_nodes.emplace_back(cell);
-            node_lock.unlock();
+            GraphPrinter graphPrinter(cell, cell_edges);
+            graphPrinter.write_void_result(n_lock, res_cells_nodes, res_cells_edges);
             continue;
         }
-        if (cell_edges.empty()) {
-            unique_lock<mutex> node_lock(n_lock);
-            res_cells_nodes.emplace_back(cell);
-            node_lock.unlock();
-            cout<<"empty cell edge, skipping..\n";
-            continue;
-        }
+        assert(!cell_edges.empty());
+//        if (cell_edges.empty()) {
+//            unique_lock<mutex> node_lock(n_lock);
+//            res_cells_nodes.emplace_back(cell);
+//            node_lock.unlock();
+//            cout<<"empty cell edge, skipping..\n";
+//            continue;
+//        }
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
 //        vector<vector<NodeID>> output_edges; // for ram storage

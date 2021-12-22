@@ -10,11 +10,12 @@
 #include <fstream>
 #include <iostream>
 #include <mutex>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
 #include "../Common/common.h"
-#include <unordered_map>
 
 class GraphPrinter {
 private:
@@ -22,6 +23,7 @@ private:
     const int l;
     const bool contract_tiny;
     vector<NodeID>& cell_edges;
+    const vector<NodeID>& void_nodes;
 //    vector<NodeID> cell_nodes;
     const vector<vector<NodeID>>& id_map;
     const vector<NodeID>& real_map;
@@ -41,6 +43,8 @@ private:
 
 public:
     GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<EdgeID>& cellEdges, const int u, const int l, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_edges(cellEdges), U(u), l(l), contract_tiny(contract){}
+    GraphPrinter(const vector<NodeID>& void_nodes, vector<EdgeID>& cellEdges): void_nodes(void_nodes), cell_edges(cellEdges){}
+    void write_void_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges);
     void write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells);
 //    NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
