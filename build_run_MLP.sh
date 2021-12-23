@@ -36,11 +36,11 @@ fi
 
 if [ -f "./logs/$date_str/$time_str.log" ]
 then
-  echo "log .logs/$date_str/$time_str.log exists, creating {$time_str}_1"
+  echo "log ./logs/$date_str/$time_str.log exists, creating {$time_str}_1"
   echo "log output to .logs/$date_str/{$time_str}_1.log"
   touch ./logs/"$date_str"/"$time_str"_1.log || exit
 else
-  echo "log output to .logs/$date_str/$time_str.log"
+  echo "log output to ./logs/$date_str/$time_str.log"
   touch ./logs/"$date_str"/"$time_str".log || exit
 fi
 
