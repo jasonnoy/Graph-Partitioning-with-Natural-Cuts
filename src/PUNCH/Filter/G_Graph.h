@@ -22,9 +22,9 @@
 
 using namespace std;
 
-#include "../../Common/Utility.h"
-#include "../../Common/common.h"
-#include "../../Common/sw_basetypes.h"
+#include "../../../common/Utility.h"
+#include "../../../common/common.h"
+#include "../../../common/sw_basetypes.h"
 #include "../Assemble/A_Graph.h"
 
 #include "G_Node.h"

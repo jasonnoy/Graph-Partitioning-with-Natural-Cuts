@@ -1,7 +1,7 @@
 #ifndef A_EDGE_H
 #define A_EDGE_H
 
-#include "../../Common/common.h"
+#include "../../../common/common.h"
 
 class A_Edge{
 

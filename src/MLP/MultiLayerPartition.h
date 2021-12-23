@@ -7,15 +7,14 @@
 
 #include "../PUNCH/Filter/G_Graph.h"
 #include "../PUNCH/Assemble/A_Graph.h"
-#include "../Common/sw_basetypes.h"
-#include "../Common/tp_basetype.h"
-#include "../Common/Utility.h"
-#include "../Common/crp_types.h"
+#include "../../common/sw_basetypes.h"
+#include "../../common/tp_basetype.h"
+#include "../../common/Utility.h"
+#include "../../common/crp_types.h"
 
 #include "Assembly.h"
 #include "Filter.h"
 #include "GraphPrinter.h"
-#include "Preprocess.h"
 //#include "AdaptivePrinter.h"
 #include <string>
 #include <iostream>

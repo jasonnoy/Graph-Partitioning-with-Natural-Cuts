@@ -5,8 +5,8 @@
 #ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_PHANTOM_H
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_PHANTOM_H
 
-#include "../Common/common.h"
-#include "../Common/sw_basetypes.h"
+#include "../../common/common.h"
+#include "../../common/sw_basetypes.h"
 #include <vector>
 #include <iostream>
 #include <string>

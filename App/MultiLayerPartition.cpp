@@ -2,8 +2,8 @@
 // Created by 骏辉 on 2021/10/12.
 //
 
-#include "MultiLayerPartition.h"
-#include "../Common/io_util.h"
+#include "../MLP/MultiLayerPartition.h"
+#include "../common/io_util.h"
 
 // Parallel global variables.
 const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
@@ -587,13 +587,6 @@ int main(int argc, char** argv) {
         cout<<"Notice: input thread setting surpass the max capacity, which is  "<<hardware_threads<<endl;
         exit(0);
     }
-
-//    cout<<"Dealing with layer 0...\n";
-//    Preprocess preprocess(nodePath, edgePath, topoPath, outPath);
-//    preprocess.runPreprocess();
-//    end = time(&end);
-//    cout<<"Preprocess run time: "<<end-start<<"s.\n";
-
 
     MultiLayerPartition mlp(paraPath, outPath, false);
     if (topo) {

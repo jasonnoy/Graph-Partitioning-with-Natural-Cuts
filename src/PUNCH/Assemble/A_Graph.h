@@ -18,7 +18,7 @@
 using namespace std;
 
 #include "A_Node.h"
-#include "../../Common/Utility.h"
+#include "../../../common/Utility.h"
 #include "Logic_Edge.h"
 #include "F_Graph.h"
 #include "Pool_Item.h"

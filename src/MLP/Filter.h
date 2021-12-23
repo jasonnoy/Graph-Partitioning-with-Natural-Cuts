@@ -6,7 +6,7 @@
 #define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_FILTER_H
 
 #include "../PUNCH/Filter/G_Graph.h"
-#include "../Common/common.h"
+#include "../../common/common.h"
 #include <ctime>
 #include <stdlib.h>
 

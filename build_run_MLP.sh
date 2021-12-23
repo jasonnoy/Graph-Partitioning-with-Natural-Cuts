@@ -44,9 +44,9 @@ else
   touch ./logs/"$date_str"/"$time_str".log || exit
 fi
 
-g++ ./MLP/MultiLayerPartition.cpp -g -lpthread -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
+g++ ./App/MultiLayerPartition.cpp -g -lpthread -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
-#g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./Common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
+#g++ ./MLP/MultiLayerPartition.cpp -g -lpthread ./MLP/Assembly.cpp ./MLP/Filter.cpp ./MLP/AdaptivePrinter.cpp ./MLP/Preprocess.cpp ./MLP/GraphPrinter.cpp ./common/Utility.cpp ./PUNCH/Filter/G_Graph.cpp ./PUNCH/Assemble/A_Graph.cpp -o ./bin/MLP -std=c++11 > ./logs/"$date_str"/"$time_str".log 2>&1
 
 # base china input
 #./bin/MLP ./data/paras.txt ./result/ 52 "$date_str$time_str" /data/map_data/rp_2.0/normal/2021_11_25_21_07_41/all/all/nodes /data/map_data/rp_2.0/normal/2021_11_25_21_07_41/all/all/links >> ./logs/"$date_str"/"$time_str".log 2>&1

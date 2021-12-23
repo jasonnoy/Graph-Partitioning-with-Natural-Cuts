@@ -2,7 +2,34 @@
 // Created by 骏辉 on 2021/10/19.
 //
 
-#include "AdaptivePrinter.h"
+#ifndef GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ADAPTIVEPRINTER_H
+#define GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ADAPTIVEPRINTER_H
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <vector>
+#include "../../common/sw_basetypes.h"
+#include "../../common/common.h"
+
+using namespace std;
+
+class AdaptivePrinter {
+private:
+    const string out_path;
+    vector<int> cell_nums;
+    const int layer;
+    const NodeID node_num;
+    vector<vector<int>> node_parti;
+    vector<vector<NodeID>> phantom_nodes;
+    void read_phantom_nodes();
+
+public:
+    AdaptivePrinter(const string o_path, const int l, const NodeID n_num): out_path(o_path), layer(l), node_num(n_num){cell_nums.resize(l);}
+    void print_final_result(const string timestamp);
+    void print_result_for_show(const string node_path, const string edge_path);
+    void filter_result(vector<vector<NodeID>>& void_cells);
+};
+
 void AdaptivePrinter::filter_result(vector<vector<NodeID>>& void_cells) {
     cout<<"\n";
     for (int l = 1; l <= layer; l++) {
@@ -117,3 +144,5 @@ void AdaptivePrinter::print_final_result(const string timestamp) {
         outfile2<<*node_iter<<"\n";
     }
 }
+
+#endif //GRAPH_PARTITIONING_WITH_NATURAL_CUTS_ADAPTIVEPRINTER_H

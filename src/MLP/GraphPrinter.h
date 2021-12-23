@@ -15,7 +15,7 @@
 
 using namespace std;
 
-#include "../Common/common.h"
+#include "../../common/common.h"
 
 class GraphPrinter {
 private:

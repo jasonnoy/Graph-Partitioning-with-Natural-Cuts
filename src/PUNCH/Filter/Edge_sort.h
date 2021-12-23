@@ -1,7 +1,7 @@
 #ifndef EDGE_SORT_H
 #define EDGE_SORT_H
 
-#include "../../Common/common.h"
+#include "../../../common/common.h"
 
 class Edge_sort{
 
