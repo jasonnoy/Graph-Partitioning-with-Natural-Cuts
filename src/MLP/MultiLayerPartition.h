@@ -10,6 +10,7 @@
 #include "../PUNCH/Assemble/A_Graph.h"
 #include "../../common/tp_basetype.h"
 #include "../../common/Utility.h"
+#include "../../common/io_util.h"
 
 
 #include "Assembly.h"
