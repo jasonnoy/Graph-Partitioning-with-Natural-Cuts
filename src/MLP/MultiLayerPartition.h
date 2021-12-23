@@ -7,10 +7,8 @@
 
 #include "../PUNCH/Filter/G_Graph.h"
 #include "../PUNCH/Assemble/A_Graph.h"
-#include "../../common/sw_basetypes.h"
 #include "../../common/tp_basetype.h"
 #include "../../common/Utility.h"
-#include "../../common/base_def.h"
 #include "../../common/crp_types.h"
 
 #include "Assembly.h"
