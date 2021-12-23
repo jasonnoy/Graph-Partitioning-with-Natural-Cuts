@@ -1,9 +1,7 @@
 //
 // Created by 骏辉 on 2021/10/12.
 //
-#include "../common/base_def.h"
 #include "../src/MLP/MultiLayerPartition.h"
-#include "../common/io_util.h"
 
 
 // Parallel global variables.
