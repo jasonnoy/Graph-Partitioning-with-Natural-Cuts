@@ -14,7 +14,7 @@ const unsigned int hardware_threads = thread::hardware_concurrency();
 int thread_limit = 1, current_occupied = 1;
 
 // Parallel function
-void dealCell(mutex& n_lock, int extra_thread, int l, string cur_layer, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M, const int L) {
+void dealCell(mutex& n_lock, int extra_thread, int l, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M) {
     time_t start, mid, end;
     for (NodeID cell_id:thread_index) {
         time(&start);
@@ -54,8 +54,7 @@ void dealCell(mutex& n_lock, int extra_thread, int l, string cur_layer, vector<N
         assembly.runAssembly();
 
         time(&mid);
-        bool need_contract = l == L - 1;
-        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, U, l, need_contract);
+        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, l);
         graphPrinter.write_MLP_result( n_lock, res_cells_nodes, res_cells_edges, res_void_cells);
 //        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
 
@@ -199,14 +198,13 @@ void MultiLayerPartition::MLP() {
         } else {
             phantom = false;
         }
-        string last_layer = to_string(prefix);
         string cur_layer = to_string(l + 1);
         if (l + 1 > 2) {
             cout<<"not target, skip...\n";
             continue;
         }
-        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
-        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
+//        string out_node_path = outPath + "layer" + cur_layer + "_nodes.txt";
+//        string out_cut_path = outPath + "layer" + cur_layer + "_cuts.txt";
         // for test only!
 //        if (cur_layer == "3") {
 //            ifstream check(out_node_path);
@@ -251,8 +249,6 @@ void MultiLayerPartition::MLP() {
 //        outfile.open(out_cut_path);
 //        outfile.close();
 //        outfile.clear(ios::goodbit);
-
-        int voidSize = 0;
         atomic<int> cellCount(0);
         atomic<int> cutCount(0);
 //        infile>>voidSize;
@@ -262,7 +258,6 @@ void MultiLayerPartition::MLP() {
 //            infile>>vid;
 //            void_nodes.push_back(i);
 //        }
-        NodeSize count;
 
 //        infile>>count;
 //        cout<<"current layer has "<<count<<" cells.\n";
@@ -323,7 +318,7 @@ void MultiLayerPartition::MLP() {
         }
         mutex node_lock;
         for (int i = 0; i < current_occupied; i++)
-            ths.push_back(thread(dealCell, ref(node_lock), extra_thread, l, cur_layer,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), U, Uf, C, FI, M, L));
+            ths.push_back(thread(dealCell, ref(node_lock), extra_thread, l ,ref(thread_index[i]), ref(cells_nodes), ref(cutCount), ref(void_cells), ref(cells_edges), ref(res_cells_nodes), ref(res_cells_edges), U, Uf, C, FI, M));
         for (int i = 0; i < current_occupied; i++){
             ths[i].join();
             cout<<i<<"/"<<current_occupied<<" threads finished\n";

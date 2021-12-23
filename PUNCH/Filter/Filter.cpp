@@ -3,7 +3,6 @@
 #include <ctime>
 
 using namespace std;
-clock_t start;
 
 #include "G_Graph.h"
 
@@ -115,7 +114,7 @@ void convert_and_output( G_Graph &graph, string r_path ){
 }
 
 int main( int argc, char** argv){
-    start = clock();
+    clock_t start = clock();
 
 	//srand(40);
 	srand((unsigned int)time(NULL)); //initial here, since two seeds can be within 1'

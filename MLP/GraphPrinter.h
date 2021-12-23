@@ -19,9 +19,7 @@ using namespace std;
 
 class GraphPrinter {
 private:
-    const int U;
     const int l;
-    const bool contract_tiny;
     vector<NodeID>& cell_edges;
     const vector<NodeID>& void_nodes;
 //    vector<NodeID> cell_nodes;
@@ -30,29 +28,17 @@ private:
     const vector<vector<NodeID>>& a_result;
     vector<vector<NodeID>> phantom_nodes;
     vector<vector<NodeID>> result_cuts;
+
     // 替代无用引用成员参数, only for replacing members with empty vecs
     vector<NodeID> replace_vec;
     vector<vector<NodeID>> replace_vec_vec;
-//    const string out_path;
-//    vector<NodeID> contract_to;
-//    vector<NodeID> cell_void_nodes;
-
-//    void fill_contracts();
-    void filter_edges();
-    void MLP_result();
-    void phantom_result();
-    void contract_tiny_cells();
-    void contract_iso_cells();
 
 public:
-    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<EdgeID>& cellEdges, const int u, const int l, const bool contract): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_edges(cellEdges), U(u), l(l), contract_tiny(contract), void_nodes(replace_vec){}
-    GraphPrinter(const vector<NodeID>& void_nodes, vector<EdgeID>& cellEdges): void_nodes(void_nodes), cell_edges(cellEdges), id_map(replace_vec_vec), real_map(replace_vec), a_result(replace_vec_vec), contract_tiny(false), l(0), U(0){}
+    GraphPrinter(const vector<vector<NodeID>>& in_result, const vector<vector<NodeID>>& in_id_map, const vector<NodeID>& real_map, vector<EdgeID>& cellEdges, const int l): a_result(in_result), id_map(in_id_map), real_map(real_map), cell_edges(cellEdges), l(l), void_nodes(replace_vec){}
+    GraphPrinter(const vector<NodeID>& void_nodes, vector<EdgeID>& cellEdges): void_nodes(void_nodes), cell_edges(cellEdges), id_map(replace_vec_vec), real_map(replace_vec), a_result(replace_vec_vec), l(0){}
     void write_void_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges);
     void write_MLP_result(mutex& w_lock, vector<vector<NodeID>>& res_cells_nodes, vector<vector<NodeID>>& res_cells_edges, vector<vector<NodeID>>& res_void_cells);
-//    NodeID nodes_result_size(){return result_nodes.size();}
     NodeID cuts_result_size(){return result_cuts.size();}
-//    vector<NodeID>& get_cell_void_nodes(){return cell_void_nodes;}
-//    vector<vector<NodeID>>& get_void_cells(){return void_cells;}
 };
 
 
