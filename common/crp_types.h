@@ -3,6 +3,7 @@
 
 #include "base_def.h"
 #include <vector>
+#include <limits>
 
 using std::pair;
 using namespace std;
