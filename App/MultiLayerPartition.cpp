@@ -4,6 +4,7 @@
 
 #include "../src/MLP/MultiLayerPartition.h"
 #include "../common/io_util.h"
+#include "../common/base_def.h"
 
 // Parallel global variables.
 const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
