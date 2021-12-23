@@ -33,6 +33,13 @@
 using namespace std;
 using namespace navi::crp;
 
+int thread_limit = 1, current_occupied = 1;
+// Parallel global variables.
+const int thread_pool_capacity = 256; // the max threads that can be started at the same timed limited by linux system.
+atomic<int> process_count(0);
+
+const unsigned int hardware_threads = thread::hardware_concurrency();
+
 class MultiLayerPartition {
 private:
     int L, U, Uf, C, FI, M, PS;
@@ -79,7 +86,7 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     time_t begin, finish;
     time(&begin);
     cout<<"MLP reading graph...\n";
-    vector<topo_node_info_t> topo_nodes;
+    vector<uint32_t> topo_nodes;
 
     topo_link_head_weight_t* topo_link_weight_head = read_topo_link(topo_weight_path);
     NodeSize node_count = topo_link_weight_head->max_vertex_id+1;
@@ -135,6 +142,59 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 
 //    outfile.close();
 //    outfile.clear(ios::goodbit);
+}
+
+// Parallel function
+void dealCell(mutex& n_lock, int extra_thread, int l, vector<NodeID>& thread_index, vector<vector<NodeID>> &cells_nodes, atomic<int> &cutCount, vector<vector<NodeID>>& res_void_cells, vector<vector<EdgeID>>& cells_edges, vector<vector<NodeID>> &res_cells_nodes, vector<vector<EdgeID>>& res_cells_edges, const int U, const int Uf, const int C, const int FI, const int M) {
+    time_t start, mid, end;
+    for (NodeID cell_id:thread_index) {
+        time(&start);
+        process_count++;
+        cout<<"Parallel dealing Cell: "<<process_count<<"/"<<cells_nodes.size()<<endl;
+        vector<NodeID>& cell = cells_nodes[cell_id];
+        vector<EdgeID>& cell_edges = cells_edges[cell_id];
+        cout<<"cell node size: "<<cell.size()<<", cell edge size: "<<cell_edges.size()/2<<endl;
+
+        if (cell.size() < U) {
+            cout<<"cell size less than U, hand over to next layer\n";
+            GraphPrinter graphPrinter(cell, cell_edges);
+            graphPrinter.write_void_result(n_lock, res_cells_nodes, res_cells_edges);
+            continue;
+        }
+        assert(!cell_edges.empty());
+//        if (cell_edges.empty()) {
+//            unique_lock<mutex> node_lock(n_lock);
+//            res_cells_nodes.emplace_back(cell);
+//            node_lock.unlock();
+//            cout<<"empty cell edge, skipping..\n";
+//            continue;
+//        }
+        vector<vector<NodeID>> anodes;
+        vector<vector<NodeID>> aedges;
+//        vector<vector<NodeID>> output_edges; // for ram storage
+
+        time(&mid);
+        cout<<"cell preprocess time: "<<mid-start<<"s\n";
+
+        Filter filter(Uf, U, C, cell, cell_edges, anodes, aedges, extra_thread);
+        cout<<"Running filter...";
+        filter.runFilter();
+        cout<<"Filter result node size: "<<anodes.size()<<", edge size: "<<aedges.size()<<endl;
+        Assembly assembly(U, FI, M, false, anodes, aedges, false);
+        cout<<"Running assembly...\n";
+        assembly.runAssembly();
+
+        time(&mid);
+        GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, l);
+        graphPrinter.write_MLP_result( n_lock, res_cells_nodes, res_cells_edges, res_void_cells);
+//        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
+
+//        cellCount += graphPrinter.nodes_result_size();
+//        cutCount += graphPrinter.cuts_result_size();
+
+        time(&end);
+        cout<<"cell print time cost: "<<end-mid<<"s, "<<"cell time cost: "<<end-start<<"s\n";
+    }
 }
 
 void MultiLayerPartition::MLP() {
