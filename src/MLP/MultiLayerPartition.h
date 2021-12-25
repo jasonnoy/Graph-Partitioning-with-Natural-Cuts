@@ -54,7 +54,7 @@ private:
     vector<vector<NodeID>> node_parti;
     vector<NodeSize> cell_sizes;
     bool phantom;
-    bool accumulate = true;
+    bool accumulate = false;
 
     void MLP();
 
@@ -79,10 +79,6 @@ public:
 
 void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
 //    ofstream outfile;
-//    string out_node_path = out_path + "layer0_nodes.txt";
-//    string out_edge_path = out_path + "layer0_edges.txt";
-//    string out_node_path = out_path + "layer-1_nodes.txt";
-//    string out_edge_path = out_path + "layer-1_edges.txt";
     time_t begin, finish;
     time(&begin);
     cout<<"MLP reading graph...\n";
@@ -126,10 +122,6 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
         edge_weight_t& link = topo_edge_weight_ptr[i];
         graph_edges[2*i] = link.s_node_;
         graph_edges[2*i+1] = link.e_node_;
-//        vector<EdgeID> edge2 = {link.e_node_, link.s_node_};
-//        graph_edges.emplace_back(edge2);
-//        graph_edges[(NodeID)link.s_node_].push_back((NodeID)link.e_node_);
-//        graph_edges[(NodeID)link.e_node_].push_back((NodeID)link.s_node_);
     }
     cells_edges.emplace_back(graph_edges);
 //    cout<<"emplace in topo edges finished, check mem\n";
@@ -137,11 +129,6 @@ void MultiLayerPartition::read_topo_graph(const string topo_weight_path) {
     time(&finish);
     cout<<"MLP read graph time cost: "<<finish-begin<<"s\n";
 
-    // Test only!
-//    sleep(10);
-
-//    outfile.close();
-//    outfile.clear(ios::goodbit);
 }
 
 // Parallel function
@@ -162,13 +149,7 @@ void dealCell(mutex& n_lock, int extra_thread, int l, vector<NodeID>& thread_ind
             continue;
         }
         assert(!cell_edges.empty());
-//        if (cell_edges.empty()) {
-//            unique_lock<mutex> node_lock(n_lock);
-//            res_cells_nodes.emplace_back(cell);
-//            node_lock.unlock();
-//            cout<<"empty cell edge, skipping..\n";
-//            continue;
-//        }
+
         vector<vector<NodeID>> anodes;
         vector<vector<NodeID>> aedges;
 //        vector<vector<NodeID>> output_edges; // for ram storage
@@ -187,10 +168,6 @@ void dealCell(mutex& n_lock, int extra_thread, int l, vector<NodeID>& thread_ind
         time(&mid);
         GraphPrinter graphPrinter(assembly.get_result_nodes(), assembly.get_id_map(), filter.get_real_map(), cell_edges, l);
         graphPrinter.write_MLP_result( n_lock, res_cells_nodes, res_cells_edges, res_void_cells);
-//        void_cells.insert(void_cells.end(), graphPrinter.get_void_cells().begin(), graphPrinter.get_void_cells().end());
-
-//        cellCount += graphPrinter.nodes_result_size();
-//        cutCount += graphPrinter.cuts_result_size();
 
         time(&end);
         cout<<"cell print time cost: "<<end-mid<<"s, "<<"cell time cost: "<<end-start<<"s\n";
@@ -227,27 +204,6 @@ void MultiLayerPartition::MLP() {
     infile.clear(ios::goodbit);
     time(&finish);
     cout<<"mlp preprocess time: "<<finish-begin<<"s\n";
-
-//
-//    vector<vector<vector<int>>> cell_nodes_list; // 后期可使用内存转储数据
-//    vector<vector<vector<int>>> cut_edges_list;
-    // read edges
-//    infile.open(in_edge_path);
-//    if (!infile.is_open()) {
-//        cout<<"graph edge file open failed!\n";
-//        exit(1);
-//    }
-//    graph_edges.resize(nodeNum);
-//    infile>>count;
-//    cout<<"Input graph has "<<count<<" edges\n";
-//    for (int i = 0; i < count; i++) {
-//        NodeID sid, tid;
-//        infile>>sid>>tid;
-//        graph_edges[sid].push_back(tid);
-////            graph_edges[i].push_back(weight);
-//    }
-//    infile.close();
-//    infile.clear(ios::goodbit);
 
     for (--l; l >= 0; l--) {
         time_t start, end;
@@ -371,9 +327,6 @@ void MultiLayerPartition::MLP() {
         vector<thread> ths;
         current_occupied = cells_nodes.size() > thread_limit ? thread_limit : cells_nodes.size();
         cout<<"cur occ: "<<current_occupied<<endl;
-//        int thread_left = cells_nodes.size();
-//        int thread_count = 0;
-//        int extra_thread = l==getL()-1? 10 : 1;
         int extra_thread = thread_limit/current_occupied > 1 ? thread_limit/current_occupied : 1;
         cout<<"extra_thread: "<<extra_thread<<endl;
         vector<vector<NodeID>> thread_index(current_occupied);
@@ -462,12 +415,6 @@ void MultiLayerPartition::MLP() {
 //        outfile.clear(ios::goodbit);
 
     }
-//    // deal void cells
-//    for (NodeSize i = 0; i < void_cells.size(); i++) {
-//        NodeID index = total_cell_num + i;
-//        for (NodeID vid : void_cells[i])
-//            node_parti[vid].emplace_back(index);
-//    }
     time(&finish);
     cout<<"mlp time cost: "<<finish-begin<<"s\n";
 }
