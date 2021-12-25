@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
         mlp.read_base_graph(nodePath, edgePath);
     }
 
-//    bool accumulate = true;
+    bool accumulate = false;
     const string partition_file_path = "/data/jjh/partitions/1220/node_partitions_20211217221805.txt";
 //    const int ori_layer = 5;
     const int base_layer = 3;
