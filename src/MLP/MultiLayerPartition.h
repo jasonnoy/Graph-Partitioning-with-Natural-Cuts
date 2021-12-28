@@ -480,12 +480,12 @@ void MultiLayerPartition::print_parti(const string timestamp) {
         exit(-1);
     }
     outfile<<L<<endl;
-    for (NodeSize layer_size : cell_sizes)
-        outfile<<layer_size<<endl;
+    for (auto cell_size_itr = cell_sizes.rbegin(); cell_size_itr != cell_sizes.rend(); cell_size_itr++)
+        outfile<<*cell_size_itr<<endl;
     outfile<<nodeNum<<endl;
     for (auto node_cids : node_parti){
-        for (auto cid : node_cids) {
-            outfile<<cid<<" ";
+        for (auto cid_iter = node_cids.rbegin(); cid_iter != node_cids.rend(); cid_iter++) {
+            outfile<<*cid_iter<<" ";
         }
         outfile<<endl;
     }
