@@ -514,7 +514,7 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     for (NodeID i = 0; i < nodeCount; i++) {
         node_parti[i].resize(ori_layer);
         int j = 0;
-        for (; j < base_layer; j++) {
+        for (; j < ori_layer-base_layer; j++) {
             NodeID cid;
             infile>>cid;
 //            infile>>node_parti[i][ori_layer-j-1];
