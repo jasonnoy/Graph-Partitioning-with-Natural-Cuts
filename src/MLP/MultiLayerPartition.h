@@ -502,32 +502,32 @@ void MultiLayerPartition::read_accumu_parti(const string parti_path, const int b
     cout<<"[accumulate] original partition has "<<ori_layer<<" layers\n";
     vector<NodeSize> layer_sizes(ori_layer);
     for (NodeID i = 0; i < ori_layer; i++) {
-        infile>>layer_sizes[i];
-        cout<<"layer "<<i<<": "<<layer_sizes[i]<<endl;
+        infile>>layer_sizes[ori_layer-i-1];
+        cout<<"layer "<<ori_layer-i-1<<": "<<layer_sizes[ori_layer-i-1]<<endl;
     }
 
-    const int base_index = ori_layer - base_layer;
+    const int base_index = base_layer - 1;
     NodeSize nodeCount;
     infile>>nodeCount;
     assert(nodeCount == nodeNum);
     vector<vector<NodeID>> layer_cells(layer_sizes[base_index]);
     for (NodeID i = 0; i < nodeCount; i++) {
+        node_parti[i].resize(ori_layer);
         int j = 0;
         for (; j < base_index; j++) {
             NodeID cid;
             infile>>cid;
-            node_parti[i].emplace_back(cid);
+//            infile>>node_parti[i][ori_layer-j-1];
         }
         NodeID cur_cid;
         infile>>cur_cid;
-        node_parti[i].emplace_back(cur_cid);
+        node_parti[i][base_index] = cur_cid;
         if (cur_cid >= layer_sizes[base_index])
             cout<<"oversize cid: "<<cur_cid<<", nid: "<<i<<endl;
         layer_cells[cur_cid].emplace_back(i);
         j++;
         for (; j < ori_layer; j++) {
-            NodeID void_cid;
-            infile>>void_cid;
+            infile>>node_parti[i][ori_layer-j-1];
         }
     }
     cells_nodes.assign(layer_cells.begin(), layer_cells.end());
