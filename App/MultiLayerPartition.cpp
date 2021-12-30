@@ -51,9 +51,9 @@ int main(int argc, char** argv) {
     }
 
     bool accumulate = true;
-    const string partition_file_path = "/data/jjh/partitions/1222/node_partitions_20211222113230.txt";
+    const string partition_file_path = "/data/jjh/partitions/1230/node_partitions_20211230010914_1.txt";
 //    const int ori_layer = 5;
-    const int base_layer = 5;
+    const int base_layer = 6;
     if (accumulate) {
         time_t begin, end;
         time(&begin);

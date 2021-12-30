@@ -219,7 +219,7 @@ void MultiLayerPartition::MLP() {
             phantom = false;
         }
         string cur_layer = to_string(l + 1);
-        if (l + 1 > 2) {
+        if (l + 1 > 1) {
             cout<<"not target, skip...\n";
             continue;
         }
