@@ -57,7 +57,7 @@ g++ ./App/MultiLayerPartition.cpp -lpthread -o ./bin/MLP -std=c++11 > ./logs/"$d
 #./bin/MLP ./data/paras.txt ./result/ 52 000 /data/jjh/crp_data/china/crp_weight_dist.hllnavi
 
 # topo china input
-./bin/MLP ./data/paras.txt ./result/ 60 "$date_str$time_str" /data/guolei/data/ch_compiler_data/china/Q4/weight_distance.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
+./bin/MLP ./data/paras.txt ./result/ 60 "$date_str$time_str" /data/guolei/data/ch_compiler_data/beijing/Q4/weight_time.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
 
 # Topo beijing input
 #./bin/MLP ./data/paras_beijing.txt ./result/beijing/ 32 "$date_str$time_str" /data/jjh/mlp_test/Graph-Partitioning-with-Natural-Cuts/data/beijing/binary_data/crp_weight_dist.hllnavi >> ./logs/"$date_str"/"$time_str".log 2>&1
