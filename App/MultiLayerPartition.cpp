@@ -63,8 +63,17 @@ int main(int argc, char** argv) {
     }
 //    cout<<"read in graph finished, check mem\n";
 //    sleep(15);
-    mlp.generateMLP();
+    try
+    {
+        mlp.generateMLP();
+    } catch (std::exception const& e) {
+        cout<<"Exception caught: "<<e.what()<<"\nPrinting residual partition...\n";
+    } catch (...) {
+        cout<<"Unknown exception happened\nPrinting residual partition...\n";
+    }
+
     mlp.print_parti(timestamp);
+    return;
 
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
