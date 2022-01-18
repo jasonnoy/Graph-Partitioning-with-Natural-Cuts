@@ -73,8 +73,6 @@ int main(int argc, char** argv) {
     }
 
     mlp.print_parti(timestamp);
-    return;
-
 
 //    AdaptivePrinter adaptivePrinter(outPath, 3, 723624);
 //    AdaptivePrinter adaptivePrinter(outPath, 6, preprocess.getNodeNum());
