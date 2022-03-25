@@ -146,7 +146,7 @@ void dealCell(mutex& n_lock, int extra_thread, int l, vector<NodeID>& thread_ind
             cout<<"cell size less than U, hand over to next layer\n";
             GraphPrinter graphPrinter(cell, cell_edges);
             graphPrinter.write_void_result(n_lock, res_cells_nodes, res_cells_edges);
-            cout<<"nids:\n"
+            cout<<"nids:\n";
             for (const auto& nid : cell)
                 cout<<nid<<",";
             cout<<"\n";
